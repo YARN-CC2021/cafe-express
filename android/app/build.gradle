@@ -5,9 +5,9 @@ if (localPropertiesFile.exists()) {
         localProperties.load(reader)
     }
 }
-def localPropertyApiToken = localProperties.getProperty("MAPS_API_KEY")
-def systemEnvApiToken = System.getenv('MAPS_API_KEY')
-def MAPS_API_KEY = localPropertyApiToken != null ? localPropertyApiToken : systemEnvApiToken
+def localPropertyApiToken = localProperties.getProperty("GOOGLE_MAP_API_KEY")
+def systemEnvApiToken = System.getenv('GOOGLE_MAP_API_KEY')
+def GOOGLE_MAP_API_KEY = localPropertyApiToken != null ? localPropertyApiToken : systemEnvApiToken
 
 def flutterRoot = localProperties.getProperty('flutter.sdk')
 if (flutterRoot == null) {
