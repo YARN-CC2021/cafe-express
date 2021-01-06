@@ -5,6 +5,7 @@ if (localPropertiesFile.exists()) {
         localProperties.load(reader)
     }
 }
+//ADDED FOR PRODUCTION
 def localPropertyApiToken = localProperties.getProperty("GOOGLE_MAP_API_KEY")
 def systemEnvApiToken = System.getenv('GOOGLE_MAP_API_KEY')
 def GOOGLE_MAP_API_KEY = localPropertyApiToken != null ? localPropertyApiToken : systemEnvApiToken
