@@ -1,0 +1,383 @@
+{
+    "customer": {
+        "id": "pk_XXXXXXXXX ", //use uuid generated from the cognito >> this is good practice to check if the users authenticated, also should be accessible from any screen once the user is logged in or signed up
+        "email": "xxxx@gmail.com",
+        "username": "yoshinao",
+        "point": 350,
+        "createdAt": "datetime",
+        "updatedAt": "datetime"
+    },
+    "store": {
+        "id": "pk_XXXXXXXXX ",
+        "stripeId": "XXXXXXX",
+        "name": "CCbucks",
+        "address": "六本木３－１－１",
+        "lat": 120.0432579,
+        "lng": 20.7320851,
+        "tel": "99999999",
+        "email": "xxxx@gmail.com",
+        "storeURL": "http://....",
+        "category": "Cafe",
+        "statistics": {
+            "rating": 3.8,
+            "category": {
+                "With No Wait": 51,
+                "With 10 min Wait": 10,
+                "With 30 min Wait": 5,
+                "More than 1 hour Wait": 1,
+                "Was Not Able to Get In": 0
+            },
+            "bookingCount": 122,
+        },
+        "imagePaths": [
+            "http://....",
+            "http://..."
+        ],
+        "hours": {
+            "Sun": {
+                "open": "0900",
+                "close": "2000",
+                "day-off": false,
+                "bookingStart": "0900", //mapping booking start to open
+                "bookingEnd": "1830" // mapping booking end to end hours subtracting 1hours and 30 minutes.
+            },
+            "Mon": {
+                "open": "0900",
+                "close": "2000",
+                "day-off": true,
+                "bookingStart": "0900",
+                "bookingEnd": "1830"
+            },
+            "Tue": {
+                "open": "0900",
+                "close": "2000",
+                "day-off": true,
+                "bookingStart": "0900",
+                "bookingEnd": "1830"
+            },
+            "Wed": {
+                "open": "0900",
+                "close": "2000",
+                "day-off": true,
+                "bookingStart": "0900",
+                "bookingEnd": "1830"
+            },
+            "Thu": {
+                "open": "0900",
+                "close": "2000",
+                "day-off": true,
+                "bookingStart": "0900",
+                "bookingEnd": "1830"
+            },
+            "Fri": {
+                "open": "0900",
+                "close": "2000",
+                "day-off": true,
+                "bookingStart": "0900",
+                "bookingEnd": "1830"
+            },
+            "Sat": {
+                "open": "0900",
+                "close": "2000",
+                "day-off": true,
+                "bookingStart": "0900",
+                "bookingEnd": "1830"
+            },
+            "Holiday": {
+                "open": "0900",
+                "close": "2000",
+                "day-off": true,
+                "bookingStart": "0900",
+                "bookingEnd": "1830"
+            }
+        },
+        "description": "メロスは激怒した。必ず、かの邪智暴虐じゃちぼうぎゃくの王を除かなければならぬと決意した。メロスには政治がわからぬ。メロスは、村の牧人である。笛を吹き、羊と遊んで暮して来た。けれども邪悪に対しては、人一倍に敏感であった。きょう未明メロスは村を出発し、野を越え山越え、十里はなれた此このシラクスの市にやって来た。メロスには父も、母も無い。女房も無い。十六の、内気な妹と二人暮しだ。この妹は、村の或る律気な一牧人を、近々、花婿はなむことして迎える事になっていた。結婚式も間近かなのである。メロスは、それゆえ、花嫁の衣裳やら祝宴の御馳走やらを買いに、はるばる市にやって来たのだ。先ず、その品々を買い集め、それから都の大路をぶらぶら歩いた。メロスには竹馬の友があった。セリヌンティウスである。今は此のシラクスの市で、石工をしている。その友を、これから訪ねてみるつもりなのだ。久しく逢わなかったのだから、訪ねて行くのが楽しみである。歩いているうちにメロスは、まちの様子を怪しく思った。",
+        "vacancy": {
+            "strict": [
+                {
+                    "label": "1 Seat Table",
+                    "Min": 1,
+                    "Max": 1,
+                    "isVacant": true
+                },
+                {
+                    "label": "2 Seat Table",
+                    "Min": 2,
+                    "Max": 2,
+                    "isVacant": true
+                },
+                {
+                    "label": "3 Seat Table",
+                    "Min": 3,
+                    "Max": 3,
+                    "isVacant": true
+                },
+                {
+                    "label": "4 Seat Table",
+                    "Min": 4,
+                    "Max": 4,
+                    "isVacant": true
+                },
+                {
+                    "label": "5 Seat Table",
+                    "Min": 5,
+                    "Max": 5,
+                    "isVacant": true
+                },
+                {
+                    "label": "6 Seat Table",
+                    "Min": 6,
+                    "Max": 6,
+                    "isVacant": true
+                },
+                {
+                    "label": "7 Seat Table",
+                    "Min": 7,
+                    "Max": 7,
+                    "isVacant": true
+                },
+                {
+                    "label": "8 Seat Table",
+                    "Min": 8,
+                    "Max": 8,
+                    "isVacant": true
+                },
+                {
+                    "label": "9 Seat Table",
+                    "Min": 9,
+                    "Max": 9,
+                    "isVacant": true
+                },
+                {
+                    "label": "10 Seat Table",
+                    "Min": 10,
+                    "Max": 10,
+                    "isVacant": true
+                },
+                {
+                    "label": "11 Seat Table",
+                    "Min": 11,
+                    "Max": 11,
+                    "isVacant": true
+                },
+                {
+                    "label": "12 Seat Table",
+                    "Min": 12,
+                    "Max": 12,
+                    "isVacant": true
+                }
+            ],
+            "flex": [
+                {
+                    "label": "1-2 Seat Table",
+                    "Min": 1,
+                    "Max": 2,
+                    "isVacant": true
+                },
+                {
+                    "label": "3-4 Seat Table",
+                    "Min": 3,
+                    "Max": 4,
+                    "isVacant": true
+                },
+                {
+                    "label": "5-6 Seat Table",
+                    "Min": 5,
+                    "Max": 6,
+                    "isVacant": true
+                },
+                {
+                    "label": "7-8 Seat Table",
+                    "Min": 7,
+                    "Max": 8,
+                    "isVacant": true
+                },
+                {
+                    "label": "9-10 Seat Table",
+                    "Min": 9,
+                    "Max": 10,
+                    "isVacant": true
+                },
+                {
+                    "label": "11-12 Seat Table",
+                    "Min": 11,
+                    "Max": 12,
+                    "isVacant": true
+                }
+            ],
+            "custom": [
+                {
+                    "label": "1-5 Seat Table",
+                    "Min": 1,
+                    "Max": 5,
+                    "isVacant": false
+                },
+                {
+                    "label": "1-5 Seat Table",
+                    "Min": 1,
+                    "Max": 5,
+                    "isVacant": false
+                }
+            ],
+            "vacancyType": "flex",
+            "createdAt": "datetime",
+            "updatedAt": "datetime"
+        }
+    },
+    "booking": [
+        {
+            "bookingId": "12312312312312",
+            "storeInfo": {
+                "id": "pk_XXXXXXXXX ",
+                "name": "CCbucks",
+                "address": "六本木３－１－１",
+                "category": "Cafe",
+                "tel": "123-2313-1231",
+                "rating": 3.8
+            },
+            "customerInfo": {
+                "customerId": "pk_XXXXXXXXX",
+                "username": "yoshinao"
+            },
+            "tableType": {
+                "label": "pk_XXXXXXXXX",
+                "mode": "strict",
+                "capacity": "3-4"
+            },
+            "partySize": 4,
+            "coupon": {
+                "couponAttached": true,
+                "couponId": "pk_XXXXXXXXX",
+                "title": "２万引き",
+                "imagePath": "http://....",
+                "codeForQR": "XXXXXXXX",
+                "description": "メロスは激怒した。必ず、かの邪智暴虐じゃちぼうぎゃくの王を除かなければならぬと決意した。メロスには政治がわからぬ。メロスは、村の牧人である。笛を吹き、羊と遊んで暮して来た。けれども邪悪に対しては、人一倍に敏感であった。きょう未明メロスは村を出発し、野を越え山越え、十里はなれた此このシラクスの市にやって来た。メロスには父も、母も無い。女房も無い。十六の、内気な妹と二人暮しだ。この妹は、村の或る律気な一牧人を、近々、花婿はなむことして迎える事になっていた。結婚式も間近かなのである。メロスは、それゆえ、花嫁の衣裳やら祝宴の御馳走やらを買いに、はるばる市にやって来たのだ。先ず、その品々を買い集め、それから都の大路をぶらぶら歩いた。メロスには竹馬の友があった。セリヌンティウスである。今は此のシラクスの市で、石工をしている。その友を、これから訪ねてみるつもりなのだ。久しく逢わなかったのだから、訪ねて行くのが楽しみである。歩いているうちにメロスは、まちの様子を怪しく思った。",
+            },
+            "depositAmount": 2000,
+            "bookedAt": "datetime",
+            "expiredAt": "datetime",
+            "createdAt": "datetime",
+            "updatedAt": "datetime",
+            "status": "checked-in"
+        },
+        {
+            "bookingId": "12312312312312",
+            "bookingName": "Naoto",
+            "storeInfo": {
+                "id": "pk_XXXXXXXXX ",
+                "name": "CCbucks",
+                "address": "六本木３－１－１",
+                "category": "Cafe",
+                "tel": "123-2313-1231",
+                "rating": 3.8
+            },
+            "customerInfo": {
+                "customerId": "pk_XXXXXXXXX",
+                "username": "yoshinao"
+            },
+            "tableType": {
+                "label": "pk_XXXXXXXXX",
+                "mode": "strict",
+                "capacity": "3-4"
+            },
+            "partySize": 4,
+            "coupon": {
+                "couponAttached": true,
+                "couponId": "pk_XXXXXXXXX",
+                "title": "２万引き",
+                "imagePath": "http://....",
+                "codeForQR": "XXXXXXXX",
+                "description": "メロスは激怒した。必ず、かの邪智暴虐じゃちぼうぎゃくの王を除かなければならぬと決意した。メロスには政治がわからぬ。メロスは、村の牧人である。笛を吹き、羊と遊んで暮して来た。けれども邪悪に対しては、人一倍に敏感であった。きょう未明メロスは村を出発し、野を越え山越え、十里はなれた此このシラクスの市にやって来た。メロスには父も、母も無い。女房も無い。十六の、内気な妹と二人暮しだ。この妹は、村の或る律気な一牧人を、近々、花婿はなむことして迎える事になっていた。結婚式も間近かなのである。メロスは、それゆえ、花嫁の衣裳やら祝宴の御馳走やらを買いに、はるばる市にやって来たのだ。先ず、その品々を買い集め、それから都の大路をぶらぶら歩いた。メロスには竹馬の友があった。セリヌンティウスである。今は此のシラクスの市で、石工をしている。その友を、これから訪ねてみるつもりなのだ。久しく逢わなかったのだから、訪ねて行くのが楽しみである。歩いているうちにメロスは、まちの様子を怪しく思った。",
+            },
+            "depositAmount": 2000,
+            "bookedAt": "datetime",
+            "expiredAt": "datetime",
+            "createdAt": "datetime",
+            "updatedAt": "datetime",
+            "status": "checked-in"
+        }
+    ],
+    "review": [
+        {
+            "reviewId": "pk_XXXXXXXXX ",
+            "rating": 4,
+            "category": "With no wait", /* "category": {
+                "With No Wait"
+                "With 10 min Wait"
+                "With 30 min Wait"
+                "More than 1 hour Wait"
+                "Was Not Able to Get In"
+            }*/
+            "storeInfo": {
+                "id": "pk_XXXXXXXXX ",
+                "name": "CCbucks",
+                "address": "六本木３－１－１",
+                "category": "Cafe",
+                "rating": 3.8
+            },
+            "customerInfo": {
+                "customerId": "pk_XXXXXXXXX",
+                "username": "yoshinao"
+            },
+            "title": "２万引き",
+            "description": "メロスは激怒した。必ず、かの邪智暴虐じゃちぼうぎゃくの王を除かなければならぬと決意した。メロスには政治がわからぬ。メロスは、村の牧人である。笛を吹き、羊と遊んで暮して来た。けれども邪悪に対しては、人一倍に敏感であった。きょう未明メロスは村を出発し、野を越え山越え、十里はなれた此このシラクスの市にやって来た。メロスには父も、母も無い。女房も無い。十六の、内気な妹と二人暮しだ。この妹は、村の或る律気な一牧人を、近々、花婿はなむことして迎える事になっていた。結婚式も間近かなのである。メロスは、それゆえ、花嫁の衣裳やら祝宴の御馳走やらを買いに、はるばる市にやって来たのだ。先ず、その品々を買い集め、それから都の大路をぶらぶら歩いた。メロスには竹馬の友があった。セリヌンティウスである。今は此のシラクスの市で、石工をしている。その友を、これから訪ねてみるつもりなのだ。久しく逢わなかったのだから、訪ねて行くのが楽しみである。歩いているうちにメロスは、まちの様子を怪しく思った。",
+            "createdAt": "datetime",
+            "updatedAt": "datetime"
+        },
+        {
+            "reviewId": "pk_XXXXXXXXX ",
+            "rating": 4,
+            "category": "With no wait", /* "category": {
+                "With No Wait"
+                "With 10 min Wait"
+                "With 30 min Wait"
+                "More than 1 hour Wait"
+                "Was Not Able to Get In"
+            }*/
+            "storeInfo": {
+                "id": "pk_XXXXXXXXX ",
+                "name": "CCbucks",
+                "address": "六本木３－１－１",
+                "category": "Cafe",
+                "rating": 3.8
+            },
+            "customerInfo": {
+                "customerId": "pk_XXXXXXXXX",
+                "username": "yoshinao"
+            },
+            "title": "２万引き",
+            "description": "メロスは激怒した。必ず、かの邪智暴虐じゃちぼうぎゃくの王を除かなければならぬと決意した。メロスには政治がわからぬ。メロスは、村の牧人である。笛を吹き、羊と遊んで暮して来た。けれども邪悪に対しては、人一倍に敏感であった。きょう未明メロスは村を出発し、野を越え山越え、十里はなれた此このシラクスの市にやって来た。メロスには父も、母も無い。女房も無い。十六の、内気な妹と二人暮しだ。この妹は、村の或る律気な一牧人を、近々、花婿はなむことして迎える事になっていた。結婚式も間近かなのである。メロスは、それゆえ、花嫁の衣裳やら祝宴の御馳走やらを買いに、はるばる市にやって来たのだ。先ず、その品々を買い集め、それから都の大路をぶらぶら歩いた。メロスには竹馬の友があった。セリヌンティウスである。今は此のシラクスの市で、石工をしている。その友を、これから訪ねてみるつもりなのだ。久しく逢わなかったのだから、訪ねて行くのが楽しみである。歩いているうちにメロスは、まちの様子を怪しく思った。",
+            "createdAt": "datetime",
+            "updatedAt": "datetime"
+        },
+    ],
+    "coupon": {
+        "id": "pk_XXXXXXXXX ",
+        "storeInfo": {
+            "id": "pk_XXXXXXXXX ",
+            "name": "CCbucks",
+            "address": "六本木３－１－１",
+            "category": "Cafe",
+            "rating": 3.8
+        },
+        "title": "２万引き",
+        "description": "メロスは激怒した。必ず、かの邪智暴虐じゃちぼうぎゃくの王を除かなければならぬと決意した。メロスには政治がわからぬ。メロスは、村の牧人である。笛を吹き、羊と遊んで暮して来た。けれども邪悪に対しては、人一倍に敏感であった。きょう未明メロスは村を出発し、野を越え山越え、十里はなれた此このシラクスの市にやって来た。メロスには父も、母も無い。女房も無い。十六の、内気な妹と二人暮しだ。この妹は、村の或る律気な一牧人を、近々、花婿はなむことして迎える事になっていた。結婚式も間近かなのである。メロスは、それゆえ、花嫁の衣裳やら祝宴の御馳走やらを買いに、はるばる市にやって来たのだ。先ず、その品々を買い集め、それから都の大路をぶらぶら歩いた。メロスには竹馬の友があった。セリヌンティウスである。今は此のシラクスの市で、石工をしている。その友を、これから訪ねてみるつもりなのだ。久しく逢わなかったのだから、訪ねて行くのが楽しみである。歩いているうちにメロスは、まちの様子を怪しく思った。",
+        "imagePath": "http://....",
+        "couponCode": "123jfaie123",
+        "codeForQR": "XXXXXXXX",
+        "createdAt": "datetime",
+        "updatedAt": "datetime"
+    }
+}
+
+
+
+
+
+Send a message to Alexander Stevenson, Ryusei Takezono, Yoshinori Wakabayashi
+
+
+
+
+
+
