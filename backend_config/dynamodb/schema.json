@@ -1,6 +1,6 @@
 {
     "customer": {
-        "id": "pk_XXXXXXXXX ", //use uuid generated from the cognito >> this is good practice to check if the users authenticated, also should be accessible from any screen once the user is logged in or signed up
+        "id": "pk_XXXXXXXXX ",
         "email": "xxxx@gmail.com",
         "username": "yoshinao",
         "point": 350,
@@ -18,6 +18,7 @@
         "email": "xxxx@gmail.com",
         "storeURL": "http://....",
         "category": "Cafe",
+        "depositAmountPerPerson": 500,
         "statistics": {
             "rating": 3.8,
             "category": {
@@ -27,7 +28,7 @@
                 "More than 1 hour Wait": 1,
                 "Was Not Able to Get In": 0
             },
-            "bookingCount": 122,
+            "bookingCount": 122
         },
         "imagePaths": [
             "http://....",
@@ -38,8 +39,8 @@
                 "open": "0900",
                 "close": "2000",
                 "day-off": false,
-                "bookingStart": "0900", //mapping booking start to open
-                "bookingEnd": "1830" // mapping booking end to end hours subtracting 1hours and 30 minutes.
+                "bookingStart": "0900",
+                "bookingEnd": "1830"
             },
             "Mon": {
                 "open": "0900",
@@ -227,6 +228,7 @@
     "booking": [
         {
             "bookingId": "12312312312312",
+            "bookName": "Naoto",
             "storeInfo": {
                 "id": "pk_XXXXXXXXX ",
                 "name": "CCbucks",
@@ -236,8 +238,7 @@
                 "rating": 3.8
             },
             "customerInfo": {
-                "customerId": "pk_XXXXXXXXX",
-                "username": "yoshinao"
+                "customerId": "pk_XXXXXXXXX"
             },
             "tableType": {
                 "label": "pk_XXXXXXXXX",
@@ -251,7 +252,7 @@
                 "title": "２万引き",
                 "imagePath": "http://....",
                 "codeForQR": "XXXXXXXX",
-                "description": "メロスは激怒した。必ず、かの邪智暴虐じゃちぼうぎゃくの王を除かなければならぬと決意した。メロスには政治がわからぬ。メロスは、村の牧人である。笛を吹き、羊と遊んで暮して来た。けれども邪悪に対しては、人一倍に敏感であった。きょう未明メロスは村を出発し、野を越え山越え、十里はなれた此このシラクスの市にやって来た。メロスには父も、母も無い。女房も無い。十六の、内気な妹と二人暮しだ。この妹は、村の或る律気な一牧人を、近々、花婿はなむことして迎える事になっていた。結婚式も間近かなのである。メロスは、それゆえ、花嫁の衣裳やら祝宴の御馳走やらを買いに、はるばる市にやって来たのだ。先ず、その品々を買い集め、それから都の大路をぶらぶら歩いた。メロスには竹馬の友があった。セリヌンティウスである。今は此のシラクスの市で、石工をしている。その友を、これから訪ねてみるつもりなのだ。久しく逢わなかったのだから、訪ねて行くのが楽しみである。歩いているうちにメロスは、まちの様子を怪しく思った。",
+                "description": "メロスは激怒した。必ず、かの邪智暴虐じゃちぼうぎゃくの王を除かなければならぬと決意した。メロスには政治がわからぬ。メロスは、村の牧人である。笛を吹き、羊と遊んで暮して来た。けれども邪悪に対しては、人一倍に敏感であった。きょう未明メロスは村を出発し、野を越え山越え、十里はなれた此このシラクスの市にやって来た。メロスには父も、母も無い。女房も無い。十六の、内気な妹と二人暮しだ。この妹は、村の或る律気な一牧人を、近々、花婿はなむことして迎える事になっていた。結婚式も間近かなのである。メロスは、それゆえ、花嫁の衣裳やら祝宴の御馳走やらを買いに、はるばる市にやって来たのだ。先ず、その品々を買い集め、それから都の大路をぶらぶら歩いた。メロスには竹馬の友があった。セリヌンティウスである。今は此のシラクスの市で、石工をしている。その友を、これから訪ねてみるつもりなのだ。久しく逢わなかったのだから、訪ねて行くのが楽しみである。歩いているうちにメロスは、まちの様子を怪しく思った。"
             },
             "depositAmount": 2000,
             "bookedAt": "datetime",
@@ -287,7 +288,7 @@
                 "title": "２万引き",
                 "imagePath": "http://....",
                 "codeForQR": "XXXXXXXX",
-                "description": "メロスは激怒した。必ず、かの邪智暴虐じゃちぼうぎゃくの王を除かなければならぬと決意した。メロスには政治がわからぬ。メロスは、村の牧人である。笛を吹き、羊と遊んで暮して来た。けれども邪悪に対しては、人一倍に敏感であった。きょう未明メロスは村を出発し、野を越え山越え、十里はなれた此このシラクスの市にやって来た。メロスには父も、母も無い。女房も無い。十六の、内気な妹と二人暮しだ。この妹は、村の或る律気な一牧人を、近々、花婿はなむことして迎える事になっていた。結婚式も間近かなのである。メロスは、それゆえ、花嫁の衣裳やら祝宴の御馳走やらを買いに、はるばる市にやって来たのだ。先ず、その品々を買い集め、それから都の大路をぶらぶら歩いた。メロスには竹馬の友があった。セリヌンティウスである。今は此のシラクスの市で、石工をしている。その友を、これから訪ねてみるつもりなのだ。久しく逢わなかったのだから、訪ねて行くのが楽しみである。歩いているうちにメロスは、まちの様子を怪しく思った。",
+                "description": "メロスは激怒した。必ず、かの邪智暴虐じゃちぼうぎゃくの王を除かなければならぬと決意した。メロスには政治がわからぬ。メロスは、村の牧人である。笛を吹き、羊と遊んで暮して来た。けれども邪悪に対しては、人一倍に敏感であった。きょう未明メロスは村を出発し、野を越え山越え、十里はなれた此このシラクスの市にやって来た。メロスには父も、母も無い。女房も無い。十六の、内気な妹と二人暮しだ。この妹は、村の或る律気な一牧人を、近々、花婿はなむことして迎える事になっていた。結婚式も間近かなのである。メロスは、それゆえ、花嫁の衣裳やら祝宴の御馳走やらを買いに、はるばる市にやって来たのだ。先ず、その品々を買い集め、それから都の大路をぶらぶら歩いた。メロスには竹馬の友があった。セリヌンティウスである。今は此のシラクスの市で、石工をしている。その友を、これから訪ねてみるつもりなのだ。久しく逢わなかったのだから、訪ねて行くのが楽しみである。歩いているうちにメロスは、まちの様子を怪しく思った。"
             },
             "depositAmount": 2000,
             "bookedAt": "datetime",
@@ -301,13 +302,7 @@
         {
             "reviewId": "pk_XXXXXXXXX ",
             "rating": 4,
-            "category": "With no wait", /* "category": {
-                "With No Wait"
-                "With 10 min Wait"
-                "With 30 min Wait"
-                "More than 1 hour Wait"
-                "Was Not Able to Get In"
-            }*/
+            "category": "With no wait",
             "storeInfo": {
                 "id": "pk_XXXXXXXXX ",
                 "name": "CCbucks",
@@ -327,13 +322,7 @@
         {
             "reviewId": "pk_XXXXXXXXX ",
             "rating": 4,
-            "category": "With no wait", /* "category": {
-                "With No Wait"
-                "With 10 min Wait"
-                "With 30 min Wait"
-                "More than 1 hour Wait"
-                "Was Not Able to Get In"
-            }*/
+            "category": "With no wait",
             "storeInfo": {
                 "id": "pk_XXXXXXXXX ",
                 "name": "CCbucks",
@@ -349,7 +338,7 @@
             "description": "メロスは激怒した。必ず、かの邪智暴虐じゃちぼうぎゃくの王を除かなければならぬと決意した。メロスには政治がわからぬ。メロスは、村の牧人である。笛を吹き、羊と遊んで暮して来た。けれども邪悪に対しては、人一倍に敏感であった。きょう未明メロスは村を出発し、野を越え山越え、十里はなれた此このシラクスの市にやって来た。メロスには父も、母も無い。女房も無い。十六の、内気な妹と二人暮しだ。この妹は、村の或る律気な一牧人を、近々、花婿はなむことして迎える事になっていた。結婚式も間近かなのである。メロスは、それゆえ、花嫁の衣裳やら祝宴の御馳走やらを買いに、はるばる市にやって来たのだ。先ず、その品々を買い集め、それから都の大路をぶらぶら歩いた。メロスには竹馬の友があった。セリヌンティウスである。今は此のシラクスの市で、石工をしている。その友を、これから訪ねてみるつもりなのだ。久しく逢わなかったのだから、訪ねて行くのが楽しみである。歩いているうちにメロスは、まちの様子を怪しく思った。",
             "createdAt": "datetime",
             "updatedAt": "datetime"
-        },
+        }
     ],
     "coupon": {
         "id": "pk_XXXXXXXXX ",
@@ -369,15 +358,3 @@
         "updatedAt": "datetime"
     }
 }
-
-
-
-
-
-Send a message to Alexander Stevenson, Ryusei Takezono, Yoshinori Wakabayashi
-
-
-
-
-
-
