@@ -27,12 +27,10 @@ class _MapPageState extends State<MapPage> {
   void initState() {
     super.initState();
 
-    // _getShopList();
+    _getAllShopData();
 
     // 現在位置の取得
     _getLocation();
-
-    _getAllShopData();
 
     // 現在位置の変化を監視
     _locationChangedListen =
@@ -60,38 +58,65 @@ class _MapPageState extends State<MapPage> {
         backgroundColor: Colors.blue,
         elevation: 0.0,
       ),
-      body: _makeGoogleMap()//Column(children: [
-      //   Expanded(child: _makeGoogleMap()),
-      //   Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
-      //     Column(children: [
-      //       DropdownButton<String>(
-      //         hint: Text("Select Distance!"),
-      //         value: dropdownValue,
-      //         icon: Icon(Icons.arrow_downward),
-      //         iconSize: 24,
-      //         elevation: 16,
-      //         style: TextStyle(color: Colors.deepPurple),
-      //         underline: Container(
-      //           height: 2,
-      //           color: Colors.deepPurpleAccent,
-      //         ),
-      //         onChanged: (String newValue) {
-      //           setState(() {
-      //             dropdownValue = newValue;
-      //             //filterbynagasa
-      //           });
-      //         },
-      //         items: <String>['One', 'Two', 'Free', 'Four']
-      //             .map<DropdownMenuItem<String>>((String value) {
-      //           return DropdownMenuItem<String>(
-      //             value: value,
-      //             child: Text(value),
-      //           );
-      //         }).toList(),
-      //       ),
-      //     ]),
-      //   ]),
-      // ]),
+      body: Column(children: [
+        Expanded(child: _makeGoogleMap()),
+        Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+          Column(children: [
+            Text("Filter by Distance!"),
+            DropdownButton<String>(
+              value: dropdownValue,
+              icon: Icon(Icons.arrow_drop_down),
+              iconSize: 24,
+              elevation: 16,
+              style: TextStyle(color: Colors.deepPurple),
+              underline: Container(
+                height: 2,
+                color: Colors.deepPurpleAccent,
+              ),
+              onChanged: (String newValue) {
+                setState(() {
+                  dropdownValue = newValue;
+                  //filterbynagasa
+                });
+              },
+              items: <String>['One', 'Two', 'Free', 'Four']
+                  .map<DropdownMenuItem<String>>((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                );
+              }).toList(),
+            ),
+          ]),
+          Column(children: [
+            Text("Filter by Distance!"),
+            DropdownButton<String>(
+              value: dropdownValue,
+              icon: Icon(Icons.arrow_drop_down),
+              iconSize: 24,
+              elevation: 16,
+              style: TextStyle(color: Colors.deepPurple),
+              underline: Container(
+                height: 2,
+                color: Colors.deepPurpleAccent,
+              ),
+              onChanged: (String newValue) {
+                setState(() {
+                  dropdownValue = newValue;
+                  //filterbynagasa
+                });
+              },
+              items: <String>['One', 'Two', 'Free', 'Four']
+                  .map<DropdownMenuItem<String>>((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                );
+              }).toList(),
+            ),
+          ]),
+        ]),
+      ]),
     );
   }
 
@@ -121,6 +146,7 @@ class _MapPageState extends State<MapPage> {
           );
         }).toSet(),
         onMapCreated: (GoogleMapController controller) {
+          // _getAllShopData();
           _controller.complete(controller);
         },
         // 現在位置にアイコン（青い円形のやつ）を置く
@@ -136,11 +162,12 @@ class _MapPageState extends State<MapPage> {
   }
 
   Future<void> _getAllShopData() async {
+    print("----------------");
     var response = await http.get(
         'https://pq3mbzzsbg.execute-api.ap-northeast-1.amazonaws.com/CaffeExpressRESTAPI/store');
     if (response.statusCode == 200) {
-      var jsonResponse = json.decode(response.body);
-      var shopData = jsonResponse['body'];
+      final jsonResponse = json.decode(response.body);
+      final shopData = jsonResponse['body'];
       listShops = shopData;
       return listShops;
     } else {
@@ -149,4 +176,10 @@ class _MapPageState extends State<MapPage> {
   }
 
   Future<void> _filterShopData(List shops) async {}
+
+  Future<void> _filterAvailable(List shops) async {}
+
+  Future<void> _filterMember(List shops) async {}
+
+  Future<void> _filterDistance(List shops) async {}
 }
