@@ -28,40 +28,31 @@ exports.handler = async (event, context) => {
 
   let responseBody = "";
   let statusCode = 0;
+  let message = "";
 
   const { id } = event.params;
 
-  if (id) {
     try {
+      if (id) {
       const data = await getStore(tableName, id);
       responseBody = data.Item;
-      statusCode = 200;
-    } catch (err) {
-      responseBody = "Unable to get store data";
-      statusCode = 403;
-    }
-
-    const response = {
-      statusCode: statusCode,
-      body: responseBody,
-    };
-
-    return response;
-  } else {
-    try {
-      const data = await getStoreAll(tableName);
+      } else {
+        const data = await getStoreAll(tableName);
       responseBody = data.Items;
+      }
       statusCode = 200;
+      message = `Successfully got ${id ? "data" : "all data" }.`
     } catch (err) {
-      responseBody = "Unable to get all store data";
+      message = `Failed to get store data. ERROR=${err}`;
       statusCode = 403;
     }
 
     const response = {
       statusCode: statusCode,
       body: responseBody,
+      message: message
     };
 
     return response;
-  }
+  
 };
