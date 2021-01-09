@@ -78,7 +78,7 @@ const updateStore = (event, id) => {
         Key: {
           id: id,
         },
-        UpdateExpression: "set stripeId = :a, #str = :b, address = :c, description = :d, lat = :e, lng = :f, tel = :g, email = :h, storeURL = :i, category = :j, depositAmountPerPerson = k, vacancyType = :l, createdAt = :m, updatedAt = :n, imagePaths = :o, hours = :p, vacancy = :q, statistics = :r",
+        UpdateExpression: "set stripeId = :a, #str = :b, address = :c, description = :d, lat = :e, lng = :f, tel = :g, email = :h, storeURL = :i, category = :j, depositAmountPerPerson = :k, vacancyType = :l, createdAt = :m, updatedAt = :n, imagePaths = :o, hours = :p, vacancy = :q, statistics = :r",
         ExpressionAttributeNames : {
           '#str' : 'name'
         },
@@ -105,37 +105,6 @@ const updateStore = (event, id) => {
         ReturnValues: "UPDATED_NEW",
       };
 
-          ":p": hours,
-          ":q": vacancy
-        },
-        ReturnValues: "UPDATED_NEW",
-      };
-
-    const params = {
-        TableName: "store",
-        Key: {
-          id: id,
-        },
-        Item: {
-            stripeId: stripeId,
-            name: name,
-            address: address,
-            description: description,
-            lat: lat,
-            lng: lng,
-            tel: tel,
-            email: email,
-            storeURL: storeURL,
-            category: category,
-            depositAmountPerPerson: depositAmountPerPerson,
-            vacancyType: vacancyType,
-            createdAt: createdAt,
-            updatedAt: updatedAt,
-            imagePaths: imagePaths,
-            hours: hours,
-            vacancy: vacancy
-        },
-    };
     return ddb.update(params).promise();
 }
 
