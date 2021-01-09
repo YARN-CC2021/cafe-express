@@ -1,4 +1,5 @@
 const template = {
+  action: "onBook",
   bookingId: "12312312312312",
   bookName: "Naoto",
   storeInfo: {
