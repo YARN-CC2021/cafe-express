@@ -25,7 +25,9 @@
 **/ios/Flutter/.last_build_id
 .dart_tool/
 .flutter-plugins
+.flutter-plugins *
 .flutter-plugins-dependencies
+.flutter-plugins-dependencies *
 .packages
 .pub-cache/
 .pub/
@@ -39,5 +41,8 @@ app.*.symbols
 
 # Obfuscation related
 app.*.map.json
+
+# dynamodb config template
+# /dynamodb_config
 
 .env*

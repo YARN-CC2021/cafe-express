@@ -1,0 +1,281 @@
+{
+  "customer": {
+    "id": "pk_XXXXXXXXX ",
+    "firstName": "太郎",
+    "lastName": "山田",
+    "stripeId": "XXXXXXX",
+    "bookingIds": ["abc1234", "cde5678"],
+    "point": 350,
+    "reviewIds": ["123", "456"],
+    "createdAt": "datetime",
+    "updatedAt": "datetime"
+  },
+  "store": [
+    {
+      "id": "pk_XXXXXXXXX ",
+      "name": "CCbucks",
+      "address": "六本木1-6-5",
+      "lat": 35.6578641,
+      "lng": 139.7269745,
+      "tel": "090-0000-0194",
+      "email": "xxxx@gmail.com",
+      "storeURL": "http://....",
+      "category": "Cafe",
+      "rate": 3.8,
+      "imagePaths": ["http://....", "http://..."],
+      "hours": {
+        "Sun": {
+          "open": "0900",
+          "close": "2000"
+        },
+        "Mon": {
+          "open": "0900",
+          "close": "2000"
+        },
+        "Tue": {
+          "open": "0900",
+          "close": "2000"
+        },
+        "Wed": {
+          "open": "0900",
+          "close": "2000"
+        },
+        "Thu": {
+          "open": "0900",
+          "close": "2000"
+        },
+        "Fri": {
+          "open": "0900",
+          "close": "2000"
+        },
+        "Sat": {
+          "open": "0900",
+          "close": "2000"
+        }
+      },
+      "description": "メロスは激怒した。必ず、かの邪智暴虐じゃちぼうぎゃくの王を除かなければならぬと決意した。メロスには",
+      "reviewIds": ["123", "456"],
+      "couponIds": ["234", "567"],
+      "stripeId": "XXXXXXX",
+      "vacancyType": 1,
+      "vacancyId": 23,
+      "bookingIds": ["234", "567"],
+      "createdAt": "datetime",
+      "updatedAt": "datetime",
+      "vacancy": {
+        "id": "pk_XXXXXXXXX ",
+        "1": {
+          "1": true,
+          "2": true,
+          "3": true,
+          "4": true,
+          "5": true,
+          "6": true,
+          "7": true,
+          "8": true,
+          "9": true,
+          "10": true,
+          "11": true,
+          "12": true
+        },
+        "2": {
+          "1-2": true,
+          "3-4": true,
+          "4-5": true,
+          "6-7": true,
+          "8-9": true,
+          "10-12": true
+        },
+        "3": {
+          "1": {
+            "label": "",
+            "isVacant": true
+          },
+          "2": {
+            "label": "",
+            "isVacant": true
+          },
+          "3": {
+            "label": "",
+            "isVacant": true
+          },
+          "4": {
+            "label": "",
+            "isVacant": true
+          },
+          "5": {
+            "label": "",
+            "isVacant": true
+          },
+          "6": {
+            "label": "",
+            "isVacant": true
+          },
+          "7": {
+            "label": "",
+            "isVacant": true
+          },
+          "8": {
+            "label": "",
+            "isVacant": true
+          },
+          "9": {
+            "label": "",
+            "isVacant": true
+          },
+          "10": {
+            "label": "",
+            "isVacant": true
+          }
+        }
+      }
+    },
+    {
+      "id": "pk_XXXXXXXXXYY ",
+      "name": "STAR",
+      "address": "六本木2-1-3",
+      "lat": 35.65849,
+      "lng": 139.727464,
+      "tel": "090-0000-8282",
+      "email": "xxxx@gmail.com",
+      "storeURL": "http://....",
+      "category": "Cafe",
+      "rate": 3.8,
+      "imagePaths": ["http://....", "http://..."],
+      "hours": {
+        "Sun": {
+          "open": "0900",
+          "close": "2000"
+        },
+        "Mon": {
+          "open": "0900",
+          "close": "2000"
+        },
+        "Tue": {
+          "open": "0900",
+          "close": "2000"
+        },
+        "Wed": {
+          "open": "0900",
+          "close": "2000"
+        },
+        "Thu": {
+          "open": "0900",
+          "close": "2000"
+        },
+        "Fri": {
+          "open": "0900",
+          "close": "2000"
+        },
+        "Sat": {
+          "open": "0900",
+          "close": "2000"
+        }
+      },
+      "description": "アイウエオかきくけこ",
+      "reviewIds": ["123", "456"],
+      "couponIds": ["234", "567"],
+      "stripeId": "XXXXXXX",
+      "vacancyType": 1,
+      "vacancyId": 23,
+      "bookingIds": ["234", "567"],
+      "createdAt": "datetime",
+      "updatedAt": "datetime",
+      "vacancy": {
+        "id": "pk_XXXXXXXXX ",
+        "1": {
+          "1": true,
+          "2": true,
+          "3": true,
+          "4": true,
+          "5": true,
+          "6": true,
+          "7": true,
+          "8": true,
+          "9": true,
+          "10": true,
+          "11": true,
+          "12": true
+        },
+        "2": {
+          "1-2": true,
+          "3-4": true,
+          "4-5": true,
+          "6-7": true,
+          "8-9": true,
+          "10-12": true
+        },
+        "3": {
+          "1": {
+            "label": "",
+            "isVacant": true
+          },
+          "2": {
+            "label": "",
+            "isVacant": true
+          },
+          "3": {
+            "label": "",
+            "isVacant": true
+          },
+          "4": {
+            "label": "",
+            "isVacant": true
+          },
+          "5": {
+            "label": "",
+            "isVacant": true
+          },
+          "6": {
+            "label": "",
+            "isVacant": true
+          },
+          "7": {
+            "label": "",
+            "isVacant": true
+          },
+          "8": {
+            "label": "",
+            "isVacant": true
+          },
+          "9": {
+            "label": "",
+            "isVacant": true
+          },
+          "10": {
+            "label": "",
+            "isVacant": true
+          }
+        }
+      }
+    }
+  ],
+  "booking": {
+    "id": "pk_XXXXXXXXX ",
+    "paidPrice": 2000.0,
+    "cafeId": "pk_XXXXXXXXX ",
+    "bookedAt": "datetime",
+    "expiredAt": "datetime",
+    "createdAt": "datetime",
+    "updatedAt": "datetime"
+  },
+  "review": {
+    "id": "pk_XXXXXXXXX ",
+    "rateOverall": 4,
+    "customerId": "pk_XXXXXXXXX",
+    "title": "２万引き",
+    "description": "メロスは激怒した。必ず、かの邪智暴虐じゃちぼうぎゃくの王を除かなければならぬと決意した。メロスには政治がわからぬ。メロスは、村の牧人である。笛を吹き、羊と遊んで暮して来た。けれども邪悪に対しては、人一倍に敏感であった。きょう未明メロスは村を出発し、野を越え山越え、十里はなれた此このシラクスの市にやって来た。メロスには父も、母も無い。女房も無い。十六の、内気な妹と二人暮しだ。この妹は、村の或る律気な一牧人を、近々、花婿はなむことして迎える事になっていた。結婚式も間近かなのである。メロスは、それゆえ、花嫁の衣裳やら祝宴の御馳走やらを買いに、はるばる市にやって来たのだ。先ず、その品々を買い集め、それから都の大路をぶらぶら歩いた。メロスには竹馬の友があった。セリヌンティウスである。今は此のシラクスの市で、石工をしている。その友を、これから訪ねてみるつもりなのだ。久しく逢わなかったのだから、訪ねて行くのが楽しみである。歩いているうちにメロスは、まちの様子を怪しく思った。",
+    "createdAt": "datetime",
+    "updatedAt": "datetime"
+  },
+  "coupon": {
+    "id": "pk_XXXXXXXXX ",
+    "cafeId": "pk_XXXXXXXXX",
+    "title": "２万引き",
+    "description": "メロスは激怒した。必ず、かの邪智暴虐じゃちぼうぎゃくの王を除かなければならぬと決意した。メロスには政治がわからぬ。メロスは、村の牧人である。笛を吹き、羊と遊んで暮して来た。けれども邪悪に対しては、人一倍に敏感であった。きょう未明メロスは村を出発し、野を越え山越え、十里はなれた此このシラクスの市にやって来た。メロスには父も、母も無い。女房も無い。十六の、内気な妹と二人暮しだ。この妹は、村の或る律気な一牧人を、近々、花婿はなむことして迎える事になっていた。結婚式も間近かなのである。メロスは、それゆえ、花嫁の衣裳やら祝宴の御馳走やらを買いに、はるばる市にやって来たのだ。先ず、その品々を買い集め、それから都の大路をぶらぶら歩いた。メロスには竹馬の友があった。セリヌンティウスである。今は此のシラクスの市で、石工をしている。その友を、これから訪ねてみるつもりなのだ。久しく逢わなかったのだから、訪ねて行くのが楽しみである。歩いているうちにメロスは、まちの様子を怪しく思った。",
+    "imagePath": "http://....",
+    "codeForQR": "XXXXXXXX",
+    "createdAt": "datetime",
+    "updatedAt": "datetime"
+  }
+}
