@@ -19,18 +19,10 @@ exports.handler = async (event, context) => {
 
   const params = {
     TableName: "booking",
-    FilterExpression: "#keyone.#keytwo = :keyone",
-    ExpressionAttributeNames: {
-      "#keyone": "storeInfo",
-      "#keytwo": "category",
-    },
     UpdateExpression: "set depositAmount = :n, bookedAt = :b",
     ExpressionAttributeValues: {
       ":n": depositAmount,
       ":b": bookedAt,
-      ":keyone": {
-        S: id,
-      },
     },
     ReturnValues: "UPDATED_NEW",
   };
