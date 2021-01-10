@@ -71,11 +71,12 @@ exports.handler = async (event, context, sendResponse) => {
 
   await updateVacancy(bodyParsed);
 
-  const { index, storeId, isVacant } = bodyParsed;
+  const { index, storeId, vacancyType, isVacant } = bodyParsed;
 
   const customerResponseBody = JSON.stringify({
     storeId,
     index,
+    vacancyType,
     isVacant,
   });
 
