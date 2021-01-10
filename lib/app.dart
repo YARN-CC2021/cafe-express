@@ -4,7 +4,7 @@ import 'screens/merchant_page.dart';
 import 'wrapper.dart';
 
 const MapSearchRoute = "/map_search";
-const VenueRoute = "/venue";
+const DetailRoute = "/detail";
 const MerchantRoute = "/merchant_settings";
 
 class MyApp extends StatelessWidget {
@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
         case MapSearchRoute:
           screen = MapPage();
           break;
-        case VenueRoute:
+        case DetailRoute:
           screen = MapPage();
           break;
         case MerchantRoute:
