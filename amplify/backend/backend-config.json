@@ -1,0 +1,9 @@
+{
+	"auth": {
+		"cafeexpressd296e42a": {
+			"service": "Cognito",
+			"providerPlugin": "awscloudformation",
+			"dependsOn": []
+		}
+	}
+}
