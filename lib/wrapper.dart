@@ -3,7 +3,6 @@ import 'screens/authenticate.dart';
 import 'screens/map_page.dart';
 import 'screens/merchant_page.dart';
 
-
 class Wrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {

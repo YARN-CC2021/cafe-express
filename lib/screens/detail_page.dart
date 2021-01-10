@@ -11,7 +11,7 @@ class DetailPage extends StatefulWidget {
 }
 
 class _DetailPageState extends State<DetailPage> {
-  var shopData;
+  Map shopData;
   @override
   void initState() {
     super.initState();
