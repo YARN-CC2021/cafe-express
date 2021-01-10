@@ -20,7 +20,8 @@ const createStore = (event) => {
       // updatedAt,
       // imagePaths,
       // hours,
-      // vacancy
+      // vacancy,
+      // statistics
     } = event.body;
   
   const params = {
@@ -43,7 +44,8 @@ const createStore = (event) => {
           // updatedAt: updatedAt,
           // imagePaths: imagePaths,
           // hours: hours,
-          // vacancy: vacancy
+          // vacancy: vacancy,
+          // statistics: statistics
       },
   };
   return ddb.put(params).promise();
@@ -67,34 +69,42 @@ const updateStore = (event, id) => {
         updatedAt,
         imagePaths,
         hours,
-        vacancy
+        vacancy,
+        statistics
       } = event.body;
     
-    const params = {
+      const params = {
         TableName: "store",
         Key: {
           id: id,
         },
-        Item: {
-            stripeId: stripeId,
-            name: name,
-            address: address,
-            description: description,
-            lat: lat,
-            lng: lng,
-            tel: tel,
-            email: email,
-            storeURL: storeURL,
-            category: category,
-            depositAmountPerPerson: depositAmountPerPerson,
-            vacancyType: vacancyType,
-            createdAt: createdAt,
-            updatedAt: updatedAt,
-            imagePaths: imagePaths,
-            hours: hours,
-            vacancy: vacancy
+        UpdateExpression: "set stripeId = :a, #str = :b, address = :c, description = :d, lat = :e, lng = :f, tel = :g, email = :h, storeURL = :i, category = :j, depositAmountPerPerson = :k, vacancyType = :l, createdAt = :m, updatedAt = :n, imagePaths = :o, hours = :p, vacancy = :q, statistics = :r",
+        ExpressionAttributeNames : {
+          '#str' : 'name'
         },
-    };
+        ExpressionAttributeValues: {
+          ":a": stripeId,
+          ":b": name,
+          ":c": address,
+          ":d": description,
+          ":e": lat,
+          ":f": lng,
+          ":g": tel,
+          ":h": email,
+          ":i": storeURL,
+          ":j": category,
+          ":k": depositAmountPerPerson,
+          ":l": vacancyType,
+          ":m": createdAt,
+          ":n": updatedAt,
+          ":o": imagePaths,
+          ":p": hours,
+          ":q": vacancy,
+          ":r": statistics
+        },
+        ReturnValues: "UPDATED_NEW",
+      };
+
     return ddb.update(params).promise();
 }
 
