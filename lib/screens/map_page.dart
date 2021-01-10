@@ -188,7 +188,6 @@ class _MapPageState extends State<MapPage> {
     if (category == 'All') {
       listShops = _filterShopByDistance(distance, shopData);
     } else {
-      //both shopData= ga mondai
       final tmp = _filterShopByDistance(distance, shopData);
       listShops = _filterShopByCategory(category, tmp);
     }
@@ -214,7 +213,7 @@ class _MapPageState extends State<MapPage> {
 
   Future<void> _filterGroupSize(List shops) async {}
 
-  int _getDistance(dynamic shop) {
+  int _getDistance(Map shop) {
     double distanceInMeters = Geolocator.distanceBetween(
       _yourLocation.latitude,
       _yourLocation.longitude,
