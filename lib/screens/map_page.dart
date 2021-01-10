@@ -43,8 +43,7 @@ class _MapPageState extends State<MapPage> {
         _yourLocation = result;
       });
     });
-    print('init Called');
-    // _getAllShopData();
+    _getAllShopData();
   }
 
   @override
@@ -81,7 +80,7 @@ class _MapPageState extends State<MapPage> {
               onChanged: (String newValue) {
                 setState(() {
                   distance = newValue;
-                  _filterShopByDistance(distance);
+                  _filterShop(distance, category);
                 });
               },
               items: <String>['500m', '1km', '2km']
@@ -108,7 +107,7 @@ class _MapPageState extends State<MapPage> {
               onChanged: (String newValue) {
                 setState(() {
                   category = newValue;
-                  _filterShopByCategory(category);
+                  _filterShop(distance, category);
                 });
               },
               items: <String>['All', 'Cafe', 'Restaurant', 'Bar']
@@ -170,31 +169,36 @@ class _MapPageState extends State<MapPage> {
   }
 
   Future<void> _getAllShopData() async {
+    print('allShopData called');
     var response = await http.get(
         'https://pq3mbzzsbg.execute-api.ap-northeast-1.amazonaws.com/CaffeExpressRESTAPI/store');
     if (response.statusCode == 200) {
       final jsonResponse = json.decode(response.body);
-      shopData = jsonResponse['body'];
+      shopData = jsonResponse['body']
+          .where((shop) => shop['lat'] != null && shop['lng'] != null)
+          .toList();
       listShops = shopData;
-      _filterShopByDistance(distance);
+      _filterShop(distance, category);
     } else {
       print('Request failed with status: ${response.statusCode}.');
     }
   }
 
-  void _filterShop(String category, String distance) {
+  void _filterShop(String distance, String category) {
     if (category == 'All') {
-      listShops = _filterShopByDistance(distance);
+      listShops = _filterShopByDistance(distance, shopData);
     } else {
       //both shopData= ga mondai
+      final tmp = _filterShopByDistance(distance, shopData);
+      listShops = _filterShopByCategory(category, tmp);
     }
   }
 
-  List _filterShopByCategory(String category) {
-    return shopData.where((data) => data['category'] == category).toList();
+  List _filterShopByCategory(String category, List shops) {
+    return shops.where((data) => data['category'] == category).toList();
   }
 
-  List _filterShopByDistance(String distance) {
+  List _filterShopByDistance(String distance, List shops) {
     int numDistance;
     if (distance.contains('km')) {
       numDistance = int.parse(distance.replaceAll('km', '000'));
@@ -203,7 +207,7 @@ class _MapPageState extends State<MapPage> {
     }
     print(numDistance);
 
-    return shopData.where((shop) => _getDistance(shop) <= numDistance).toList();
+    return shops.where((shop) => _getDistance(shop) <= numDistance).toList();
   }
 
   Future<void> _filterAvailable(List shops) async {}
