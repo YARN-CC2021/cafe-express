@@ -3,13 +3,13 @@ const ddb = new AWS.DynamoDB.DocumentClient();
 const tableName = "userCategory";
 
 function setUserCategory(tableName, body) {
-  const { id, isStore } = body;
+  const { id, isCustomer } = body;
 
   const params = {
     TableName: tableName,
     Item: {
       id: id,
-      isStore: isStore,
+      isCustomer: isCustomer,
     },
   };
 
