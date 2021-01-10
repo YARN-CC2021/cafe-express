@@ -1,11 +1,10 @@
 const AWS = require("aws-sdk");
 const ddb = new AWS.DynamoDB.DocumentClient();
-const tableName = "websocket";
 
 function addConnection(connectionId, id, isCustomer) {
   return ddb
     .put({
-      TableName: tableName,
+      TableName: "websocket",
       Item: {
         connectionId: connectionId,
         id: id,
@@ -15,9 +14,24 @@ function addConnection(connectionId, id, isCustomer) {
     .promise();
 }
 
+function getUserCategory(id) {
+  return ddb
+    .get({
+      TableName: "userCategory",
+      Key: {
+        id: id,
+      },
+    })
+    .promise();
+}
+
 exports.handler = async (event, context, sendResponse) => {
   const connectionId = event.requestContext.connectionId;
-  const { id, isCustomer } = event.queryStringParameters;
-  await addConnection(connectionId, id, isCustomer );
-  sendResponse(null, {statusCode: 200});
+  const { id } = event.queryStringParameters;
+
+  const userData = await getUserCategory(id);
+  const { isCustomer } = userData.Item;
+
+  await addConnection(connectionId, id, isCustomer);
+  sendResponse(null, { statusCode: 200 });
 };
