@@ -11,7 +11,7 @@ class DetailPage extends StatefulWidget {
 }
 
 class _DetailPageState extends State<DetailPage> {
-  var shopData;
+  Map shopData;
   @override
   void initState() {
     super.initState();
@@ -47,7 +47,6 @@ class _DetailPageState extends State<DetailPage> {
   }
 
   Future<void> _getShopData(String id) async {
-    /////////////////////////
     print("---------");
     var response = await http.get(
         'https://pq3mbzzsbg.execute-api.ap-northeast-1.amazonaws.com/CaffeExpressRESTAPI/store?id=$id');
