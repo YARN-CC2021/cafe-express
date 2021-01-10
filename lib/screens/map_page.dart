@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
+import 'package:geolocator/geolocator.dart';
 import 'dart:async';
+import 'dart:math' as math;
 import './detail_page.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -13,6 +15,9 @@ class MapPage extends StatefulWidget {
 
 class _MapPageState extends State<MapPage> {
   List<dynamic> listShops = [];
+  var shopData;
+  String category = "All";
+  String distance = '2km';
 
   Completer<GoogleMapController> _controller = Completer();
   Location _locationService = Location();
@@ -27,8 +32,6 @@ class _MapPageState extends State<MapPage> {
   void initState() {
     super.initState();
 
-    _getAllShopData();
-
     // 現在位置の取得
     _getLocation();
 
@@ -36,9 +39,11 @@ class _MapPageState extends State<MapPage> {
     _locationChangedListen =
         _locationService.onLocationChanged.listen((LocationData result) async {
       setState(() {
+        print("aaaaaa");
         _yourLocation = result;
       });
     });
+    _getAllShopData();
   }
 
   @override
@@ -49,7 +54,6 @@ class _MapPageState extends State<MapPage> {
     _locationChangedListen?.cancel();
   }
 
-  String dropdownValue = 'One';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,7 +68,7 @@ class _MapPageState extends State<MapPage> {
           Column(children: [
             Text("Filter by Distance!"),
             DropdownButton<String>(
-              value: dropdownValue,
+              value: distance,
               icon: Icon(Icons.arrow_drop_down),
               iconSize: 24,
               elevation: 16,
@@ -75,11 +79,11 @@ class _MapPageState extends State<MapPage> {
               ),
               onChanged: (String newValue) {
                 setState(() {
-                  dropdownValue = newValue;
-                  //filterbynagasa
+                  distance = newValue;
+                  _filterShop(distance, category);
                 });
               },
-              items: <String>['One', 'Two', 'Free', 'Four']
+              items: <String>['500m', '1km', '2km']
                   .map<DropdownMenuItem<String>>((String value) {
                 return DropdownMenuItem<String>(
                   value: value,
@@ -89,9 +93,9 @@ class _MapPageState extends State<MapPage> {
             ),
           ]),
           Column(children: [
-            Text("Filter by Distance!"),
+            Text("Filter by Category"),
             DropdownButton<String>(
-              value: dropdownValue,
+              value: category,
               icon: Icon(Icons.arrow_drop_down),
               iconSize: 24,
               elevation: 16,
@@ -102,11 +106,11 @@ class _MapPageState extends State<MapPage> {
               ),
               onChanged: (String newValue) {
                 setState(() {
-                  dropdownValue = newValue;
-                  //filterbynagasa
+                  category = newValue;
+                  _filterShop(distance, category);
                 });
               },
-              items: <String>['One', 'Two', 'Free', 'Four']
+              items: <String>['All', 'Cafe', 'Restaurant', 'Bar']
                   .map<DropdownMenuItem<String>>((String value) {
                 return DropdownMenuItem<String>(
                   value: value,
@@ -141,11 +145,14 @@ class _MapPageState extends State<MapPage> {
             infoWindow: InfoWindow(
               title: data['name'],
               snippet: data['category'],
-              onTap: () {},
+              onTap: () {
+                //move to detail page with its id
+              },
             ),
           );
         }).toSet(),
         onMapCreated: (GoogleMapController controller) {
+          print('Map Created');
           // _getAllShopData();
           _controller.complete(controller);
         },
@@ -162,24 +169,58 @@ class _MapPageState extends State<MapPage> {
   }
 
   Future<void> _getAllShopData() async {
-    print("----------------");
+    print('allShopData called');
     var response = await http.get(
         'https://pq3mbzzsbg.execute-api.ap-northeast-1.amazonaws.com/CaffeExpressRESTAPI/store');
     if (response.statusCode == 200) {
       final jsonResponse = json.decode(response.body);
-      final shopData = jsonResponse['body'];
+      shopData = jsonResponse['body']
+          .where((shop) => shop['lat'] != null && shop['lng'] != null)
+          .toList();
       listShops = shopData;
-      return listShops;
+      _filterShop(distance, category);
     } else {
       print('Request failed with status: ${response.statusCode}.');
     }
   }
 
-  Future<void> _filterShopData(List shops) async {}
+  void _filterShop(String distance, String category) {
+    if (category == 'All') {
+      listShops = _filterShopByDistance(distance, shopData);
+    } else {
+      final tmp = _filterShopByDistance(distance, shopData);
+      listShops = _filterShopByCategory(category, tmp);
+    }
+  }
+
+  List _filterShopByCategory(String category, List shops) {
+    return shops.where((data) => data['category'] == category).toList();
+  }
+
+  List _filterShopByDistance(String distance, List shops) {
+    int numDistance;
+    if (distance.contains('km')) {
+      numDistance = int.parse(distance.replaceAll('km', '000'));
+    } else {
+      numDistance = int.parse(distance.replaceAll('m', ''));
+    }
+    print(numDistance);
+
+    return shops.where((shop) => _getDistance(shop) <= numDistance).toList();
+  }
 
   Future<void> _filterAvailable(List shops) async {}
 
-  Future<void> _filterMember(List shops) async {}
+  Future<void> _filterGroupSize(List shops) async {}
 
-  Future<void> _filterDistance(List shops) async {}
+  int _getDistance(Map shop) {
+    double distanceInMeters = Geolocator.distanceBetween(
+      _yourLocation.latitude,
+      _yourLocation.longitude,
+      shop['lat'],
+      shop['lng'],
+    );
+    print(distanceInMeters.toInt());
+    return distanceInMeters.toInt();
+  }
 }
