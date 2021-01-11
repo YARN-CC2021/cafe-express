@@ -87,7 +87,7 @@ class _DetailPageState extends State<DetailPage> {
                   ],
                 ),
               ),
-              // imageCard(),
+              imageCard(),
               Card(
                 color: Colors.amber[100],
                 child: Text('${shopData['description']}'),
@@ -99,7 +99,6 @@ class _DetailPageState extends State<DetailPage> {
                       child: Column(
                         children: [
                           Text("Mon"),
-
                         ],
                       ),
                     ),
@@ -107,7 +106,6 @@ class _DetailPageState extends State<DetailPage> {
                       child: Column(
                         children: [
                           Text("Tue"),
-                          
                         ],
                       ),
                     ),
@@ -115,7 +113,6 @@ class _DetailPageState extends State<DetailPage> {
                       child: Column(
                         children: [
                           Text("Wed"),
-                          
                         ],
                       ),
                     ),
@@ -123,7 +120,6 @@ class _DetailPageState extends State<DetailPage> {
                       child: Column(
                         children: [
                           Text("Thu"),
-                          
                         ],
                       ),
                     ),
@@ -131,7 +127,6 @@ class _DetailPageState extends State<DetailPage> {
                       child: Column(
                         children: [
                           Text("Fri"),
-                          
                         ],
                       ),
                     ),
@@ -139,7 +134,6 @@ class _DetailPageState extends State<DetailPage> {
                       child: Column(
                         children: [
                           Text("Sat"),
-                          
                         ],
                       ),
                     ),
@@ -147,7 +141,6 @@ class _DetailPageState extends State<DetailPage> {
                       child: Column(
                         children: [
                           Text("Sun"),
-                          
                         ],
                       ),
                     ),
@@ -155,7 +148,6 @@ class _DetailPageState extends State<DetailPage> {
                       child: Column(
                         children: [
                           Text("Hol"),
-                          
                         ],
                       ),
                     ),
@@ -169,17 +161,17 @@ class _DetailPageState extends State<DetailPage> {
     }
   }
 
-  // Widget imageCard() {
-  //   if ('${shopData['imagePaths'][0]}' == null) {
-  //     return Card(
-  //       child: Text(''),
-  //     );
-  //   } else {
-  //     return Card(
-  //       child: Image.network('${shopData['imagePaths'][0]}'),
-  //     );
-  //   }
-  // }
+  Widget imageCard() {
+    if ('${shopData['imagePaths'][0]}' == null) {
+      return Card(
+        child: Text(''),
+      );
+    } else {
+      return Card(
+        child: Image.network('${shopData['imagePaths'][0]}'),
+      );
+    }
+  }
 
   Future<void> _getShopData(String id) async {
     var response = await http.get(
@@ -189,7 +181,7 @@ class _DetailPageState extends State<DetailPage> {
       print(jsonResponse);
       print(jsonResponse['imagePaths']);
       setState(() {
-        shopData = jsonResponse;
+        shopData = jsonResponse['body'];
       });
     } else {
       print('Request failed with status: ${response.statusCode}.');

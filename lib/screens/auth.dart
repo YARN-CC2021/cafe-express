@@ -81,7 +81,7 @@ class _AuthState extends State<Auth> {
 
   void _returnWrapper(BuildContext context) {
     // Navigator.pushNamed(context, MapSearchRoute);
-    Navigator.pushNamed(context, MerchantProfileRoute);
+    Navigator.pushNamed(context, MapSearchRoute);
     print("triggered");
   }
 
