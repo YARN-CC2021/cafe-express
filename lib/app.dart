@@ -52,7 +52,7 @@ class MyApp extends StatelessWidget {
           screen = UserCategoryPage();
           break;
         case ValidationRoute:
-          screen = Validation(arguments['email']);
+          screen = Validation(arguments['email'], arguments['passcode']);
           break;
         case MerchantProfileRoute:
           screen = MerchantProfilePage();
