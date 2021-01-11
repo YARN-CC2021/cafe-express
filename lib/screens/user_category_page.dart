@@ -75,7 +75,7 @@ class _UserCategoryPageState extends State<UserCategoryPage> {
     if (response.statusCode == 200) {
       final jsonResponse = json.decode(response.body);
       print("_insertUserCategory jsonResponse= $jsonResponse");
-      isCustomer ? _goMapSearch(context) : _goMerchant(context);
+      isCustomer ? _goMapSearch(context) : _goMerchantProfile(context);
       return jsonResponse;
     } else {
       print('Request failed with status: ${response.statusCode}.');
@@ -87,8 +87,8 @@ class _UserCategoryPageState extends State<UserCategoryPage> {
     print("goMapSearch was triggered");
   }
 
-  void _goMerchant(BuildContext context) {
-    Navigator.pushNamed(context, MerchantRoute);
+  void _goMerchantProfile(BuildContext context) {
+    Navigator.pushNamed(context, MerchantProfileRoute);
     print("goMerchant was triggered");
   }
 }
