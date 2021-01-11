@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../app.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -37,7 +38,8 @@ class _UserCategoryPageState extends State<UserCategoryPage> {
                   height: 100.0,
                   child: RaisedButton.icon(
                       onPressed: () {
-                        _insertUserCategory(true);
+                        // _goMerchant(context);
+                        _insertUserCategory(false);
                       },
                       icon: Icon(Icons.local_restaurant),
                       label: Text("Establishment")))), //or storefront
@@ -47,7 +49,8 @@ class _UserCategoryPageState extends State<UserCategoryPage> {
                   height: 100.0,
                   child: RaisedButton.icon(
                       onPressed: () {
-                        _insertUserCategory(false);
+                        // _goMapSearch(context);
+                        _insertUserCategory(true);
                       },
                       icon: Icon(Icons.switch_account),
                       label: Text("Customer")))),
@@ -78,8 +81,13 @@ class _UserCategoryPageState extends State<UserCategoryPage> {
     }
   }
 
-  // void _returnWrapper(BuildContext context) {
-  //   Navigator.pushNamed(context, MapSearchRoute);
-  //   print("triggered");
-  // }
+  void _goMapSearch(BuildContext context) {
+    Navigator.pushNamed(context, MapSearchRoute);
+    print("goMapSearch was triggered");
+  }
+
+  void _goMerchant(BuildContext context) {
+    Navigator.pushNamed(context, MerchantRoute);
+    print("goMerchant was triggered");
+  }
 }
