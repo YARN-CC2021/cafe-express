@@ -5,8 +5,9 @@ import '../app.dart';
 
 class Validation extends StatelessWidget {
   final String email;
+  final String passcode;
 
-  Validation(@required this.email);
+  Validation(this.email, this.passcode);
 
   // Validation({
   //   Key key,
@@ -56,7 +57,7 @@ class Validation extends StatelessWidget {
   }
 
   Future<void> _submitCode(BuildContext context) async {
-    //if (_formKey.currentState.validate()) {
+    //  if (_formKey.currentState.validate()) {
     final confirmationCode = _confirmationCodeController.text;
     try {
       final SignUpResult response = await Amplify.Auth.confirmSignUp(
@@ -64,7 +65,8 @@ class Validation extends StatelessWidget {
         confirmationCode: confirmationCode,
       );
       if (response.isSignUpComplete) {
-        _goToUserCategory(context);
+        //_goToUserCategory(context);
+        autoLogIn(context);
       }
     } on AuthError catch (e) {
       _scaffoldKey.currentState.showSnackBar(
@@ -79,5 +81,18 @@ class Validation extends StatelessWidget {
   void _goToUserCategory(BuildContext context) {
     Navigator.pushNamed(context, UserCategoryRoute);
     print("new login move to user type page");
+  }
+
+  Future<void> autoLogIn(aContext) async {
+    SignInResult result =
+        await Amplify.Auth.signIn(username: email, password: passcode);
+    try {
+      if (result.isSignedIn) {
+        _goToUserCategory(aContext);
+        print(result.isSignedIn);
+      }
+    } catch (e) {
+      print(e);
+    }
   }
 }
