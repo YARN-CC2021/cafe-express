@@ -1,6 +1,9 @@
+import 'package:flutter/gestures.dart';
 import "package:flutter/material.dart";
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:url_launcher/url_launcher.dart';
 
 class DetailPage extends StatefulWidget {
   final String id;
@@ -36,14 +39,145 @@ class _DetailPageState extends State<DetailPage> {
   }
 
   Widget showShopDetail() {
-    print('-------$shopData');
     if (shopData == null) {
       // 現在位置が取れるまではローディング中
       return Center(
         child: CircularProgressIndicator(),
       );
     } else {
-      return Center(child: Text('$shopData'));
+      return Center(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Card(
+                child: Column(
+                  children: [
+                    Text(
+                      '${shopData['name']}',
+                      style: TextStyle(
+                        fontSize: 30.0,
+                      ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          '${shopData['category']}',
+                          style: TextStyle(
+                            fontSize: 20.0,
+                          ),
+                        ),
+                        RichText(
+                          text: TextSpan(
+                            text: "URL",
+                            style: TextStyle(color: Colors.lightBlue),
+                            recognizer: TapGestureRecognizer()
+                              ..onTap = () async {
+                                final url = shopData['storeURL'];
+                                if (await canLaunch(url)) {
+                                  await launch(url);
+                                } else {
+                                  return InfoWindow(title: "No URL");
+                                }
+                              },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              imageCard(),
+              Card(
+                color: Colors.amber[100],
+                child: Text('${shopData['description']}'),
+              ),
+              Card(
+                child: Row(
+                  children: [
+                    Card(
+                      child: Column(
+                        children: [
+                          Text("Mon"),
+
+                        ],
+                      ),
+                    ),
+                    Card(
+                      child: Column(
+                        children: [
+                          Text("Tue"),
+                          
+                        ],
+                      ),
+                    ),
+                    Card(
+                      child: Column(
+                        children: [
+                          Text("Wed"),
+                          
+                        ],
+                      ),
+                    ),
+                    Card(
+                      child: Column(
+                        children: [
+                          Text("Thu"),
+                          
+                        ],
+                      ),
+                    ),
+                    Card(
+                      child: Column(
+                        children: [
+                          Text("Fri"),
+                          
+                        ],
+                      ),
+                    ),
+                    Card(
+                      child: Column(
+                        children: [
+                          Text("Sat"),
+                          
+                        ],
+                      ),
+                    ),
+                    Card(
+                      child: Column(
+                        children: [
+                          Text("Sun"),
+                          
+                        ],
+                      ),
+                    ),
+                    Card(
+                      child: Column(
+                        children: [
+                          Text("Hol"),
+                          
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+  }
+
+  Widget imageCard() {
+    if ('${shopData['imagePaths'][0]}' == null) {
+      return Card(
+        child: Text(''),
+      );
+    } else {
+      return Card(
+        child: Image.network('${shopData['imagePaths'][0]}'),
+      );
     }
   }
 
@@ -53,7 +187,7 @@ class _DetailPageState extends State<DetailPage> {
     if (response.statusCode == 200) {
       final jsonResponse = json.decode(utf8.decode(response.bodyBytes));
       setState(() {
-        shopData = jsonResponse;
+        shopData = jsonResponse['body'];
       });
     } else {
       print('Request failed with status: ${response.statusCode}.');
