@@ -44,7 +44,7 @@ class _AuthState extends State<Auth> {
         options: CognitoSignUpOptions(userAttributes: userAttributes));
     if (result.isSignUpComplete) {
       print('Sign Up Complete');
-      _goToValidation(context, data.name);
+      _goToValidation(context, data.name, data.password);
     } else {
       return 'Sign up error';
     }
@@ -80,12 +80,14 @@ class _AuthState extends State<Auth> {
   }
 
   void _returnWrapper(BuildContext context) {
-    Navigator.pushNamed(context, MapSearchRoute);
+    // Navigator.pushNamed(context, MapSearchRoute);
+    Navigator.pushNamed(context, MerchantProfileRoute);
     print("triggered");
   }
 
-  void _goToValidation(BuildContext context, String email) {
-    Navigator.pushNamed(context, ValidationRoute, arguments: {"email": email});
+  void _goToValidation(BuildContext context, String email, String passcode) {
+    Navigator.pushNamed(context, ValidationRoute,
+        arguments: {"email": email, "passcode": passcode});
     print("new login move to user type page");
   }
 }
