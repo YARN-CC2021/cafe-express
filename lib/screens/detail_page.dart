@@ -94,12 +94,15 @@ class _DetailPageState extends State<DetailPage> {
               ),
               Card(
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Card(
                       child: Column(
                         children: [
                           Text("Mon"),
-
+                          changeTime(shopData['hours']['Mon']['bookingStart']),
+                          Text(""),
+                          changeTime(shopData['hours']['Mon']['bookingEnd']),
                         ],
                       ),
                     ),
@@ -107,7 +110,6 @@ class _DetailPageState extends State<DetailPage> {
                       child: Column(
                         children: [
                           Text("Tue"),
-                          
                         ],
                       ),
                     ),
@@ -115,7 +117,6 @@ class _DetailPageState extends State<DetailPage> {
                       child: Column(
                         children: [
                           Text("Wed"),
-                          
                         ],
                       ),
                     ),
@@ -123,7 +124,6 @@ class _DetailPageState extends State<DetailPage> {
                       child: Column(
                         children: [
                           Text("Thu"),
-                          
                         ],
                       ),
                     ),
@@ -131,7 +131,6 @@ class _DetailPageState extends State<DetailPage> {
                       child: Column(
                         children: [
                           Text("Fri"),
-                          
                         ],
                       ),
                     ),
@@ -139,7 +138,6 @@ class _DetailPageState extends State<DetailPage> {
                       child: Column(
                         children: [
                           Text("Sat"),
-                          
                         ],
                       ),
                     ),
@@ -147,7 +145,6 @@ class _DetailPageState extends State<DetailPage> {
                       child: Column(
                         children: [
                           Text("Sun"),
-                          
                         ],
                       ),
                     ),
@@ -155,18 +152,49 @@ class _DetailPageState extends State<DetailPage> {
                       child: Column(
                         children: [
                           Text("Hol"),
-                          
                         ],
                       ),
                     ),
                   ],
                 ),
               ),
+              Column(
+                children: [
+                  //人数設定
+                  //perいくらか
+                   FlatButton(
+                    onPressed: () {},
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.book_online,
+                          ),
+                          Text("Book now!"),
+                        ]
+                      ),
+                    ),
+                ]
+              ),
             ],
           ),
         ),
       );
     }
+  }
+
+  Widget changeTime(String time) {
+    String first;
+    String last;
+    if (time.length == 4) {
+      if(time.substring(0,1) == "1") {
+        first = first = time.substring(0,2);
+      } else {
+        first = time.substring(1,2);
+      }
+        last = time.substring(2);
+    }
+    return Text('$first:$last');
   }
 
   Widget imageCard() {
@@ -189,6 +217,7 @@ class _DetailPageState extends State<DetailPage> {
       setState(() {
         shopData = jsonResponse['body'];
       });
+      print(shopData['hours']['Mon']);
     } else {
       print('Request failed with status: ${response.statusCode}.');
     }
