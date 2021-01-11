@@ -3,8 +3,9 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:amplify_core/amplify_core.dart';
+import './merchant_calendar_page.dart';
 
-enum VacancyType { strict, flex, custom }
+// enum VacancyType { strict, flex, custom }
 
 class MerchantProfilePage extends StatefulWidget {
   @override
@@ -22,9 +23,22 @@ class _MerchantProfilePageState extends State<MerchantProfilePage> {
   final TextEditingController categoryController = TextEditingController();
   final TextEditingController depositController = TextEditingController();
   final TextEditingController imageController = TextEditingController();
-  bool _lights = false;
 
-  VacancyType _vacancyType = VacancyType.strict;
+  var _vacancyType = "";
+  var profile = {};
+
+  void assignVariable() {
+    profile["name"] = nameController.text;
+    profile["description"] = descriptionController.text;
+    profile["address"] = addressController.text;
+    profile["tel"] = telController.text;
+    profile["email"] = emailController.text;
+    profile["storeURL"] = storeUrlController.text;
+    profile["category"] = categoryController.text;
+    profile["depositAmountPerPerson"] = depositController.text;
+    profile["imagePaths"] = imageController.text;
+    profile["vacancyType"] = _vacancyType;
+  }
 
   @override
   void initState() {
@@ -73,7 +87,7 @@ class _MerchantProfilePageState extends State<MerchantProfilePage> {
                       hintText: 'Enter your store description',
                       labelText: 'Store Description',
                     ),
-                    maxLines: 3,
+                    maxLines: 2,
                     controller: descriptionController,
                     validator: (value) {
                       if (value.isEmpty) {
@@ -195,7 +209,7 @@ class _MerchantProfilePageState extends State<MerchantProfilePage> {
                     },
                   ),
                   Padding(
-                    padding: EdgeInsets.fromLTRB(0, 20, 20, 0),
+                    padding: EdgeInsets.fromLTRB(0, 10, 10, 0),
                     child: Text(
                       "Vacancy Type",
                       style: TextStyle(
@@ -205,73 +219,82 @@ class _MerchantProfilePageState extends State<MerchantProfilePage> {
                       ),
                     ),
                   ),
-                  ListTile(
-                    title: const Text('Strict'),
-                    leading: Radio(
-                      value: VacancyType.strict,
-                      groupValue: _vacancyType,
-                      onChanged: (VacancyType value) {
-                        setState(() {
-                          _vacancyType = value;
-                        });
-                      },
+                  Row(children: [
+                    Expanded(
+                        child: ListTile(
+                      title: const Text(
+                        'Strict',
+                        style: TextStyle(
+                          fontSize: 11.5,
+                        ),
+                      ),
+                      leading: Radio(
+                        value: "strict",
+                        groupValue: _vacancyType,
+                        onChanged: (value) {
+                          setState(() {
+                            _vacancyType = value;
+                          });
+                        },
+                      ),
+                    )),
+                    Expanded(
+                      child: ListTile(
+                        title: const Text(
+                          'Flex',
+                          style: TextStyle(
+                            fontSize: 11.5,
+                          ),
+                        ),
+                        leading: Radio(
+                          value: "flex",
+                          groupValue: _vacancyType,
+                          onChanged: (value) {
+                            setState(() {
+                              _vacancyType = value;
+                            });
+                          },
+                        ),
+                      ),
                     ),
-                  ),
-                  ListTile(
-                    title: const Text('Flex'),
-                    leading: Radio(
-                      value: VacancyType.flex,
-                      groupValue: _vacancyType,
-                      onChanged: (VacancyType value) {
-                        setState(() {
-                          _vacancyType = value;
-                        });
-                      },
+                    Expanded(
+                      child: ListTile(
+                        title: const Text(
+                          'Custom',
+                          style: TextStyle(
+                            fontSize: 11.5,
+                          ),
+                        ),
+                        leading: Radio(
+                          value: "custom",
+                          groupValue: _vacancyType,
+                          onChanged: (value) {
+                            setState(() {
+                              _vacancyType = value;
+                            });
+                          },
+                        ),
+                      ),
                     ),
-                  ),
-                  ListTile(
-                    title: const Text('Custom'),
-                    leading: Radio(
-                      value: VacancyType.custom,
-                      groupValue: _vacancyType,
-                      onChanged: (VacancyType value) {
-                        setState(() {
-                          _vacancyType = value;
-                        });
-                      },
-                    ),
-                  ),
-                  ListTile(
-                    leading: Icon(
-                      Icons.lock_outline,
-                      color: Colors.purple,
-                    ),
-                    title: Text("じっけん"),
-                    trailing: Icon(Icons.keyboard_arrow_right),
-                    onTap: () {
-                      //go
-                    },
-                  ),
-                  SwitchListTile(
-                    title: const Text('Lights'),
-                    value: _lights,
-                    onChanged: (bool value) {
-                      setState(() {
-                        _lights = value;
-                      });
-                    },
-                    secondary: const Icon(Icons.lightbulb_outline),
-                  ),
+                  ]),
                   ElevatedButton(
                     onPressed: () {
                       // Validate returns true if the form is valid, otherwise false.
                       if (_formKey.currentState.validate()) {
                         // If the form is valid, display a snackbar. In the real world,
                         // you'd often call a server or save the information in a database.
-                        print(emailController.text);
+                        assignVariable();
+                        print(profile);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                MerchantCalendarPage(profile: profile),
+                          ),
+                        );
                       }
                     },
-                    child: Text('Submit'),
+                    child: Text('Next Page'),
                   )
                 ])));
   }
