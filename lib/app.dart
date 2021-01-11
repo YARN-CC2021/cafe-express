@@ -6,12 +6,14 @@ import 'package:provider/provider.dart';
 import 'models/user_status.dart';
 import './screens/detail_page.dart';
 import 'screens/user_category_page.dart';
+import 'screens/merchant_profile_page.dart';
 
 const WrapperRoute = "/";
 const MapSearchRoute = "/map_search";
 const DetailRoute = "/detail";
 const MerchantRoute = "/merchant_settings";
 const UserCategoryRoute = "/user_category";
+const MerchantProfileRoute = "/merchant_profile";
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -46,6 +48,9 @@ class MyApp extends StatelessWidget {
           break;
         case UserCategoryRoute:
           screen = UserCategoryPage();
+          break;
+        case MerchantProfileRoute:
+          screen = MerchantProfilePage();
           break;
         default:
           return null;
