@@ -186,8 +186,8 @@ class _DetailPageState extends State<DetailPage> {
         'https://pq3mbzzsbg.execute-api.ap-northeast-1.amazonaws.com/CaffeExpressRESTAPI/store/$id');
     if (response.statusCode == 200) {
       final jsonResponse = json.decode(utf8.decode(response.bodyBytes));
-      print(shopData['imagePaths'][0]);
       print(jsonResponse);
+      print(jsonResponse['imagePaths']);
       setState(() {
         shopData = jsonResponse;
       });
