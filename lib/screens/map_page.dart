@@ -7,6 +7,7 @@ import 'dart:math' as math;
 import './detail_page.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import '../app.dart';
 
 class MapPage extends StatefulWidget {
   @override
@@ -17,7 +18,7 @@ class _MapPageState extends State<MapPage> {
   List<dynamic> listShops = [];
   var shopData;
   String category = "All";
-  String distance = '2km';
+  String distance = '100m';
 
   Completer<GoogleMapController> _controller = Completer();
   Location _locationService = Location();
@@ -39,11 +40,9 @@ class _MapPageState extends State<MapPage> {
     _locationChangedListen =
         _locationService.onLocationChanged.listen((LocationData result) async {
       setState(() {
-        print("aaaaaa");
         _yourLocation = result;
       });
     });
-    _getAllShopData();
   }
 
   @override
@@ -83,7 +82,7 @@ class _MapPageState extends State<MapPage> {
                   _filterShop(distance, category);
                 });
               },
-              items: <String>['500m', '1km', '2km']
+              items: <String>['100m', '500m', '1km', '2km']
                   .map<DropdownMenuItem<String>>((String value) {
                 return DropdownMenuItem<String>(
                   value: value,
@@ -143,9 +142,10 @@ class _MapPageState extends State<MapPage> {
             markerId: MarkerId(data['id']),
             position: LatLng(data['lat'], data['lng']),
             infoWindow: InfoWindow(
-              title: data['name'],
+              title: '${data['name']}',
               snippet: data['category'],
               onTap: () {
+                _onTap(context, data['id']);
                 //move to detail page with its id
               },
             ),
@@ -153,7 +153,7 @@ class _MapPageState extends State<MapPage> {
         }).toSet(),
         onMapCreated: (GoogleMapController controller) {
           print('Map Created');
-          // _getAllShopData();
+          _getAllShopData();
           _controller.complete(controller);
         },
         // 現在位置にアイコン（青い円形のやつ）を置く
@@ -173,10 +173,12 @@ class _MapPageState extends State<MapPage> {
     var response = await http.get(
         'https://pq3mbzzsbg.execute-api.ap-northeast-1.amazonaws.com/CaffeExpressRESTAPI/store');
     if (response.statusCode == 200) {
-      final jsonResponse = json.decode(response.body);
-      shopData = jsonResponse['body']
+      final jsonResponse = json.decode(utf8.decode(response.bodyBytes));
+      print(jsonResponse['body']);
+      shopData = await jsonResponse['body']
           .where((shop) => shop['lat'] != null && shop['lng'] != null)
           .toList();
+      print(shopData);
       listShops = shopData;
       _filterShop(distance, category);
     } else {
@@ -204,7 +206,6 @@ class _MapPageState extends State<MapPage> {
     } else {
       numDistance = int.parse(distance.replaceAll('m', ''));
     }
-    print(numDistance);
 
     return shops.where((shop) => _getDistance(shop) <= numDistance).toList();
   }
@@ -222,5 +223,8 @@ class _MapPageState extends State<MapPage> {
     );
     print(distanceInMeters.toInt());
     return distanceInMeters.toInt();
+  }
+  void _onTap(BuildContext context, String shopId) {
+    Navigator.pushNamed(context, DetailRoute, arguments: {"id": shopId});
   }
 }
