@@ -5,8 +5,6 @@ import 'package:http/http.dart' as http;
 import 'package:amplify_core/amplify_core.dart';
 import './merchant_calendar_page.dart';
 
-// enum VacancyType { strict, flex, custom }
-
 class MerchantProfilePage extends StatefulWidget {
   @override
   _MerchantProfilePageState createState() => _MerchantProfilePageState();
