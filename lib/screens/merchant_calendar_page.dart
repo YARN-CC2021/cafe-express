@@ -9,7 +9,7 @@ class MerchantCalendarPage extends StatefulWidget {
 }
 
 class _MerchantCalendarPageState extends State<MerchantCalendarPage> {
-  TimeOfDay _time = TimeOfDay(hour: 7, minute: 15);
+  var _time = TimeOfDay(hour: 7, minute: 15);
 
   void _selectTime() async {
     final TimeOfDay newTime = await showTimePicker(
@@ -46,7 +46,7 @@ class _MerchantCalendarPageState extends State<MerchantCalendarPage> {
             Text(
               'Selected time: ${_time.format(context)}',
             ),
-            Text('${widget.profile}')
+            Text('${widget.profile}'),
           ],
         ),
       ),
