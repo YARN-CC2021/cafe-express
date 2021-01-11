@@ -4,6 +4,7 @@ import 'screens/merchant_page.dart';
 import 'wrapper.dart';
 import 'package:provider/provider.dart';
 import 'models/user_status.dart';
+import './screens/detail_page.dart';
 
 const WrapperRoute = "/";
 const MapSearchRoute = "/map_search";
@@ -25,6 +26,7 @@ class MyApp extends StatelessWidget {
 
   RouteFactory _routes() {
     return (settings) {
+      print(settings.arguments);
       final Map<String, dynamic> arguments = settings.arguments;
       Widget screen;
       switch (settings.name) {
@@ -35,7 +37,7 @@ class MyApp extends StatelessWidget {
           screen = MapPage();
           break;
         case DetailRoute:
-          screen = MapPage();
+          screen = DetailPage(arguments['id']);
           break;
         case MerchantRoute:
           screen = MerchantPage();

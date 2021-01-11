@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 
 class DetailPage extends StatefulWidget {
   final String id;
-  DetailPage({Key key, this.id}) : super(key: key);
+  DetailPage(this.id);
 
   @override
   _DetailPageState createState() => _DetailPageState();
@@ -15,7 +15,7 @@ class _DetailPageState extends State<DetailPage> {
   @override
   void initState() {
     super.initState();
-
+    print(widget.id);
     _getShopData(widget.id);
   }
 
@@ -36,6 +36,7 @@ class _DetailPageState extends State<DetailPage> {
   }
 
   Widget showShopDetail() {
+    print('-------$shopData');
     if (shopData == null) {
       // 現在位置が取れるまではローディング中
       return Center(
@@ -47,13 +48,13 @@ class _DetailPageState extends State<DetailPage> {
   }
 
   Future<void> _getShopData(String id) async {
-    print("---------");
     var response = await http.get(
-        'https://pq3mbzzsbg.execute-api.ap-northeast-1.amazonaws.com/CaffeExpressRESTAPI/store?id=$id');
+        'https://pq3mbzzsbg.execute-api.ap-northeast-1.amazonaws.com/CaffeExpressRESTAPI/store/$id');
     if (response.statusCode == 200) {
-      final jsonResponse = json.decode(response.body);
-      shopData = jsonResponse;
-      return shopData;
+      final jsonResponse = json.decode(utf8.decode(response.bodyBytes));
+      setState(() {
+        shopData = jsonResponse;
+      });
     } else {
       print('Request failed with status: ${response.statusCode}.');
     }
