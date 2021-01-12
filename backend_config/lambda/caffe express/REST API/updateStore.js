@@ -2,6 +2,8 @@ const AWS = require("aws-sdk");
 const ddb = new AWS.DynamoDB.DocumentClient();
 
 const updateStore = (event, id) => {
+  console.log("Im Here inside the updatesStore Function!!!!!!");
+
   const params = {
     TableName: "store",
     Key: {
@@ -35,6 +37,8 @@ const updateStore = (event, id) => {
     ReturnValues: "UPDATED_NEW",
   };
 
+  console.log("Params to be updated", params);
+  
   return ddb.update(params).promise();
 };
 
@@ -42,12 +46,13 @@ exports.handler = async (event, context) => {
   // Lambda Code Here
   // context.succeed('Success!')
   // context.fail('Failed!')
-
+  console.log("Im Here!!!!!!");
+  console.log("event body", event.body);
+  console.log("event params", event.params);
   let responseBody = "";
   let statusCode = 0;
   let message = "";
   const { id } = event.params;
-
   try {
     await updateStore(event, id);
     responseBody = event.body;
