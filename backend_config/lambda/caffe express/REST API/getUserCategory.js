@@ -2,18 +2,16 @@ const AWS = require("aws-sdk");
 const ddb = new AWS.DynamoDB.DocumentClient();
 const tableName = "userCategory";
 
-function setUserCategory(tableName, body) {
-  const { id, isCustomer } = body;
+function getUserCategory(tableName, id) {
 
   const params = {
     TableName: tableName,
-    Item: {
+    Key: {
       id: id,
-      isCustomer: isCustomer,
     },
   };
 
-  return ddb.put(params).promise();
+  return ddb.get(params).promise();
 }
 
 exports.handler = async (event, context) => {
@@ -25,15 +23,15 @@ exports.handler = async (event, context) => {
   let statusCode = 0;
   let message = "";
 
-  const body = event.body;
+  const {id} = event.params;
 
   try {
-    await setUserCategory(tableName, body);
-    responseBody = body;
-    statusCode = 201;
-    message = "Successfully set user category.";
+    const data = await getUserCategory(tableName, id);
+    responseBody = data.Item;
+    statusCode = 200;
+    message = "Successfully received user category.";
   } catch (err) {
-    message = `Failed to insert customer data. ERROR=${err}`;
+    message = `Failed to retrieve user category. ERROR=${err}`;
     statusCode = 403;
   }
 
