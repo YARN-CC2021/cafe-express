@@ -303,18 +303,19 @@ class _MerchantProfilePageState extends State<MerchantProfilePage> {
                 ])));
   }
 
-  Future<dynamic> _updateStoreProfile() async {
-    var response = await http.put(
-      "https://pq3mbzzsbg.execute-api.ap-northeast-1.amazonaws.com/CaffeExpressRESTAPI/user/$_userId",
+  Future<void> _updateStoreProfile() async {
+    print("shopData in _updateStoreProfile $shopData");
+    print("JSON stringiified shopdata ${jsonEncode(shopData)}");
+    var response = await http.patch(
+      "https://pq3mbzzsbg.execute-api.ap-northeast-1.amazonaws.com/CaffeExpressRESTAPI/store/$_userId",
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: jsonEncode(shopData),
     );
-    if (response.statusCode == 201) {
+    if (response.statusCode == 200) {
       final jsonResponse = json.decode(response.body);
       print("_updateStoreProfile jsonResponse= $jsonResponse");
-      return jsonResponse;
     } else {
       print('Request failed with status: ${response.statusCode}.');
     }
@@ -338,6 +339,7 @@ class _MerchantProfilePageState extends State<MerchantProfilePage> {
   }
 
   void _mapMountedStoreData() {
+    print("shopData in _mapMountedStoreData $shopData");
     nameController.text = shopData['name'];
     descriptionController.text = shopData['descripti'];
     addressController.text = shopData['address'];
