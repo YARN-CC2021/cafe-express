@@ -179,6 +179,7 @@ class _MapPageState extends State<MapPage> {
           .where((shop) => shop['lat'] != null && shop['lng'] != null)
           .toList();
       print(shopData);
+      print(shopData[0]['lat']);
       listShops = shopData;
       _filterShop(distance, category);
     } else {
@@ -218,8 +219,8 @@ class _MapPageState extends State<MapPage> {
     double distanceInMeters = Geolocator.distanceBetween(
       _yourLocation.latitude,
       _yourLocation.longitude,
-      shop['lat'],
-      shop['lng'],
+      shop['lat'].toDouble(),
+      shop['lng'].toDouble(),
     );
     print(distanceInMeters.toInt());
     return distanceInMeters.toInt();
