@@ -8,6 +8,14 @@ class MerchantPage extends StatefulWidget {
 class _MerchantPageState extends State<MerchantPage> {
   @override
   Widget build(BuildContext context) {
-    return Container(child: Text("this is the Merchant view"));
+    return Scaffold(
+        appBar: AppBar(
+          title: Text("Cafe Express"),
+          backgroundColor: Colors.blue,
+          elevation: 0.0,
+        ),
+        body: Column(
+          children: [Text("THIS IS THE MERCHANT DISPLAY")],
+        ));
   }
 }
