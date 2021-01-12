@@ -1,5 +1,4 @@
 import "package:flutter/material.dart";
-import './merchant_calendar_page.dart';
 import '../app.dart';
 import 'dart:async';
 import 'dart:convert';
@@ -14,70 +13,69 @@ class MerchantCalendarPage extends StatefulWidget {
   _MerchantCalendarPageState createState() => _MerchantCalendarPageState();
 }
 
-var hours = {
-  "Sun": {
-    "open": "0900",
-    "close": "2000",
-    "day-off": false,
-    "bookingStart": "0900",
-    "bookingEnd": "1830"
-  },
-  "Mon": {
-    "open": "0900",
-    "close": "2000",
-    "day-off": false,
-    "bookingStart": "0900",
-    "bookingEnd": "1830"
-  },
-  "Tue": {
-    "open": "0900",
-    "close": "2000",
-    "day-off": true,
-    "bookingStart": "0900",
-    "bookingEnd": "1830"
-  },
-  "Wed": {
-    "open": "1000",
-    "close": "1800",
-    "day-off": false,
-    "bookingStart": "0900",
-    "bookingEnd": "1830"
-  },
-  "Thu": {
-    "open": "0900",
-    "close": "2000",
-    "day-off": false,
-    "bookingStart": "0900",
-    "bookingEnd": "1830"
-  },
-  "Fri": {
-    "open": "0900",
-    "close": "2000",
-    "day-off": false,
-    "bookingStart": "0900",
-    "bookingEnd": "1830"
-  },
-  "Sat": {
-    "open": "0900",
-    "close": "2000",
-    "day-off": false,
-    "bookingStart": "0900",
-    "bookingEnd": "1830"
-  },
-  "Holiday": {
-    "open": "0900",
-    "close": "2000",
-    "day-off": false,
-    "bookingStart": "0900",
-    "bookingEnd": "1830"
-  }
-};
+Map newShopData;
+var hours;
+var _userId;
 
 class _MerchantCalendarPageState extends State<MerchantCalendarPage> {
   double _height;
   double _width;
-  var test = "test";
-  var isChecked = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _getShopData();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  void _mapMountedHoursData() {
+    hours = newShopData['hours'];
+  }
+
+  void assignNewHours() {
+    newShopData["hours"] = hours;
+  }
+
+  Future<void> _getShopData() async {
+    var userData = await Amplify.Auth.getCurrentUser();
+    var userId = userData.userId;
+    setState(() => _userId = userId);
+    var response = await http.get(
+        'https://pq3mbzzsbg.execute-api.ap-northeast-1.amazonaws.com/CaffeExpressRESTAPI/store/$userId');
+    if (response.statusCode == 200) {
+      final jsonResponse = await json.decode(utf8.decode(response.bodyBytes));
+      setState(() {
+        newShopData = jsonResponse['body'];
+      });
+      print("This is ShopData: $newShopData");
+      _mapMountedHoursData();
+      print("This is HoursData: $hours");
+    } else {
+      print('Request failed with status: ${response.statusCode}.');
+    }
+  }
+
+  Future<void> _updateStoreProfile() async {
+    // print("shopData in _updateStoreProfile $shopData");
+    // print("JSON stringiified shopdata ${jsonEncode(shopData)}");
+    var response = await http.patch(
+      "https://pq3mbzzsbg.execute-api.ap-northeast-1.amazonaws.com/CaffeExpressRESTAPI/store/$_userId",
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(newShopData),
+    );
+    if (response.statusCode == 200) {
+      final jsonResponse = json.decode(response.body);
+      print("_updateStoreProfile jsonResponse= $jsonResponse");
+    } else {
+      print('Request failed with status: ${response.statusCode}.');
+    }
+  }
 
   void _selectTime(String day, String openClose) async {
     String initialHour = hours[day][openClose];
@@ -130,7 +128,7 @@ class _MerchantCalendarPageState extends State<MerchantCalendarPage> {
   }
 
   _onChecked(bool newValue, String day) => setState(() {
-        hours[day]["day-off"] = newValue;
+        hours[day]["day_off"] = newValue;
       });
 
   _displaySetTime(String day, String openClose) {
@@ -227,7 +225,7 @@ class _MerchantCalendarPageState extends State<MerchantCalendarPage> {
                               ),
                             ),
                             Checkbox(
-                              value: hours["Mon"]["day-off"],
+                              value: hours["Mon"]["day_off"],
                               onChanged: (value) => {_onChecked(value, "Mon")},
                             ),
                           ])),
@@ -261,7 +259,7 @@ class _MerchantCalendarPageState extends State<MerchantCalendarPage> {
                             ),
                           ),
                           Checkbox(
-                            value: hours["Tue"]["day-off"],
+                            value: hours["Tue"]["day_off"],
                             onChanged: (value) => {_onChecked(value, "Tue")},
                           ),
                         ]),
@@ -296,7 +294,7 @@ class _MerchantCalendarPageState extends State<MerchantCalendarPage> {
                             ),
                           ),
                           Checkbox(
-                            value: hours["Wed"]["day-off"],
+                            value: hours["Wed"]["day_off"],
                             onChanged: (value) => {_onChecked(value, "Wed")},
                           ),
                         ]),
@@ -331,7 +329,7 @@ class _MerchantCalendarPageState extends State<MerchantCalendarPage> {
                             ),
                           ),
                           Checkbox(
-                            value: hours["Thu"]["day-off"],
+                            value: hours["Thu"]["day_off"],
                             onChanged: (value) => {_onChecked(value, "Thu")},
                           ),
                         ]),
@@ -366,7 +364,7 @@ class _MerchantCalendarPageState extends State<MerchantCalendarPage> {
                             ),
                           ),
                           Checkbox(
-                            value: hours["Fri"]["day-off"],
+                            value: hours["Fri"]["day_off"],
                             onChanged: (value) => {_onChecked(value, "Fri")},
                           ),
                         ]),
@@ -401,7 +399,7 @@ class _MerchantCalendarPageState extends State<MerchantCalendarPage> {
                             ),
                           ),
                           Checkbox(
-                            value: hours["Sat"]["day-off"],
+                            value: hours["Sat"]["day_off"],
                             onChanged: (value) => {_onChecked(value, "Sat")},
                           ),
                         ]),
@@ -436,7 +434,7 @@ class _MerchantCalendarPageState extends State<MerchantCalendarPage> {
                             ),
                           ),
                           Checkbox(
-                            value: hours["Sun"]["day-off"],
+                            value: hours["Sun"]["day_off"],
                             onChanged: (value) => {_onChecked(value, "Sun")},
                           ),
                         ]),
@@ -471,7 +469,7 @@ class _MerchantCalendarPageState extends State<MerchantCalendarPage> {
                             ),
                           ),
                           Checkbox(
-                            value: hours["Holiday"]["day-off"],
+                            value: hours["Holiday"]["day_off"],
                             onChanged: (value) =>
                                 {_onChecked(value, "Holiday")},
                           ),
@@ -481,26 +479,20 @@ class _MerchantCalendarPageState extends State<MerchantCalendarPage> {
               ),
               ElevatedButton(
                 onPressed: () {
-                  // Validate returns true if the form is valid, otherwise false.
-                  // if (_formKey.currentState.validate()) {
-                  // If the form is valid, display a snackbar. In the real world,
-                  // you'd often call a server or save the information in a database.
-                  // assignVariable();
+                  assignNewHours();
+                  _updateStoreProfile();
                   // Navigator.push(
                   //   context,
                   //   MaterialPageRoute(
                   //     builder: (context) =>
-                  //         MerchantCalendarPage(profile: widget.profile),
+                  //         MerchantCalendarPage(shopData: shopData),
                   //   ),
                   // );
-                  print(hours);
                 },
-                child: Text('Next Page'),
+                child: Text('Submit'),
               )
             ]),
       ),
     );
   }
 }
-
-Future<dynamic> _updateUserProfile(Map profile) async {}

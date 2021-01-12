@@ -22,6 +22,7 @@ function createCustomer(body) {
     TableName: "customer",
     Item: {
       id: id,
+      username: "",
       email: loginEmail,
       point: 0,
       createdAt: createdAt,
@@ -38,6 +39,7 @@ const createStore = (body) => {
     TableName: "store",
     Item: {
       id: id,
+      stripeId: "",
       createdAt: createdAt,
       updatedAt: createdAt,
       name: "",
@@ -53,6 +55,17 @@ const createStore = (body) => {
       depositAmountPerPerson: 0,
       imagePaths: [],
       vacancyType: "strict",
+      statistics: {
+        rating: 0,
+        category: {
+            WithNoWait:0,
+            With10minWait: 0,
+            With30minWait: 0,
+            Morethan1hourWait: 0,
+            WasNotAbletoGetIn: 0
+        },
+        bookingCount: 0
+    },
       hours: {
         Sun: {
           open: "0000",
