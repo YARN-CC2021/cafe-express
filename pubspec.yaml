@@ -38,6 +38,7 @@ dependencies:
   amplify_auth_cognito: "<1.0.0"
   flutter_login: ^1.0.14
   provider: ^4.3.2+3
+  web_socket_channel: ^1.1.0
 
 dev_dependencies:
   flutter_test:
