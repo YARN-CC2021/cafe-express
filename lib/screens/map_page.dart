@@ -174,12 +174,9 @@ class _MapPageState extends State<MapPage> {
         'https://pq3mbzzsbg.execute-api.ap-northeast-1.amazonaws.com/CaffeExpressRESTAPI/store');
     if (response.statusCode == 200) {
       final jsonResponse = json.decode(utf8.decode(response.bodyBytes));
-      print(jsonResponse['body']);
       shopData = await jsonResponse['body']
           .where((shop) => shop['lat'] != null && shop['lng'] != null)
           .toList();
-      print(shopData);
-      print(shopData[0]['lat']);
       listShops = shopData;
       _filterShop(distance, category);
     } else {
@@ -222,7 +219,6 @@ class _MapPageState extends State<MapPage> {
       shop['lat'].toDouble(),
       shop['lng'].toDouble(),
     );
-    print(distanceInMeters.toInt());
     return distanceInMeters.toInt();
   }
   void _onTap(BuildContext context, String shopId) {
