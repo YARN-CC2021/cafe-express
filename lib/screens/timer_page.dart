@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 
-class Timer extends StatefulWidget {
+class TimerPage extends StatefulWidget {
   @override
-  _TimerState createState() => _TimerState();
+  _TimerPageState createState() => _TimerPageState();
 }
 
-class _TimerState extends State<Timer> {
+class _TimerPageState extends State<TimerPage> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      
-    );
+    return Container();
   }
 }

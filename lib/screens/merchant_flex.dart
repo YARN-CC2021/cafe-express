@@ -1,18 +1,18 @@
 import "package:flutter/material.dart";
 
-class MerchantPage extends StatefulWidget {
+class MerchantFlex extends StatefulWidget {
   @override
-  _MerchantPageState createState() => _MerchantPageState();
+  _MerchantFlexState createState() => _MerchantFlexState();
 }
 
-class _MerchantPageState extends State<MerchantPage> {
+class _MerchantFlexState extends State<MerchantFlex> {
   bool toggle1 = false;
   bool toggle2 = false;
-  bool toggle3 = false;
-  bool toggle4 = false;
-  bool toggle5 = false;
-  bool toggle6 = false;
-  bool toggle7 = false;
+  bool toggle3Or4 = false;
+  bool toggle5Or6 = false;
+  bool toggle7Or8 = false;
+  bool toggle9Or10 = false;
+  bool toggle11Or12 = false;
   bool toggle8 = false;
   bool toggle9 = false;
   bool toggle10 = false;
@@ -126,7 +126,7 @@ class _MerchantPageState extends State<MerchantPage> {
             ),
           ),
           Text(
-            "3 Person",
+            "3 or 4 Person",
             textAlign: TextAlign.center,
           ),
           Center(
@@ -136,7 +136,7 @@ class _MerchantPageState extends State<MerchantPage> {
               width: 100.0,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20.0),
-                  color: toggle3
+                  color: toggle3Or4
                       ? Colors.blueAccent[100]
                       : Colors.redAccent[100].withOpacity(0.5)),
               child: Stack(
@@ -145,10 +145,10 @@ class _MerchantPageState extends State<MerchantPage> {
                     duration: Duration(milliseconds: 1000),
                     curve: Curves.easeIn,
                     top: 3.0,
-                    left: toggle3 ? 60.0 : 0.0,
-                    right: toggle3 ? 0.0 : 60.0,
+                    left: toggle3Or4 ? 60.0 : 0.0,
+                    right: toggle3Or4 ? 0.0 : 60.0,
                     child: InkWell(
-                      onTap: toggleButton3,
+                      onTap: toggleButton3Or4,
                       child: AnimatedSwitcher(
                         duration: Duration(milliseconds: 1000),
                         transitionBuilder:
@@ -156,7 +156,7 @@ class _MerchantPageState extends State<MerchantPage> {
                           return RotationTransition(
                               child: child, turns: animation);
                         },
-                        child: toggle3
+                        child: toggle3Or4
                             ? Icon(Icons.check_circle,
                                 color: Colors.blue,
                                 size: 35.0,
@@ -173,7 +173,7 @@ class _MerchantPageState extends State<MerchantPage> {
             ),
           ),
           Text(
-            "4 Person",
+            "5 or 6 Person",
             textAlign: TextAlign.center,
           ),
           Center(
@@ -183,7 +183,7 @@ class _MerchantPageState extends State<MerchantPage> {
               width: 100.0,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20.0),
-                  color: toggle4
+                  color: toggle5Or6
                       ? Colors.blueAccent[100]
                       : Colors.redAccent[100].withOpacity(0.5)),
               child: Stack(
@@ -192,10 +192,10 @@ class _MerchantPageState extends State<MerchantPage> {
                     duration: Duration(milliseconds: 1000),
                     curve: Curves.easeIn,
                     top: 3.0,
-                    left: toggle4 ? 60.0 : 0.0,
-                    right: toggle4 ? 0.0 : 60.0,
+                    left: toggle5Or6 ? 60.0 : 0.0,
+                    right: toggle5Or6 ? 0.0 : 60.0,
                     child: InkWell(
-                      onTap: toggleButton4,
+                      onTap: toggleButton5Or6,
                       child: AnimatedSwitcher(
                         duration: Duration(milliseconds: 1000),
                         transitionBuilder:
@@ -203,7 +203,7 @@ class _MerchantPageState extends State<MerchantPage> {
                           return RotationTransition(
                               child: child, turns: animation);
                         },
-                        child: toggle4
+                        child: toggle5Or6
                             ? Icon(Icons.check_circle,
                                 color: Colors.blue,
                                 size: 35.0,
@@ -220,7 +220,7 @@ class _MerchantPageState extends State<MerchantPage> {
             ),
           ),
           Text(
-            "5 Person",
+            "7 or 8 Person",
             textAlign: TextAlign.center,
           ),
           Center(
@@ -230,7 +230,7 @@ class _MerchantPageState extends State<MerchantPage> {
               width: 100.0,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20.0),
-                  color: toggle5
+                  color: toggle7Or8
                       ? Colors.blueAccent[100]
                       : Colors.redAccent[100].withOpacity(0.5)),
               child: Stack(
@@ -239,10 +239,10 @@ class _MerchantPageState extends State<MerchantPage> {
                     duration: Duration(milliseconds: 1000),
                     curve: Curves.easeIn,
                     top: 3.0,
-                    left: toggle5 ? 60.0 : 0.0,
-                    right: toggle5 ? 0.0 : 60.0,
+                    left: toggle7Or8 ? 60.0 : 0.0,
+                    right: toggle7Or8 ? 0.0 : 60.0,
                     child: InkWell(
-                      onTap: toggleButton5,
+                      onTap: toggleButton7Or8,
                       child: AnimatedSwitcher(
                         duration: Duration(milliseconds: 1000),
                         transitionBuilder:
@@ -250,7 +250,7 @@ class _MerchantPageState extends State<MerchantPage> {
                           return RotationTransition(
                               child: child, turns: animation);
                         },
-                        child: toggle5
+                        child: toggle7Or8
                             ? Icon(Icons.check_circle,
                                 color: Colors.blue,
                                 size: 35.0,
@@ -267,7 +267,7 @@ class _MerchantPageState extends State<MerchantPage> {
             ),
           ),
           Text(
-            "6 Person",
+            "9 or 10 Person",
             textAlign: TextAlign.center,
           ),
           Center(
@@ -277,7 +277,7 @@ class _MerchantPageState extends State<MerchantPage> {
               width: 100.0,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20.0),
-                  color: toggle6
+                  color: toggle9Or10
                       ? Colors.blueAccent[100]
                       : Colors.redAccent[100].withOpacity(0.5)),
               child: Stack(
@@ -286,10 +286,10 @@ class _MerchantPageState extends State<MerchantPage> {
                     duration: Duration(milliseconds: 1000),
                     curve: Curves.easeIn,
                     top: 3.0,
-                    left: toggle6 ? 60.0 : 0.0,
-                    right: toggle6 ? 0.0 : 60.0,
+                    left: toggle9Or10 ? 60.0 : 0.0,
+                    right: toggle9Or10 ? 0.0 : 60.0,
                     child: InkWell(
-                      onTap: toggleButton6,
+                      onTap: toggleButton9Or10,
                       child: AnimatedSwitcher(
                         duration: Duration(milliseconds: 1000),
                         transitionBuilder:
@@ -297,7 +297,7 @@ class _MerchantPageState extends State<MerchantPage> {
                           return RotationTransition(
                               child: child, turns: animation);
                         },
-                        child: toggle6
+                        child: toggle9Or10
                             ? Icon(Icons.check_circle,
                                 color: Colors.blue,
                                 size: 35.0,
@@ -314,7 +314,7 @@ class _MerchantPageState extends State<MerchantPage> {
             ),
           ),
           Text(
-            "7 Person",
+            "11 or 12 Person",
             textAlign: TextAlign.center,
           ),
           Center(
@@ -324,7 +324,7 @@ class _MerchantPageState extends State<MerchantPage> {
               width: 100.0,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20.0),
-                  color: toggle7
+                  color: toggle11Or12
                       ? Colors.blueAccent[100]
                       : Colors.redAccent[100].withOpacity(0.5)),
               child: Stack(
@@ -333,10 +333,10 @@ class _MerchantPageState extends State<MerchantPage> {
                     duration: Duration(milliseconds: 1000),
                     curve: Curves.easeIn,
                     top: 3.0,
-                    left: toggle7 ? 60.0 : 0.0,
-                    right: toggle7 ? 0.0 : 60.0,
+                    left: toggle11Or12 ? 60.0 : 0.0,
+                    right: toggle11Or12 ? 0.0 : 60.0,
                     child: InkWell(
-                      onTap: toggleButton7,
+                      onTap: toggleButton11Or12,
                       child: AnimatedSwitcher(
                         duration: Duration(milliseconds: 1000),
                         transitionBuilder:
@@ -344,242 +344,7 @@ class _MerchantPageState extends State<MerchantPage> {
                           return RotationTransition(
                               child: child, turns: animation);
                         },
-                        child: toggle7
-                            ? Icon(Icons.check_circle,
-                                color: Colors.blue,
-                                size: 35.0,
-                                key: UniqueKey())
-                            : Icon(Icons.remove_circle_outline,
-                                color: Colors.red,
-                                size: 35.0,
-                                key: UniqueKey()),
-                      ),
-                    ),
-                  )
-                ],
-              ),
-            ),
-          ),
-          Text(
-            "8 Person",
-            textAlign: TextAlign.center,
-          ),
-          Center(
-            child: AnimatedContainer(
-              duration: Duration(milliseconds: 1000),
-              height: 40.0,
-              width: 100.0,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20.0),
-                  color: toggle8
-                      ? Colors.blueAccent[100]
-                      : Colors.redAccent[100].withOpacity(0.5)),
-              child: Stack(
-                children: <Widget>[
-                  AnimatedPositioned(
-                    duration: Duration(milliseconds: 1000),
-                    curve: Curves.easeIn,
-                    top: 3.0,
-                    left: toggle8 ? 60.0 : 0.0,
-                    right: toggle8 ? 0.0 : 60.0,
-                    child: InkWell(
-                      onTap: toggleButton8,
-                      child: AnimatedSwitcher(
-                        duration: Duration(milliseconds: 1000),
-                        transitionBuilder:
-                            (Widget child, Animation<double> animation) {
-                          return RotationTransition(
-                              child: child, turns: animation);
-                        },
-                        child: toggle8
-                            ? Icon(Icons.check_circle,
-                                color: Colors.blue,
-                                size: 35.0,
-                                key: UniqueKey())
-                            : Icon(Icons.remove_circle_outline,
-                                color: Colors.red,
-                                size: 35.0,
-                                key: UniqueKey()),
-                      ),
-                    ),
-                  )
-                ],
-              ),
-            ),
-          ),
-          Text(
-            "9 Person",
-            textAlign: TextAlign.center,
-          ),
-          Center(
-            child: AnimatedContainer(
-              duration: Duration(milliseconds: 1000),
-              height: 40.0,
-              width: 100.0,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20.0),
-                  color: toggle9
-                      ? Colors.blueAccent[100]
-                      : Colors.redAccent[100].withOpacity(0.5)),
-              child: Stack(
-                children: <Widget>[
-                  AnimatedPositioned(
-                    duration: Duration(milliseconds: 1000),
-                    curve: Curves.easeIn,
-                    top: 3.0,
-                    left: toggle9 ? 60.0 : 0.0,
-                    right: toggle9 ? 0.0 : 60.0,
-                    child: InkWell(
-                      onTap: toggleButton9,
-                      child: AnimatedSwitcher(
-                        duration: Duration(milliseconds: 1000),
-                        transitionBuilder:
-                            (Widget child, Animation<double> animation) {
-                          return RotationTransition(
-                              child: child, turns: animation);
-                        },
-                        child: toggle9
-                            ? Icon(Icons.check_circle,
-                                color: Colors.blue,
-                                size: 35.0,
-                                key: UniqueKey())
-                            : Icon(Icons.remove_circle_outline,
-                                color: Colors.red,
-                                size: 35.0,
-                                key: UniqueKey()),
-                      ),
-                    ),
-                  )
-                ],
-              ),
-            ),
-          ),
-          Text(
-            "10 Person",
-            textAlign: TextAlign.center,
-          ),
-          Center(
-            child: AnimatedContainer(
-              duration: Duration(milliseconds: 1000),
-              height: 40.0,
-              width: 100.0,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20.0),
-                  color: toggle10
-                      ? Colors.blueAccent[100]
-                      : Colors.redAccent[100].withOpacity(0.5)),
-              child: Stack(
-                children: <Widget>[
-                  AnimatedPositioned(
-                    duration: Duration(milliseconds: 1000),
-                    curve: Curves.easeIn,
-                    top: 3.0,
-                    left: toggle10 ? 60.0 : 0.0,
-                    right: toggle10 ? 0.0 : 60.0,
-                    child: InkWell(
-                      onTap: toggleButton10,
-                      child: AnimatedSwitcher(
-                        duration: Duration(milliseconds: 1000),
-                        transitionBuilder:
-                            (Widget child, Animation<double> animation) {
-                          return RotationTransition(
-                              child: child, turns: animation);
-                        },
-                        child: toggle10
-                            ? Icon(Icons.check_circle,
-                                color: Colors.blue,
-                                size: 35.0,
-                                key: UniqueKey())
-                            : Icon(Icons.remove_circle_outline,
-                                color: Colors.red,
-                                size: 35.0,
-                                key: UniqueKey()),
-                      ),
-                    ),
-                  )
-                ],
-              ),
-            ),
-          ),
-          Text(
-            "11 Person",
-            textAlign: TextAlign.center,
-          ),
-          Center(
-            child: AnimatedContainer(
-              duration: Duration(milliseconds: 1000),
-              height: 40.0,
-              width: 100.0,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20.0),
-                  color: toggle11
-                      ? Colors.blueAccent[100]
-                      : Colors.redAccent[100].withOpacity(0.5)),
-              child: Stack(
-                children: <Widget>[
-                  AnimatedPositioned(
-                    duration: Duration(milliseconds: 1000),
-                    curve: Curves.easeIn,
-                    top: 3.0,
-                    left: toggle11 ? 60.0 : 0.0,
-                    right: toggle11 ? 0.0 : 60.0,
-                    child: InkWell(
-                      onTap: toggleButton11,
-                      child: AnimatedSwitcher(
-                        duration: Duration(milliseconds: 1000),
-                        transitionBuilder:
-                            (Widget child, Animation<double> animation) {
-                          return RotationTransition(
-                              child: child, turns: animation);
-                        },
-                        child: toggle11
-                            ? Icon(Icons.check_circle,
-                                color: Colors.blue,
-                                size: 35.0,
-                                key: UniqueKey())
-                            : Icon(Icons.remove_circle_outline,
-                                color: Colors.red,
-                                size: 35.0,
-                                key: UniqueKey()),
-                      ),
-                    ),
-                  )
-                ],
-              ),
-            ),
-          ),
-          Text(
-            "12 Person",
-            textAlign: TextAlign.center,
-          ),
-          Center(
-            child: AnimatedContainer(
-              duration: Duration(milliseconds: 1000),
-              height: 40.0,
-              width: 100.0,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20.0),
-                  color: toggle12
-                      ? Colors.blueAccent[100]
-                      : Colors.redAccent[100].withOpacity(0.5)),
-              child: Stack(
-                children: <Widget>[
-                  AnimatedPositioned(
-                    duration: Duration(milliseconds: 1000),
-                    curve: Curves.easeIn,
-                    top: 3.0,
-                    left: toggle12 ? 60.0 : 0.0,
-                    right: toggle12 ? 0.0 : 60.0,
-                    child: InkWell(
-                      onTap: toggleButton12,
-                      child: AnimatedSwitcher(
-                        duration: Duration(milliseconds: 1000),
-                        transitionBuilder:
-                            (Widget child, Animation<double> animation) {
-                          return RotationTransition(
-                              child: child, turns: animation);
-                        },
-                        child: toggle12
+                        child: toggle11Or12
                             ? Icon(Icons.check_circle,
                                 color: Colors.blue,
                                 size: 35.0,
@@ -610,63 +375,33 @@ class _MerchantPageState extends State<MerchantPage> {
     });
   }
 
-  toggleButton3() {
+  toggleButton3Or4() {
     setState(() {
-      toggle3 = !toggle3;
+      toggle3Or4 = !toggle3Or4;
     });
   }
 
-  toggleButton4() {
+  toggleButton5Or6() {
     setState(() {
-      toggle4 = !toggle4;
+      toggle5Or6 = !toggle5Or6;
     });
   }
 
-  toggleButton5() {
+  toggleButton7Or8() {
     setState(() {
-      toggle5 = !toggle5;
+      toggle7Or8 = !toggle7Or8;
     });
   }
 
-  toggleButton6() {
+  toggleButton9Or10() {
     setState(() {
-      toggle6 = !toggle6;
+      toggle9Or10 = !toggle9Or10;
     });
   }
 
-  toggleButton7() {
+  toggleButton11Or12() {
     setState(() {
-      toggle7 = !toggle7;
-    });
-  }
-
-  toggleButton8() {
-    setState(() {
-      toggle8 = !toggle8;
-    });
-  }
-
-  toggleButton9() {
-    setState(() {
-      toggle9 = !toggle9;
-    });
-  }
-
-  toggleButton10() {
-    setState(() {
-      toggle10 = !toggle10;
-    });
-  }
-
-  toggleButton11() {
-    setState(() {
-      toggle11 = !toggle11;
-    });
-  }
-
-  toggleButton12() {
-    setState(() {
-      toggle12 = !toggle12;
+      toggle11Or12 = !toggle11Or12;
     });
   }
 }
