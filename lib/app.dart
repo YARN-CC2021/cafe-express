@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'screens/map_page.dart';
 import 'screens/merchant_page.dart';
+import 'screens/merchant_flex.dart';
 import 'wrapper.dart';
 import 'package:provider/provider.dart';
 import 'models/user_status.dart';
@@ -14,6 +15,7 @@ const WrapperRoute = "/";
 const MapSearchRoute = "/map_search";
 const DetailRoute = "/detail";
 const MerchantRoute = "/merchant_settings";
+const MerchantflexRoute = "/merchant_settings_flex";
 const UserCategoryRoute = "/user_category";
 const ValidationRoute = "validation";
 const MerchantProfileRoute = "/merchant_profile";
@@ -50,6 +52,9 @@ class MyApp extends StatelessWidget {
         case MerchantRoute:
           screen = MerchantPage();
           break;
+        case MerchantflexRoute:
+          screen = MerchantFlex();
+          break;
         case UserCategoryRoute:
           screen = UserCategoryPage();
           break;
@@ -58,6 +63,9 @@ class MyApp extends StatelessWidget {
           break;
         case MerchantProfileRoute:
           screen = MerchantProfilePage();
+          break;
+        case TimerRoute:
+          screen = TimerPage();
           break;
         default:
           return null;
