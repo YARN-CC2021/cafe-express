@@ -94,76 +94,6 @@ class _DetailPageState extends State<DetailPage> {
                                 },
                             ),
                           ),
-<<<<<<< HEAD
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              imageCard(),
-              Card(
-                color: Colors.amber[100],
-                child: Text('${shopData['description']}'),
-              ),
-              Card(
-                child: Row(
-                  children: [
-                    Card(
-                      child: Column(
-                        children: [
-                          Text("Mon"),
-                        ],
-                      ),
-                    ),
-                    Card(
-                      child: Column(
-                        children: [
-                          Text("Tue"),
-                        ],
-                      ),
-                    ),
-                    Card(
-                      child: Column(
-                        children: [
-                          Text("Wed"),
-                        ],
-                      ),
-                    ),
-                    Card(
-                      child: Column(
-                        children: [
-                          Text("Thu"),
-                        ],
-                      ),
-                    ),
-                    Card(
-                      child: Column(
-                        children: [
-                          Text("Fri"),
-                        ],
-                      ),
-                    ),
-                    Card(
-                      child: Column(
-                        children: [
-                          Text("Sat"),
-                        ],
-                      ),
-                    ),
-                    Card(
-                      child: Column(
-                        children: [
-                          Text("Sun"),
-                        ],
-                      ),
-                    ),
-                    Card(
-                      child: Column(
-                        children: [
-                          Text("Hol"),
-                        ],
-=======
                         ],
                       ),
                     ],
@@ -283,7 +213,6 @@ class _DetailPageState extends State<DetailPage> {
                       style: TextStyle(
                         fontSize: 25.0,
                         fontWeight: FontWeight.bold,
->>>>>>> fc330d0afe6c0811b9609d438ee0f0a8aac6fa22
                       ),
                     ),
                     Wrap(
