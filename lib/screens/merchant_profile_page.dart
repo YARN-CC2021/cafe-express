@@ -288,19 +288,29 @@ class _MerchantProfilePageState extends State<MerchantProfilePage> {
                         // you'd often call a server or save the information in a database.
                         assignVariable();
                         _updateStoreProfile();
-                        print(shopData);
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                MerchantCalendarPage(shopData: shopData),
-                          ),
-                        );
+                        print("shopData in ElevatedButton onPressed $shopData");
+                        // Navigator.push(
+                        //   context,
+                        //   MaterialPageRoute(
+                        //     builder: (context) =>
+                        //         MerchantCalendarPage(shopData: shopData),
+                        //   ),
+                        // );
                       }
                     },
                     child: Text('Next Page'),
                   )
                 ])));
+  }
+
+  void _goToCalendarPage(BuildContext context) {
+    print("triggered _goToCalendarPage");
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => MerchantCalendarPage(shopData: shopData),
+      ),
+    );
   }
 
   Future<void> _updateStoreProfile() async {
@@ -316,6 +326,7 @@ class _MerchantProfilePageState extends State<MerchantProfilePage> {
     if (response.statusCode == 200) {
       final jsonResponse = json.decode(response.body);
       print("_updateStoreProfile jsonResponse= $jsonResponse");
+      _goToCalendarPage(context);
     } else {
       print('Request failed with status: ${response.statusCode}.');
     }

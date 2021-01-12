@@ -60,7 +60,8 @@ class _MerchantCalendarPageState extends State<MerchantCalendarPage> {
   }
 
   Future<void> _updateStoreProfile() async {
-    // print("shopData in _updateStoreProfile $shopData");
+    print("UpdateStoreProfile was called!!!!");
+    print("shopData in _updateStoreProfile $newShopData");
     // print("JSON stringiified shopdata ${jsonEncode(shopData)}");
     var response = await http.patch(
       "https://pq3mbzzsbg.execute-api.ap-northeast-1.amazonaws.com/CaffeExpressRESTAPI/store/$_userId",
