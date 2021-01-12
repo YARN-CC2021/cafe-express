@@ -7,8 +7,8 @@ import 'package:http/http.dart' as http;
 import 'package:amplify_core/amplify_core.dart';
 
 class MerchantCalendarPage extends StatefulWidget {
-  final Map<dynamic, dynamic> profile;
-  MerchantCalendarPage({Key key, @required this.profile}) : super(key: key);
+  final Map<dynamic, dynamic> shopData;
+  MerchantCalendarPage({Key key, @required this.shopData}) : super(key: key);
 
   @override
   _MerchantCalendarPageState createState() => _MerchantCalendarPageState();
@@ -121,13 +121,10 @@ class _MerchantCalendarPageState extends State<MerchantCalendarPage> {
           bookingHour = (int.parse(hour) - 1).toString();
           if (bookingHour.length == 1) bookingHour = "0" + bookingHour;
         }
-        print("bookingHour= $bookingHour");
         if (openClose == "open") hours[day]["bookingStart"] = "$hour$minute";
         if (openClose == "close") {
           hours[day]["bookingEnd"] = "$bookingHour$minute";
         }
-        print(hours[day]["bookingStart"]);
-        print(hours[day]["bookingEnd"]);
       });
     }
   }

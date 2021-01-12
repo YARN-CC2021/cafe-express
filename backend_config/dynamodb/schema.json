@@ -2,20 +2,21 @@
     "customer": {
         "id": "pk_XXXXXXXXX ",
         "email": "xxxx@gmail.com",
-        "username": "yoshinao",
+        // "username": "yoshinao",
         "point": 350,
         "createdAt": "datetime",
         "updatedAt": "datetime"
     },
     "store": {
         "id": "pk_XXXXXXXXX ",
+        "loginEmail": "ffea@gmail.com",
         "stripeId": "XXXXXXX",
         "name": "CCbucks",
         "address": "六本木３－１－１",
         "lat": 120.0432579,
         "lng": 20.7320851,
         "tel": "99999999",
-        "email": "xxxx@gmail.com",
+        "contactEmail": "xxxx@gmail.com",
         "storeURL": "http://....",
         "category": "Cafe",
         "depositAmountPerPerson": 500,
@@ -38,56 +39,56 @@
             "Sun": {
                 "open": "0900",
                 "close": "2000",
-                "day-off": false,
+                "day_off": false,
                 "bookingStart": "0900",
                 "bookingEnd": "1830"
             },
             "Mon": {
                 "open": "0900",
                 "close": "2000",
-                "day-off": true,
+                "day_off": true,
                 "bookingStart": "0900",
                 "bookingEnd": "1830"
             },
             "Tue": {
                 "open": "0900",
                 "close": "2000",
-                "day-off": true,
+                "day_off": true,
                 "bookingStart": "0900",
                 "bookingEnd": "1830"
             },
             "Wed": {
                 "open": "0900",
                 "close": "2000",
-                "day-off": true,
+                "day_off": true,
                 "bookingStart": "0900",
                 "bookingEnd": "1830"
             },
             "Thu": {
                 "open": "0900",
                 "close": "2000",
-                "day-off": true,
+                "day_off": true,
                 "bookingStart": "0900",
                 "bookingEnd": "1830"
             },
             "Fri": {
                 "open": "0900",
                 "close": "2000",
-                "day-off": true,
+                "day_off": true,
                 "bookingStart": "0900",
                 "bookingEnd": "1830"
             },
             "Sat": {
                 "open": "0900",
                 "close": "2000",
-                "day-off": true,
+                "day_off": true,
                 "bookingStart": "0900",
                 "bookingEnd": "1830"
             },
             "Holiday": {
                 "open": "0900",
                 "close": "2000",
-                "day-off": true,
+                "day_off": true,
                 "bookingStart": "0900",
                 "bookingEnd": "1830"
             }
