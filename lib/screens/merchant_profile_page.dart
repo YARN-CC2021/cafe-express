@@ -5,14 +5,26 @@ import 'package:http/http.dart' as http;
 import 'package:amplify_core/amplify_core.dart';
 import './merchant_calendar_page.dart';
 
-// enum VacancyType { strict, flex, custom }
-
 class MerchantProfilePage extends StatefulWidget {
   @override
   _MerchantProfilePageState createState() => _MerchantProfilePageState();
 }
 
+Map shopData;
+var _userId;
+
 class _MerchantProfilePageState extends State<MerchantProfilePage> {
+  @override
+  void initState() {
+    super.initState();
+    _getShopData();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
   final _formKey = GlobalKey<FormState>();
   final TextEditingController nameController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
@@ -25,29 +37,20 @@ class _MerchantProfilePageState extends State<MerchantProfilePage> {
   final TextEditingController imageController = TextEditingController();
 
   var _vacancyType = "";
-  var profile = {};
+  // var profile = {};
 
   void assignVariable() {
-    profile["name"] = nameController.text;
-    profile["description"] = descriptionController.text;
-    profile["address"] = addressController.text;
-    profile["tel"] = telController.text;
-    profile["email"] = emailController.text;
-    profile["storeURL"] = storeUrlController.text;
-    profile["category"] = categoryController.text;
-    profile["depositAmountPerPerson"] = depositController.text;
-    profile["imagePaths"] = imageController.text;
-    profile["vacancyType"] = _vacancyType;
-  }
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
+    shopData["name"] = nameController.text;
+    shopData["description"] = descriptionController.text;
+    shopData["address"] = addressController.text;
+    shopData["tel"] = telController.text;
+    shopData["contactEmail"] = emailController.text;
+    shopData["storeURL"] = storeUrlController.text;
+    shopData["category"] = categoryController.text;
+    shopData["depositAmountPerPerson"] = depositController.text;
+    shopData["imagePaths"] = imageController.text;
+    shopData["vacancyType"] = _vacancyType;
+    shopData["updatedAt"] = DateTime.now().toUtc().toIso8601String();
   }
 
   @override
@@ -284,12 +287,13 @@ class _MerchantProfilePageState extends State<MerchantProfilePage> {
                         // If the form is valid, display a snackbar. In the real world,
                         // you'd often call a server or save the information in a database.
                         assignVariable();
-                        print(profile);
+                        _updateStoreProfile();
+                        print(shopData);
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) =>
-                                MerchantCalendarPage(profile: profile),
+                                MerchantCalendarPage(shopData: shopData),
                           ),
                         );
                       }
@@ -297,5 +301,57 @@ class _MerchantProfilePageState extends State<MerchantProfilePage> {
                     child: Text('Next Page'),
                   )
                 ])));
+  }
+
+  Future<dynamic> _updateStoreProfile() async {
+    var response = await http.put(
+      "https://pq3mbzzsbg.execute-api.ap-northeast-1.amazonaws.com/CaffeExpressRESTAPI/user/$_userId",
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(shopData),
+    );
+    if (response.statusCode == 201) {
+      final jsonResponse = json.decode(response.body);
+      print("_updateStoreProfile jsonResponse= $jsonResponse");
+      return jsonResponse;
+    } else {
+      print('Request failed with status: ${response.statusCode}.');
+    }
+  }
+
+  Future<void> _getShopData() async {
+    var userData = await Amplify.Auth.getCurrentUser();
+    var userId = userData.userId;
+    setState(() => _userId = userId);
+    var response = await http.get(
+        'https://pq3mbzzsbg.execute-api.ap-northeast-1.amazonaws.com/CaffeExpressRESTAPI/store/$userId');
+    if (response.statusCode == 200) {
+      final jsonResponse = await json.decode(utf8.decode(response.bodyBytes));
+      setState(() {
+        shopData = jsonResponse['body'];
+      });
+      _mapMountedStoreData();
+    } else {
+      print('Request failed with status: ${response.statusCode}.');
+    }
+  }
+
+  void _mapMountedStoreData() {
+    nameController.text = shopData['name'];
+    descriptionController.text = shopData['descripti'];
+    addressController.text = shopData['address'];
+    telController.text = shopData['tel'];
+    emailController.text = shopData['contactEmail'];
+    storeUrlController.text = shopData['storeURL'];
+    categoryController.text = shopData['category'];
+    depositController.text = shopData['depositAmountPerPerson'].toString();
+    if (shopData['imagePaths'].length > 0) {
+      imageController.text = shopData['imagePaths'][0];
+    } else {
+      imageController.text = "";
+    }
+    _vacancyType = shopData['vacancyType'];
+    shopData.remove("id");
   }
 }

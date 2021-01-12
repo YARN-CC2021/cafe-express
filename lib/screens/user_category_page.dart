@@ -63,14 +63,22 @@ class _UserCategoryPageState extends State<UserCategoryPage> {
   Future<dynamic> _insertUserCategory(bool isCustomer) async {
     var userData = await Amplify.Auth.getCurrentUser();
     var userId = userData.userId;
+    var useremail = userData.username;
+    final now = DateTime.now();
+    print("username= ${userData.username}");
 
     print("_insertUserCategory body= $userId, $isCustomer");
     var response = await http.post(
-      "https://pq3mbzzsbg.execute-api.ap-northeast-1.amazonaws.com/CaffeExpressRESTAPI/usercategory",
+      "https://pq3mbzzsbg.execute-api.ap-northeast-1.amazonaws.com/CaffeExpressRESTAPI/user",
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
-      body: jsonEncode({'id': userId, "isCustomer": isCustomer}),
+      body: jsonEncode({
+        'id': userId,
+        "isCustomer": isCustomer,
+        "loginEmail": useremail,
+        "createdAt": now.toUtc().toIso8601String(),
+      }),
     );
     if (response.statusCode == 200) {
       final jsonResponse = json.decode(response.body);
