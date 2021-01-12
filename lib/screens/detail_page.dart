@@ -25,6 +25,8 @@ class _DetailPageState extends State<DetailPage> {
   @override
   void initState() {
     super.initState();
+    // print(MediaQuery.of(context).size.width);
+    // print(MediaQuery.of(context).size.height);
     print(widget.id);
     _getShopData(widget.id);
   }
@@ -79,20 +81,23 @@ class _DetailPageState extends State<DetailPage> {
                               fontSize: 20.0,
                             ),
                           ),
-                          RichText(
-                            textAlign: TextAlign.end,
-                            text: TextSpan(
-                              text: "URL",
-                              style: TextStyle(color: Colors.lightBlue),
-                              recognizer: TapGestureRecognizer()
-                                ..onTap = () async {
-                                  final url = shopData['storeURL'];
-                                  if (await canLaunch(url)) {
-                                    await launch(url);
-                                  } else {
-                                    return InfoWindow(title: "No URL");
-                                  }
-                                },
+                          Padding(
+                            padding: const EdgeInsets.only(right: 50.0),
+                            child: RichText(
+                              textAlign: TextAlign.end,
+                              text: TextSpan(
+                                text: "URL",
+                                style: TextStyle(color: Colors.lightBlue),
+                                recognizer: TapGestureRecognizer()
+                                  ..onTap = () async {
+                                    final url = shopData['storeURL'];
+                                    if (await canLaunch(url)) {
+                                      await launch(url);
+                                    } else {
+                                      return InfoWindow(title: "No URL");
+                                    }
+                                  },
+                              ),
                             ),
                           ),
                         ],
@@ -218,7 +223,8 @@ class _DetailPageState extends State<DetailPage> {
                     ),
                     Wrap(
                       children: availableSheets.map<Widget>((table) {
-                        return Card( //Return All isVacant and false onPressed:null
+                        return Card(
+                          //Return All isVacant and false onPressed:null
                           child: Text(
                             '${table['label']}',
                             style: TextStyle(
@@ -290,9 +296,13 @@ class _DetailPageState extends State<DetailPage> {
                         return AlertDialog(
                           title: Text("Booking Confirmation"),
                           content:
-                              Text('GroupNumber:$groupNum  Deposit:$price Yen'),
+                          Column(
+                          children: [
+                              Text('GroupNumber:$groupNum'),
+                              Text('Deposit:$price Yen'),
+                              ],
+                            ),
                           actions: <Widget>[
-                            // ボタン領域
                             FlatButton(
                               child: Text("Cancel"),
                               onPressed: () => Navigator.pop(context),
@@ -309,14 +319,13 @@ class _DetailPageState extends State<DetailPage> {
                     );
                   },
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.menu_book,
-                      ),
-                      Text("Book now!"),
-                    ]
-                  ),
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.menu_book,
+                        ),
+                        Text("Book now!"),
+                      ]),
                 ),
               ],
             ),
