@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import '../app.dart';
 
 class DetailPage extends StatefulWidget {
   final String id;
@@ -20,6 +21,7 @@ class _DetailPageState extends State<DetailPage> {
   String vacancyType;
   String groupNum = '1';
   int price = 0;
+  String sheet = 'Select Sheet';
   var availableSheets;
   @override
   void initState() {
@@ -218,6 +220,7 @@ class _DetailPageState extends State<DetailPage> {
                     Wrap(
                       children: availableSheets.map<Widget>((table) {
                         return Card(
+                          //Return All isVacant and false onPressed:null
                           child: Text(
                             '${table['label']}',
                             style: TextStyle(
@@ -280,7 +283,8 @@ class _DetailPageState extends State<DetailPage> {
                     ),
                   ),
                 ),
-                FlatButton(
+                OutlineButton(
+                  borderSide: BorderSide(color: Colors.lightBlue),
                   onPressed: () {
                     showDialog(
                       context: context,
@@ -297,7 +301,9 @@ class _DetailPageState extends State<DetailPage> {
                             ),
                             FlatButton(
                               child: Text("Go Payment"),
-                              onPressed: () => {}, //goto payment page
+                              onPressed: () => {
+                                _goTimerPage(context),
+                              }, //goto payment page
                             ),
                           ],
                         );
@@ -321,21 +327,6 @@ class _DetailPageState extends State<DetailPage> {
     }
   }
 
-  Widget vacantCard() {
-    return shopData['vacancy']['$vacancyType']
-        .map((table) => {
-              print(table),
-              Card(
-                child: table['isVacant']
-                    ? Card(
-                        child: Text("$table"),
-                      )
-                    : Text(''),
-              ),
-            })
-        .toList();
-  }
-
   Widget changeTime(String time) {
     String first;
     String last;
@@ -351,26 +342,30 @@ class _DetailPageState extends State<DetailPage> {
   }
 
   Widget imageCard() {
-    return CachedNetworkImage(
-      imageUrl: shopData['imagePaths'][0],
-      placeholder: (context, url) => CircularProgressIndicator(),
-      errorWidget: (context, url, error) => new Icon(Icons.error),
-    );
-    // if ('${shopData['imagePaths'][0]}' == null) {
-    //   return Card(
-    //     child: Text(''),
-    //   );
-    // } else {
-    //   return Card(
-    //     child: Image.network(
-    //       '${shopData['imagePaths'][0]}',
-    //       errorBuilder:
-    //           (BuildContext context, Object exception, StackTrace stackTrace) {
-    //         return Text('No Image or Loading Error');
+    try {
+      //Can't handle invalid URL
+      return CachedNetworkImage(
+        imageUrl: shopData['imagePaths'][0],
+        placeholder: (context, url) => Center(child: LinearProgressIndicator()),
+        errorWidget: (context, url, error) => Text('No Image or Loading Error'),
+      );
+    } catch (e) {
+      print(e);
+      return Text('No Image or Loading Error');
+    }
+
+    // return Card(
+    //   child: Image.network(
+    //     '${shopData['imagePaths'][0]}',
+    //     loadingBuilder: (context, child, loadingProgress) {
+    //         if (loadingProgress == null) return child;
+    //         return Center(child: Text('Loading...'));
     //       },
-    //     ),
-    //   );
-    // }
+    //     errorBuilder: (BuildContext context, Object exception, StackTrace stackTrace) {
+    //       return Text('No Image or Loading Error');
+    //     },
+    //   ),
+    // );
   }
 
   Future<void> _getShopData(String id) async {
@@ -389,5 +384,10 @@ class _DetailPageState extends State<DetailPage> {
     } else {
       print('Request failed with status: ${response.statusCode}.');
     }
+  }
+
+  void _goTimerPage(BuildContext context) {
+    Navigator.pushNamed(context, TimerRoute);
+    print("goTimerPage was triggered");
   }
 }
