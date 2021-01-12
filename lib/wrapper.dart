@@ -44,7 +44,7 @@ class _WrapperState extends State<Wrapper> {
     }
   }
 
-  void _fetchSession() async {
+  Future<void> _fetchSession() async {
     print("Fetch SESSION IS RUNNING $status");
     try {
       var userData = await Amplify.Auth.getCurrentUser();
@@ -65,6 +65,7 @@ class _WrapperState extends State<Wrapper> {
           'https://pq3mbzzsbg.execute-api.ap-northeast-1.amazonaws.com/CaffeExpressRESTAPI/usercategory/$data');
       final jsonResponse = await json.decode(utf8.decode(response.bodyBytes));
       final type = jsonResponse['body'];
+      print("THIS IS jsonresponse $jsonResponse");
       print("THIS IS TYPE $type");
       setState(() {
         userType = type["isCustomer"];
