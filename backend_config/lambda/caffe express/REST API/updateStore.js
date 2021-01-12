@@ -42,12 +42,10 @@ exports.handler = async (event, context) => {
   // Lambda Code Here
   // context.succeed('Success!')
   // context.fail('Failed!')
-
   let responseBody = "";
   let statusCode = 0;
   let message = "";
   const { id } = event.params;
-
   try {
     await updateStore(event, id);
     responseBody = event.body;
