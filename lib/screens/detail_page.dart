@@ -385,6 +385,6 @@ class _DetailPageState extends State<DetailPage> {
     }
   }
   // void _goTimerPage(BuildContext context) {
-  //   Navigator.pushNamed(context, TimerPage); //arguments: to pass data
+  //   Navigator.pushNamed(context, TimerRoute); //arguments: to pass data
   // }
 }
