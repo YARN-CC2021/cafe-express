@@ -51,7 +51,9 @@ class _TimerPageState extends State<TimerPage> {
             ),
           ),
           child: Container(
-            child: Column(children: [
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
               Container(
                 width: 40.0,
                 child: Column(children: [
