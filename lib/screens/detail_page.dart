@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import '../app.dart';
 
 class DetailPage extends StatefulWidget {
   final String id;
@@ -218,7 +219,8 @@ class _DetailPageState extends State<DetailPage> {
                     ),
                     Wrap(
                       children: availableSheets.map<Widget>((table) {
-                        return Card( //Return All isVacant and false onPressed:null
+                        return Card(
+                          //Return All isVacant and false onPressed:null
                           child: Text(
                             '${table['label']}',
                             style: TextStyle(
@@ -300,7 +302,7 @@ class _DetailPageState extends State<DetailPage> {
                             FlatButton(
                               child: Text("Go Payment"),
                               onPressed: () => {
-                                //_goTimerPage(context),
+                                _goTimerPage(context),
                               }, //goto payment page
                             ),
                           ],
@@ -309,14 +311,13 @@ class _DetailPageState extends State<DetailPage> {
                     );
                   },
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.menu_book,
-                      ),
-                      Text("Book now!"),
-                    ]
-                  ),
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.menu_book,
+                        ),
+                        Text("Book now!"),
+                      ]),
                 ),
               ],
             ),
@@ -384,7 +385,9 @@ class _DetailPageState extends State<DetailPage> {
       print('Request failed with status: ${response.statusCode}.');
     }
   }
-  // void _goTimerPage(BuildContext context) {
-  //   Navigator.pushNamed(context, TimerPage); //arguments: to pass data
-  // }
+
+  void _goTimerPage(BuildContext context) {
+    Navigator.pushNamed(context, TimerRoute);
+    print("goTimerPage was triggered");
+  }
 }
