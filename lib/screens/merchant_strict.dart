@@ -1,4 +1,8 @@
 import "package:flutter/material.dart";
+import '../global.dart' as globals;
+import 'package:web_socket_channel/io.dart';
+import 'dart:convert';
+import 'package:web_socket_channel/web_socket_channel.dart';
 
 class MerchantStrict extends StatefulWidget {
   @override
@@ -19,6 +23,15 @@ class _MerchantStrictState extends State<MerchantStrict> {
   bool toggle11 = false;
   bool toggle12 = false;
 
+  final channel = IOWebSocketChannel.connect(
+      "wss://gu2u8vdip2.execute-api.ap-northeast-1.amazonaws.com/CafeExpressWS?id=${globals.userId}");
+
+  @override
+  void dispose() {
+    channel.sink.close();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,6 +44,32 @@ class _MerchantStrictState extends State<MerchantStrict> {
           elevation: 0.0,
         ),
         body: ListView(children: [
+          StreamBuilder(
+            stream: channel.stream,
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 1.0),
+                  // child: Text(snapshot.hasData
+                  //     ? '${json.decode(snapshot.data)["customerId"]}'
+                  //     : ''),
+                  child: AlertDialog(
+                    title: Text("Booking Confirmation"),
+                    content: Text(
+                        'Party Size:${json.decode(snapshot.data)["partySize"]}\nBooked Time:${json.decode(snapshot.data)["bookedAt"]}\nArrival Time By:${json.decode(snapshot.data)["expiredAt"]}\nDeposit:${json.decode(snapshot.data)["depositAmount"]} Yen'),
+                    // actions: <Widget>[
+                    //   // ボタン領域
+                    //   FlatButton(
+                    //     child: Text("Go To Control Panel"),
+                    //     onPressed: () => Navigator.pop(context),
+                    //   ),
+                    // ],
+                  ),
+                );
+              }
+              return Text("");
+            },
+          ),
           Text(
             "1 Person",
             textAlign: TextAlign.center,
