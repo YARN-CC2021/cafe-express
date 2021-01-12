@@ -321,21 +321,6 @@ class _DetailPageState extends State<DetailPage> {
     }
   }
 
-  Widget vacantCard() {
-    return shopData['vacancy']['$vacancyType']
-        .map((table) => {
-              print(table),
-              Card(
-                child: table['isVacant']
-                    ? Card(
-                        child: Text("$table"),
-                      )
-                    : Text(''),
-              ),
-            })
-        .toList();
-  }
-
   Widget changeTime(String time) {
     String first;
     String last;
