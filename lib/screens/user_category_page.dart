@@ -74,7 +74,7 @@ class _UserCategoryPageState extends State<UserCategoryPage> {
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: jsonEncode({
-        'id': userId,
+        "id": userId,
         "isCustomer": isCustomer,
         "loginEmail": useremail,
         "createdAt": now.toUtc().toIso8601String(),
