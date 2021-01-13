@@ -219,6 +219,7 @@ class _MapPageState extends State<MapPage> {
       shop['lat'].toDouble(),
       shop['lng'].toDouble(),
     );
+    // print(distanceInMeters.toInt());
     return distanceInMeters.toInt();
   }
   void _onTap(BuildContext context, String shopId) {
