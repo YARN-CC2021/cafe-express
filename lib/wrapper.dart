@@ -6,6 +6,7 @@ import 'package:amplify_core/amplify_core.dart';
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'global.dart' as globals;
 
 class Wrapper extends StatefulWidget {
   @override
@@ -50,6 +51,7 @@ class _WrapperState extends State<Wrapper> {
       await _fetchType(userData.userId);
       setState(() {
         status = userData.userId;
+        globals.userId = userData.userId;
       });
     } on AuthError catch (e) {
       print(e);

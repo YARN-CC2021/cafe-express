@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'screens/map_page.dart';
-import 'screens/merchant_page.dart';
+import 'screens/merchant_strict.dart';
 import 'screens/merchant_flex.dart';
+import 'screens/merchant_page.dart';
 import 'wrapper.dart';
 import 'package:provider/provider.dart';
 import 'models/user_status.dart';
