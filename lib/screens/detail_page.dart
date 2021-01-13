@@ -6,6 +6,8 @@ import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../app.dart';
+import 'package:web_socket_channel/io.dart';
+import '../global.dart' as globals;
 
 class DetailPage extends StatefulWidget {
   final String id;
@@ -17,6 +19,10 @@ class DetailPage extends StatefulWidget {
 
 class _DetailPageState extends State<DetailPage> {
   final _scrollController = ScrollController();
+
+  final channel = IOWebSocketChannel.connect(
+      "wss://gu2u8vdip2.execute-api.ap-northeast-1.amazonaws.com/CafeExpressWS?id=${globals.userId}");
+
   Map shopData;
   String vacancyType;
   String groupNum = '1';
@@ -35,6 +41,7 @@ class _DetailPageState extends State<DetailPage> {
   @override
   void dispose() {
     super.dispose();
+    channel.sink.close();
   }
 
   @override
@@ -311,6 +318,49 @@ class _DetailPageState extends State<DetailPage> {
                             FlatButton(
                               child: Text("Go Payment"),
                               onPressed: () => {
+                                channel.sink.add({
+                                  "action": "onBook",
+                                  "bookedAt": "11:30",
+                                  "bookingId": "Hi Test Booking",
+                                  "bookName": "Mr.Popo",
+                                  "coupon": {
+                                    "codeForQR": "XXXXXXXX",
+                                    "couponAttached": true,
+                                    "couponId": "pk_XXXXXXXXX",
+                                    "description":
+                                        "メロスは激怒した。必ず、かの邪智暴虐じゃちぼうぎゃくの王を除かなければならぬと決意した。メロスには政治がわからぬ。メロスは、村の牧人である。笛を吹き、羊と遊んで暮して来た。けれども邪悪に対しては、人一倍に敏感であった。きょう未明メロスは村を出発し、野を越え山越え、十里はなれた此このシラクスの市にやって来た。メロスには父も、母も無い。女房も無い。十六の、内気な妹と二人暮しだ。この妹は、村の或る律気な一牧人を、近々、花婿はなむことして迎える事になっていた。結婚式も間近かなのである。メロスは、それゆえ、花嫁の衣裳やら祝宴の御馳走やらを買いに、はるばる市にやって来たのだ。先ず、その品々を買い集め、それから都の大路をぶらぶら歩いた。メロスには竹馬の友があった。セリヌンティウスである。今は此のシラクスの市で、石工をしている。その友を、これから訪ねてみるつもりなのだ。久しく逢わなかったのだから、訪ねて行くのが楽しみである。歩いているうちにメロスは、まちの様子を怪しく思った。",
+                                    "imagePath": "http://....",
+                                    "title": "２万引き"
+                                  },
+                                  "createdAt": "datetime",
+                                  "customerInfo": {
+                                    "customerId":
+                                        "c7076e59-5072-42ec-86f0-944d151f7869"
+                                    // globals.userId
+                                  },
+                                  "depositAmount": 2000,
+                                  "expiredAt": "12:00",
+                                  "index": 3,
+                                  "partySize": 4,
+                                  "status": "checked-in",
+                                  "storeInfo": {
+                                    "address": "六本木３－１－１",
+                                    "category": "Cafe",
+                                    "id":
+                                        "17fcd86a-8fa6-419c-ba43-67d64dafce9f",
+                                    "name": "CCbucks",
+                                    "rating": 3.8,
+                                    "tel": "123-2313-1231"
+                                  },
+                                  "tableType": {
+                                    "isVacant": true,
+                                    "label": "1 Seat Table",
+                                    "Max": 1,
+                                    "Min": 1
+                                  },
+                                  "updatedAt": "2021-01-12-02:01:00",
+                                  "vacancyType": "strict"
+                                }),
                                 _goTimerPage(context),
                               }, //goto payment page
                             ),
