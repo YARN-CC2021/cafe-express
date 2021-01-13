@@ -482,18 +482,17 @@ class _MerchantCalendarPageState extends State<MerchantCalendarPage> {
                 onPressed: () {
                   assignNewHours();
                   _updateStoreProfile();
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(
-                  //     builder: (context) =>
-                  //         MerchantCalendarPage(shopData: shopData),
-                  //   ),
-                  // );
+                  _goMerchantPage(context);
                 },
                 child: Text('Submit'),
               )
             ]),
       ),
     );
+  }
+
+  void _goMerchantPage(BuildContext context) {
+    Navigator.pushNamed(context, MerchantRoute);
+    print("goMerchantPage was triggered");
   }
 }
