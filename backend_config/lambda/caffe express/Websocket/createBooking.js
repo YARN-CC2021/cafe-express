@@ -104,6 +104,7 @@ exports.handler = async (event, context, sendResponse) => {
     depositAmount,
     bookedAt,
     expiredAt,
+    bookingId
   } = bodyParsed;
   const { id } = bodyParsed.storeInfo;
   const { customerId } = bodyParsed.customerInfo;
@@ -116,6 +117,7 @@ exports.handler = async (event, context, sendResponse) => {
   });
 
   const storeResponseBody = JSON.stringify({
+    bookingId,
     customerId,
     bookName,
     vacancyType,

@@ -3,6 +3,8 @@ import '../global.dart' as globals;
 import 'package:web_socket_channel/io.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:badges/badges.dart';
 
 class MerchantStrict extends StatefulWidget {
   @override
@@ -25,12 +27,63 @@ class _MerchantStrictState extends State<MerchantStrict> {
     super.dispose();
   }
 
+  final TextEditingController table1Controller = TextEditingController();
+  final TextEditingController table2Controller = TextEditingController();
+  final TextEditingController table3Controller = TextEditingController();
+  final TextEditingController table4Controller = TextEditingController();
+  final TextEditingController table5Controller = TextEditingController();
+  final TextEditingController table6Controller = TextEditingController();
+  final TextEditingController table7Controller = TextEditingController();
+  final TextEditingController table8Controller = TextEditingController();
+  final TextEditingController table9Controller = TextEditingController();
+  final TextEditingController table10Controller = TextEditingController();
+  final TextEditingController table11Controller = TextEditingController();
+  final TextEditingController table12Controller = TextEditingController();
+
   Map shopData;
   List vacancyInfo;
 
   void toggleButton(int index) {
     setState(() {
       vacancyInfo[index]["isVacant"] = !vacancyInfo[index]["isVacant"];
+      switch (index) {
+        case 0:
+          vacancyInfo[index]["cancelFee"] = int.parse(table1Controller.text);
+          break;
+        case 1:
+          vacancyInfo[index]["cancelFee"] = int.parse(table2Controller.text);
+          break;
+        case 2:
+          vacancyInfo[index]["cancelFee"] = int.parse(table3Controller.text);
+          break;
+        case 3:
+          vacancyInfo[index]["cancelFee"] = int.parse(table4Controller.text);
+          break;
+        case 4:
+          vacancyInfo[index]["cancelFee"] = int.parse(table5Controller.text);
+          break;
+        case 5:
+          vacancyInfo[index]["cancelFee"] = int.parse(table6Controller.text);
+          break;
+        case 6:
+          vacancyInfo[index]["cancelFee"] = int.parse(table7Controller.text);
+          break;
+        case 7:
+          vacancyInfo[index]["cancelFee"] = int.parse(table8Controller.text);
+          break;
+        case 8:
+          vacancyInfo[index]["cancelFee"] = int.parse(table9Controller.text);
+          break;
+        case 9:
+          vacancyInfo[index]["cancelFee"] = int.parse(table10Controller.text);
+          break;
+        case 10:
+          vacancyInfo[index]["cancelFee"] = int.parse(table11Controller.text);
+          break;
+        case 11:
+          vacancyInfo[index]["cancelFee"] = int.parse(table12Controller.text);
+          break;
+      }
     });
 
     channel.sink.add(json.encode({
@@ -38,7 +91,8 @@ class _MerchantStrictState extends State<MerchantStrict> {
       "storeId": globals.userId,
       "index": index,
       "vacancyType": shopData["vacancyType"],
-      "isVacant": vacancyInfo[index]["isVacant"]
+      "isVacant": vacancyInfo[index]["isVacant"],
+      "cancelFee": vacancyInfo[index]["cancelFee"]
     }));
   }
 
@@ -60,676 +114,686 @@ class _MerchantStrictState extends State<MerchantStrict> {
 
   void _mapMountedVacancyInfo() {
     vacancyInfo = shopData["vacancy"][shopData["vacancyType"]];
+    table1Controller.text =
+        shopData["vacancy"][shopData["vacancyType"]][0]["cancelFee"].toString();
+    table2Controller.text =
+        shopData["vacancy"][shopData["vacancyType"]][1]["cancelFee"].toString();
+    table3Controller.text =
+        shopData["vacancy"][shopData["vacancyType"]][2]["cancelFee"].toString();
+    table4Controller.text =
+        shopData["vacancy"][shopData["vacancyType"]][3]["cancelFee"].toString();
+    table5Controller.text =
+        shopData["vacancy"][shopData["vacancyType"]][4]["cancelFee"].toString();
+    table6Controller.text =
+        shopData["vacancy"][shopData["vacancyType"]][5]["cancelFee"].toString();
+    table7Controller.text =
+        shopData["vacancy"][shopData["vacancyType"]][6]["cancelFee"].toString();
+    table8Controller.text =
+        shopData["vacancy"][shopData["vacancyType"]][7]["cancelFee"].toString();
+    table9Controller.text =
+        shopData["vacancy"][shopData["vacancyType"]][8]["cancelFee"].toString();
+    table10Controller.text =
+        shopData["vacancy"][shopData["vacancyType"]][9]["cancelFee"].toString();
+    table11Controller.text = shopData["vacancy"][shopData["vacancyType"]][10]
+            ["cancelFee"]
+        .toString();
+    table12Controller.text = shopData["vacancy"][shopData["vacancyType"]][11]
+            ["cancelFee"]
+        .toString();
   }
+
+  var bookingId;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text(
-            "Cafe Express Control Panel",
-            textAlign: TextAlign.center,
-          ),
-          backgroundColor: Colors.blue,
-          elevation: 0.0,
+      appBar: AppBar(
+        title: Text(
+          "Cafe Express Control Panel",
+          textAlign: TextAlign.center,
         ),
-        body: ListView(children: [
-          StreamBuilder(
-            stream: channel.stream,
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 1.0),
-                  // child: Text(snapshot.hasData
-                  //     ? '${json.decode(snapshot.data)["customerId"]}'
-                  //     : ''),
-                  child: AlertDialog(
-                    title: Text("Booking Confirmation"),
-                    content: Text(
+        backgroundColor: Colors.blue,
+        elevation: 0.0,
+      ),
+      body: StreamBuilder(
+        stream: channel.stream,
+        builder: (context, snapshot) {
+          if (snapshot.hasData &&
+              json.decode(snapshot.data)["bookingId"] != bookingId) {
+            print(snapshot.data);
+            WidgetsBinding.instance.addPostFrameCallback((_) => AwesomeDialog(
+                  context: context,
+                  customHeader: null,
+                  animType: AnimType.LEFTSLIDE,
+                  dialogType: DialogType.SUCCES,
+                  body: Center(
+                      child: Column(children: [
+                    Text(
                         'Party Size:${json.decode(snapshot.data)["partySize"]}\nBooked Time:${json.decode(snapshot.data)["bookedAt"]}\nArrival Time By:${json.decode(snapshot.data)["expiredAt"]}\nDeposit:${json.decode(snapshot.data)["depositAmount"]} Yen'),
-                    // actions: <Widget>[
-                    //   // ボタン領域
-                    //   FlatButton(
-                    //     child: Text("Go To Control Panel"),
-                    //     onPressed: () => Navigator.pop(context),
-                    //   ),
-                    // ],
+                  ])),
+                  btnOkOnPress: () {},
+                  useRootNavigator: false,
+                  btnOkColor: Colors.tealAccent[400],
+                  // btnCancelOnPress: () {},
+                  btnOkText: '予約リストを開く',
+                  // btnCancelText: 'Go To\n Booking List',
+                  // btnCancelColor: Colors.redAccent[400],
+                  dismissOnTouchOutside: false,
+                  headerAnimationLoop: false,
+                  showCloseIcon: true,
+                  buttonsBorderRadius: BorderRadius.all(Radius.circular(100)),
+                )..show());
+            bookingId = json.decode(snapshot.data)["bookingId"];
+            // vacancyInfo[json.decode(snapshot.data)["index"]]["isVacant"] =
+            //     false;
+          }
+          return ListView(
+              padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 30.0),
+              children: [
+                Card(
+                  child: Container(
+                      width: 300,
+                      height: 70,
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Badge(
+                              toAnimate: false,
+                              shape: BadgeShape.square,
+                              badgeColor: Colors.blueAccent,
+                              borderRadius: BorderRadius.circular(8),
+                              badgeContent: Text('一人席',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 23,
+                                  )),
+                            ),
+                            Container(
+                                width: 70,
+                                child: TextFormField(
+                                  // The validator receives the text that the user has entered.
+                                  decoration: InputDecoration(
+                                    hintText: '0',
+                                  ),
+                                  controller: table1Controller,
+                                  validator: (value) {
+                                    if (value.isEmpty) {
+                                      return 'Input Cancel Fee.';
+                                    }
+                                    return null;
+                                  },
+                                )),
+                            Center(
+                              child: AnimatedContainer(
+                                duration: Duration(milliseconds: 500),
+                                height: 40.0,
+                                width: 100.0,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(20.0),
+                                    color: vacancyInfo[0]["isVacant"]
+                                        ? Colors.blueAccent[100]
+                                        : Colors.redAccent[100]
+                                            .withOpacity(0.5)),
+                                child: Stack(
+                                  children: <Widget>[
+                                    AnimatedPositioned(
+                                      duration: Duration(milliseconds: 500),
+                                      curve: Curves.easeIn,
+                                      top: 3.0,
+                                      left: vacancyInfo[0]["isVacant"]
+                                          ? 60.0
+                                          : 0.0,
+                                      right: vacancyInfo[0]["isVacant"]
+                                          ? 0.0
+                                          : 60.0,
+                                      child: InkWell(
+                                        onTap: () => {toggleButton(0)},
+                                        child: AnimatedSwitcher(
+                                          duration: Duration(milliseconds: 500),
+                                          transitionBuilder: (Widget child,
+                                              Animation<double> animation) {
+                                            return RotationTransition(
+                                                child: child, turns: animation);
+                                          },
+                                          child: vacancyInfo[0]["isVacant"]
+                                              ? Icon(Icons.check_circle,
+                                                  color: Colors.blue,
+                                                  size: 32.0,
+                                                  key: UniqueKey())
+                                              : Icon(
+                                                  Icons.remove_circle_outline,
+                                                  color: Colors.red,
+                                                  size: 32.0,
+                                                  key: UniqueKey()),
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ])),
+                ),
+                Text(
+                  "2 Person",
+                  textAlign: TextAlign.center,
+                ),
+                Center(
+                  child: AnimatedContainer(
+                    duration: Duration(milliseconds: 1000),
+                    height: 40.0,
+                    width: 100.0,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20.0),
+                        color: vacancyInfo[1]["isVacant"]
+                            ? Colors.blueAccent[100]
+                            : Colors.redAccent[100].withOpacity(0.5)),
+                    child: Stack(
+                      children: <Widget>[
+                        AnimatedPositioned(
+                          duration: Duration(milliseconds: 1000),
+                          curve: Curves.easeIn,
+                          top: 3.0,
+                          left: vacancyInfo[1]["isVacant"] ? 60.0 : 0.0,
+                          right: vacancyInfo[1]["isVacant"] ? 0.0 : 60.0,
+                          child: InkWell(
+                            onTap: () => {toggleButton(1)},
+                            child: AnimatedSwitcher(
+                              duration: Duration(milliseconds: 1000),
+                              transitionBuilder:
+                                  (Widget child, Animation<double> animation) {
+                                return RotationTransition(
+                                    child: child, turns: animation);
+                              },
+                              child: vacancyInfo[1]["isVacant"]
+                                  ? Icon(Icons.check_circle,
+                                      color: Colors.blue,
+                                      size: 35.0,
+                                      key: UniqueKey())
+                                  : Icon(Icons.remove_circle_outline,
+                                      color: Colors.red,
+                                      size: 35.0,
+                                      key: UniqueKey()),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
                   ),
-                );
-              }
-              return Text("");
-            },
-          ),
-          Text(
-            "1 Person",
-            textAlign: TextAlign.center,
-          ),
-          Center(
-            child: AnimatedContainer(
-              duration: Duration(milliseconds: 1000),
-              height: 40.0,
-              width: 100.0,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20.0),
-                  color: vacancyInfo[0]["isVacant"]
-                      ? Colors.blueAccent[100]
-                      : Colors.redAccent[100].withOpacity(0.5)),
-              child: Stack(
-                children: <Widget>[
-                  AnimatedPositioned(
+                ),
+                Text(
+                  "3 Person",
+                  textAlign: TextAlign.center,
+                ),
+                Center(
+                  child: AnimatedContainer(
                     duration: Duration(milliseconds: 1000),
-                    curve: Curves.easeIn,
-                    top: 3.0,
-                    left: vacancyInfo[0]["isVacant"] ? 60.0 : 0.0,
-                    right: vacancyInfo[0]["isVacant"] ? 0.0 : 60.0,
-                    child: InkWell(
-                      onTap: () => {toggleButton(0)},
-                      child: AnimatedSwitcher(
-                        duration: Duration(milliseconds: 1000),
-                        transitionBuilder:
-                            (Widget child, Animation<double> animation) {
-                          return RotationTransition(
-                              child: child, turns: animation);
-                        },
-                        child: vacancyInfo[0]["isVacant"]
-                            ? Icon(Icons.check_circle,
-                                color: Colors.blue,
-                                size: 35.0,
-                                key: UniqueKey())
-                            : Icon(Icons.remove_circle_outline,
-                                color: Colors.red,
-                                size: 35.0,
-                                key: UniqueKey()),
-                      ),
+                    height: 40.0,
+                    width: 100.0,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20.0),
+                        color: vacancyInfo[2]["isVacant"]
+                            ? Colors.blueAccent[100]
+                            : Colors.redAccent[100].withOpacity(0.5)),
+                    child: Stack(
+                      children: <Widget>[
+                        AnimatedPositioned(
+                          duration: Duration(milliseconds: 1000),
+                          curve: Curves.easeIn,
+                          top: 3.0,
+                          left: vacancyInfo[2]["isVacant"] ? 60.0 : 0.0,
+                          right: vacancyInfo[2]["isVacant"] ? 0.0 : 60.0,
+                          child: InkWell(
+                            onTap: () => {toggleButton(2)},
+                            child: AnimatedSwitcher(
+                              duration: Duration(milliseconds: 1000),
+                              transitionBuilder:
+                                  (Widget child, Animation<double> animation) {
+                                return RotationTransition(
+                                    child: child, turns: animation);
+                              },
+                              child: vacancyInfo[2]["isVacant"]
+                                  ? Icon(Icons.check_circle,
+                                      color: Colors.blue,
+                                      size: 35.0,
+                                      key: UniqueKey())
+                                  : Icon(Icons.remove_circle_outline,
+                                      color: Colors.red,
+                                      size: 35.0,
+                                      key: UniqueKey()),
+                            ),
+                          ),
+                        )
+                      ],
                     ),
-                  )
-                ],
-              ),
-            ),
-          ),
-          Text(
-            "2 Person",
-            textAlign: TextAlign.center,
-          ),
-          Center(
-            child: AnimatedContainer(
-              duration: Duration(milliseconds: 1000),
-              height: 40.0,
-              width: 100.0,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20.0),
-                  color: vacancyInfo[1]["isVacant"]
-                      ? Colors.blueAccent[100]
-                      : Colors.redAccent[100].withOpacity(0.5)),
-              child: Stack(
-                children: <Widget>[
-                  AnimatedPositioned(
+                  ),
+                ),
+                Text(
+                  "4 Person",
+                  textAlign: TextAlign.center,
+                ),
+                Center(
+                  child: AnimatedContainer(
                     duration: Duration(milliseconds: 1000),
-                    curve: Curves.easeIn,
-                    top: 3.0,
-                    left: vacancyInfo[1]["isVacant"] ? 60.0 : 0.0,
-                    right: vacancyInfo[1]["isVacant"] ? 0.0 : 60.0,
-                    child: InkWell(
-                      onTap: () => {toggleButton(1)},
-                      child: AnimatedSwitcher(
-                        duration: Duration(milliseconds: 1000),
-                        transitionBuilder:
-                            (Widget child, Animation<double> animation) {
-                          return RotationTransition(
-                              child: child, turns: animation);
-                        },
-                        child: vacancyInfo[1]["isVacant"]
-                            ? Icon(Icons.check_circle,
-                                color: Colors.blue,
-                                size: 35.0,
-                                key: UniqueKey())
-                            : Icon(Icons.remove_circle_outline,
-                                color: Colors.red,
-                                size: 35.0,
-                                key: UniqueKey()),
-                      ),
+                    height: 40.0,
+                    width: 100.0,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20.0),
+                        color: vacancyInfo[3]["isVacant"]
+                            ? Colors.blueAccent[100]
+                            : Colors.redAccent[100].withOpacity(0.5)),
+                    child: Stack(
+                      children: <Widget>[
+                        AnimatedPositioned(
+                          duration: Duration(milliseconds: 1000),
+                          curve: Curves.easeIn,
+                          top: 3.0,
+                          left: vacancyInfo[3]["isVacant"] ? 60.0 : 0.0,
+                          right: vacancyInfo[3]["isVacant"] ? 0.0 : 60.0,
+                          child: InkWell(
+                            onTap: () => {toggleButton(3)},
+                            child: AnimatedSwitcher(
+                              duration: Duration(milliseconds: 1000),
+                              transitionBuilder:
+                                  (Widget child, Animation<double> animation) {
+                                return RotationTransition(
+                                    child: child, turns: animation);
+                              },
+                              child: vacancyInfo[3]["isVacant"]
+                                  ? Icon(Icons.check_circle,
+                                      color: Colors.blue,
+                                      size: 35.0,
+                                      key: UniqueKey())
+                                  : Icon(Icons.remove_circle_outline,
+                                      color: Colors.red,
+                                      size: 35.0,
+                                      key: UniqueKey()),
+                            ),
+                          ),
+                        )
+                      ],
                     ),
-                  )
-                ],
-              ),
-            ),
-          ),
-          Text(
-            "3 Person",
-            textAlign: TextAlign.center,
-          ),
-          Center(
-            child: AnimatedContainer(
-              duration: Duration(milliseconds: 1000),
-              height: 40.0,
-              width: 100.0,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20.0),
-                  color: vacancyInfo[2]["isVacant"]
-                      ? Colors.blueAccent[100]
-                      : Colors.redAccent[100].withOpacity(0.5)),
-              child: Stack(
-                children: <Widget>[
-                  AnimatedPositioned(
+                  ),
+                ),
+                Text(
+                  "5 Person",
+                  textAlign: TextAlign.center,
+                ),
+                Center(
+                  child: AnimatedContainer(
                     duration: Duration(milliseconds: 1000),
-                    curve: Curves.easeIn,
-                    top: 3.0,
-                    left: vacancyInfo[2]["isVacant"] ? 60.0 : 0.0,
-                    right: vacancyInfo[2]["isVacant"] ? 0.0 : 60.0,
-                    child: InkWell(
-                      onTap: () => {toggleButton(2)},
-                      child: AnimatedSwitcher(
-                        duration: Duration(milliseconds: 1000),
-                        transitionBuilder:
-                            (Widget child, Animation<double> animation) {
-                          return RotationTransition(
-                              child: child, turns: animation);
-                        },
-                        child: vacancyInfo[2]["isVacant"]
-                            ? Icon(Icons.check_circle,
-                                color: Colors.blue,
-                                size: 35.0,
-                                key: UniqueKey())
-                            : Icon(Icons.remove_circle_outline,
-                                color: Colors.red,
-                                size: 35.0,
-                                key: UniqueKey()),
-                      ),
+                    height: 40.0,
+                    width: 100.0,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20.0),
+                        color: vacancyInfo[4]["isVacant"]
+                            ? Colors.blueAccent[100]
+                            : Colors.redAccent[100].withOpacity(0.5)),
+                    child: Stack(
+                      children: <Widget>[
+                        AnimatedPositioned(
+                          duration: Duration(milliseconds: 1000),
+                          curve: Curves.easeIn,
+                          top: 3.0,
+                          left: vacancyInfo[4]["isVacant"] ? 60.0 : 0.0,
+                          right: vacancyInfo[4]["isVacant"] ? 0.0 : 60.0,
+                          child: InkWell(
+                            onTap: () => {toggleButton(4)},
+                            child: AnimatedSwitcher(
+                              duration: Duration(milliseconds: 1000),
+                              transitionBuilder:
+                                  (Widget child, Animation<double> animation) {
+                                return RotationTransition(
+                                    child: child, turns: animation);
+                              },
+                              child: vacancyInfo[4]["isVacant"]
+                                  ? Icon(Icons.check_circle,
+                                      color: Colors.blue,
+                                      size: 35.0,
+                                      key: UniqueKey())
+                                  : Icon(Icons.remove_circle_outline,
+                                      color: Colors.red,
+                                      size: 35.0,
+                                      key: UniqueKey()),
+                            ),
+                          ),
+                        )
+                      ],
                     ),
-                  )
-                ],
-              ),
-            ),
-          ),
-          Text(
-            "4 Person",
-            textAlign: TextAlign.center,
-          ),
-          Center(
-            child: AnimatedContainer(
-              duration: Duration(milliseconds: 1000),
-              height: 40.0,
-              width: 100.0,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20.0),
-                  color: vacancyInfo[3]["isVacant"]
-                      ? Colors.blueAccent[100]
-                      : Colors.redAccent[100].withOpacity(0.5)),
-              child: Stack(
-                children: <Widget>[
-                  AnimatedPositioned(
+                  ),
+                ),
+                Text(
+                  "6 Person",
+                  textAlign: TextAlign.center,
+                ),
+                Center(
+                  child: AnimatedContainer(
                     duration: Duration(milliseconds: 1000),
-                    curve: Curves.easeIn,
-                    top: 3.0,
-                    left: vacancyInfo[3]["isVacant"] ? 60.0 : 0.0,
-                    right: vacancyInfo[3]["isVacant"] ? 0.0 : 60.0,
-                    child: InkWell(
-                      onTap: () => {toggleButton(3)},
-                      child: AnimatedSwitcher(
-                        duration: Duration(milliseconds: 1000),
-                        transitionBuilder:
-                            (Widget child, Animation<double> animation) {
-                          return RotationTransition(
-                              child: child, turns: animation);
-                        },
-                        child: vacancyInfo[3]["isVacant"]
-                            ? Icon(Icons.check_circle,
-                                color: Colors.blue,
-                                size: 35.0,
-                                key: UniqueKey())
-                            : Icon(Icons.remove_circle_outline,
-                                color: Colors.red,
-                                size: 35.0,
-                                key: UniqueKey()),
-                      ),
+                    height: 40.0,
+                    width: 100.0,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20.0),
+                        color: vacancyInfo[5]["isVacant"]
+                            ? Colors.blueAccent[100]
+                            : Colors.redAccent[100].withOpacity(0.5)),
+                    child: Stack(
+                      children: <Widget>[
+                        AnimatedPositioned(
+                          duration: Duration(milliseconds: 1000),
+                          curve: Curves.easeIn,
+                          top: 3.0,
+                          left: vacancyInfo[5]["isVacant"] ? 60.0 : 0.0,
+                          right: vacancyInfo[5]["isVacant"] ? 0.0 : 60.0,
+                          child: InkWell(
+                            onTap: () => {toggleButton(5)},
+                            child: AnimatedSwitcher(
+                              duration: Duration(milliseconds: 1000),
+                              transitionBuilder:
+                                  (Widget child, Animation<double> animation) {
+                                return RotationTransition(
+                                    child: child, turns: animation);
+                              },
+                              child: vacancyInfo[5]["isVacant"]
+                                  ? Icon(Icons.check_circle,
+                                      color: Colors.blue,
+                                      size: 35.0,
+                                      key: UniqueKey())
+                                  : Icon(Icons.remove_circle_outline,
+                                      color: Colors.red,
+                                      size: 35.0,
+                                      key: UniqueKey()),
+                            ),
+                          ),
+                        )
+                      ],
                     ),
-                  )
-                ],
-              ),
-            ),
-          ),
-          Text(
-            "5 Person",
-            textAlign: TextAlign.center,
-          ),
-          Center(
-            child: AnimatedContainer(
-              duration: Duration(milliseconds: 1000),
-              height: 40.0,
-              width: 100.0,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20.0),
-                  color: vacancyInfo[4]["isVacant"]
-                      ? Colors.blueAccent[100]
-                      : Colors.redAccent[100].withOpacity(0.5)),
-              child: Stack(
-                children: <Widget>[
-                  AnimatedPositioned(
+                  ),
+                ),
+                Text(
+                  "7 Person",
+                  textAlign: TextAlign.center,
+                ),
+                Center(
+                  child: AnimatedContainer(
                     duration: Duration(milliseconds: 1000),
-                    curve: Curves.easeIn,
-                    top: 3.0,
-                    left: vacancyInfo[4]["isVacant"] ? 60.0 : 0.0,
-                    right: vacancyInfo[4]["isVacant"] ? 0.0 : 60.0,
-                    child: InkWell(
-                      onTap: () => {toggleButton(4)},
-                      child: AnimatedSwitcher(
-                        duration: Duration(milliseconds: 1000),
-                        transitionBuilder:
-                            (Widget child, Animation<double> animation) {
-                          return RotationTransition(
-                              child: child, turns: animation);
-                        },
-                        child: vacancyInfo[4]["isVacant"]
-                            ? Icon(Icons.check_circle,
-                                color: Colors.blue,
-                                size: 35.0,
-                                key: UniqueKey())
-                            : Icon(Icons.remove_circle_outline,
-                                color: Colors.red,
-                                size: 35.0,
-                                key: UniqueKey()),
-                      ),
+                    height: 40.0,
+                    width: 100.0,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20.0),
+                        color: vacancyInfo[6]["isVacant"]
+                            ? Colors.blueAccent[100]
+                            : Colors.redAccent[100].withOpacity(0.5)),
+                    child: Stack(
+                      children: <Widget>[
+                        AnimatedPositioned(
+                          duration: Duration(milliseconds: 1000),
+                          curve: Curves.easeIn,
+                          top: 3.0,
+                          left: vacancyInfo[6]["isVacant"] ? 60.0 : 0.0,
+                          right: vacancyInfo[6]["isVacant"] ? 0.0 : 60.0,
+                          child: InkWell(
+                            onTap: () => {toggleButton(6)},
+                            child: AnimatedSwitcher(
+                              duration: Duration(milliseconds: 1000),
+                              transitionBuilder:
+                                  (Widget child, Animation<double> animation) {
+                                return RotationTransition(
+                                    child: child, turns: animation);
+                              },
+                              child: vacancyInfo[6]["isVacant"]
+                                  ? Icon(Icons.check_circle,
+                                      color: Colors.blue,
+                                      size: 35.0,
+                                      key: UniqueKey())
+                                  : Icon(Icons.remove_circle_outline,
+                                      color: Colors.red,
+                                      size: 35.0,
+                                      key: UniqueKey()),
+                            ),
+                          ),
+                        )
+                      ],
                     ),
-                  )
-                ],
-              ),
-            ),
-          ),
-          Text(
-            "6 Person",
-            textAlign: TextAlign.center,
-          ),
-          Center(
-            child: AnimatedContainer(
-              duration: Duration(milliseconds: 1000),
-              height: 40.0,
-              width: 100.0,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20.0),
-                  color: vacancyInfo[5]["isVacant"]
-                      ? Colors.blueAccent[100]
-                      : Colors.redAccent[100].withOpacity(0.5)),
-              child: Stack(
-                children: <Widget>[
-                  AnimatedPositioned(
+                  ),
+                ),
+                Text(
+                  "8 Person",
+                  textAlign: TextAlign.center,
+                ),
+                Center(
+                  child: AnimatedContainer(
                     duration: Duration(milliseconds: 1000),
-                    curve: Curves.easeIn,
-                    top: 3.0,
-                    left: vacancyInfo[5]["isVacant"] ? 60.0 : 0.0,
-                    right: vacancyInfo[5]["isVacant"] ? 0.0 : 60.0,
-                    child: InkWell(
-                      onTap: () => {toggleButton(5)},
-                      child: AnimatedSwitcher(
-                        duration: Duration(milliseconds: 1000),
-                        transitionBuilder:
-                            (Widget child, Animation<double> animation) {
-                          return RotationTransition(
-                              child: child, turns: animation);
-                        },
-                        child: vacancyInfo[5]["isVacant"]
-                            ? Icon(Icons.check_circle,
-                                color: Colors.blue,
-                                size: 35.0,
-                                key: UniqueKey())
-                            : Icon(Icons.remove_circle_outline,
-                                color: Colors.red,
-                                size: 35.0,
-                                key: UniqueKey()),
-                      ),
+                    height: 40.0,
+                    width: 100.0,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20.0),
+                        color: vacancyInfo[7]["isVacant"]
+                            ? Colors.blueAccent[100]
+                            : Colors.redAccent[100].withOpacity(0.5)),
+                    child: Stack(
+                      children: <Widget>[
+                        AnimatedPositioned(
+                          duration: Duration(milliseconds: 1000),
+                          curve: Curves.easeIn,
+                          top: 3.0,
+                          left: vacancyInfo[7]["isVacant"] ? 60.0 : 0.0,
+                          right: vacancyInfo[7]["isVacant"] ? 0.0 : 60.0,
+                          child: InkWell(
+                            onTap: () => {toggleButton(7)},
+                            child: AnimatedSwitcher(
+                              duration: Duration(milliseconds: 1000),
+                              transitionBuilder:
+                                  (Widget child, Animation<double> animation) {
+                                return RotationTransition(
+                                    child: child, turns: animation);
+                              },
+                              child: vacancyInfo[7]["isVacant"]
+                                  ? Icon(Icons.check_circle,
+                                      color: Colors.blue,
+                                      size: 35.0,
+                                      key: UniqueKey())
+                                  : Icon(Icons.remove_circle_outline,
+                                      color: Colors.red,
+                                      size: 35.0,
+                                      key: UniqueKey()),
+                            ),
+                          ),
+                        )
+                      ],
                     ),
-                  )
-                ],
-              ),
-            ),
-          ),
-          Text(
-            "7 Person",
-            textAlign: TextAlign.center,
-          ),
-          Center(
-            child: AnimatedContainer(
-              duration: Duration(milliseconds: 1000),
-              height: 40.0,
-              width: 100.0,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20.0),
-                  color: vacancyInfo[6]["isVacant"]
-                      ? Colors.blueAccent[100]
-                      : Colors.redAccent[100].withOpacity(0.5)),
-              child: Stack(
-                children: <Widget>[
-                  AnimatedPositioned(
+                  ),
+                ),
+                Text(
+                  "9 Person",
+                  textAlign: TextAlign.center,
+                ),
+                Center(
+                  child: AnimatedContainer(
                     duration: Duration(milliseconds: 1000),
-                    curve: Curves.easeIn,
-                    top: 3.0,
-                    left: vacancyInfo[6]["isVacant"] ? 60.0 : 0.0,
-                    right: vacancyInfo[6]["isVacant"] ? 0.0 : 60.0,
-                    child: InkWell(
-                      onTap: () => {toggleButton(6)},
-                      child: AnimatedSwitcher(
-                        duration: Duration(milliseconds: 1000),
-                        transitionBuilder:
-                            (Widget child, Animation<double> animation) {
-                          return RotationTransition(
-                              child: child, turns: animation);
-                        },
-                        child: vacancyInfo[6]["isVacant"]
-                            ? Icon(Icons.check_circle,
-                                color: Colors.blue,
-                                size: 35.0,
-                                key: UniqueKey())
-                            : Icon(Icons.remove_circle_outline,
-                                color: Colors.red,
-                                size: 35.0,
-                                key: UniqueKey()),
-                      ),
+                    height: 40.0,
+                    width: 100.0,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20.0),
+                        color: vacancyInfo[8]["isVacant"]
+                            ? Colors.blueAccent[100]
+                            : Colors.redAccent[100].withOpacity(0.5)),
+                    child: Stack(
+                      children: <Widget>[
+                        AnimatedPositioned(
+                          duration: Duration(milliseconds: 1000),
+                          curve: Curves.easeIn,
+                          top: 3.0,
+                          left: vacancyInfo[8]["isVacant"] ? 60.0 : 0.0,
+                          right: vacancyInfo[8]["isVacant"] ? 0.0 : 60.0,
+                          child: InkWell(
+                            onTap: () => {toggleButton(8)},
+                            child: AnimatedSwitcher(
+                              duration: Duration(milliseconds: 1000),
+                              transitionBuilder:
+                                  (Widget child, Animation<double> animation) {
+                                return RotationTransition(
+                                    child: child, turns: animation);
+                              },
+                              child: vacancyInfo[8]["isVacant"]
+                                  ? Icon(Icons.check_circle,
+                                      color: Colors.blue,
+                                      size: 35.0,
+                                      key: UniqueKey())
+                                  : Icon(Icons.remove_circle_outline,
+                                      color: Colors.red,
+                                      size: 35.0,
+                                      key: UniqueKey()),
+                            ),
+                          ),
+                        )
+                      ],
                     ),
-                  )
-                ],
-              ),
-            ),
-          ),
-          Text(
-            "8 Person",
-            textAlign: TextAlign.center,
-          ),
-          Center(
-            child: AnimatedContainer(
-              duration: Duration(milliseconds: 1000),
-              height: 40.0,
-              width: 100.0,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20.0),
-                  color: vacancyInfo[7]["isVacant"]
-                      ? Colors.blueAccent[100]
-                      : Colors.redAccent[100].withOpacity(0.5)),
-              child: Stack(
-                children: <Widget>[
-                  AnimatedPositioned(
+                  ),
+                ),
+                Text(
+                  "10 Person",
+                  textAlign: TextAlign.center,
+                ),
+                Center(
+                  child: AnimatedContainer(
                     duration: Duration(milliseconds: 1000),
-                    curve: Curves.easeIn,
-                    top: 3.0,
-                    left: vacancyInfo[7]["isVacant"] ? 60.0 : 0.0,
-                    right: vacancyInfo[7]["isVacant"] ? 0.0 : 60.0,
-                    child: InkWell(
-                      onTap: () => {toggleButton(7)},
-                      child: AnimatedSwitcher(
-                        duration: Duration(milliseconds: 1000),
-                        transitionBuilder:
-                            (Widget child, Animation<double> animation) {
-                          return RotationTransition(
-                              child: child, turns: animation);
-                        },
-                        child: vacancyInfo[7]["isVacant"]
-                            ? Icon(Icons.check_circle,
-                                color: Colors.blue,
-                                size: 35.0,
-                                key: UniqueKey())
-                            : Icon(Icons.remove_circle_outline,
-                                color: Colors.red,
-                                size: 35.0,
-                                key: UniqueKey()),
-                      ),
+                    height: 40.0,
+                    width: 100.0,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20.0),
+                        color: vacancyInfo[9]["isVacant"]
+                            ? Colors.blueAccent[100]
+                            : Colors.redAccent[100].withOpacity(0.5)),
+                    child: Stack(
+                      children: <Widget>[
+                        AnimatedPositioned(
+                          duration: Duration(milliseconds: 1000),
+                          curve: Curves.easeIn,
+                          top: 3.0,
+                          left: vacancyInfo[9]["isVacant"] ? 60.0 : 0.0,
+                          right: vacancyInfo[9]["isVacant"] ? 0.0 : 60.0,
+                          child: InkWell(
+                            onTap: () => {toggleButton(9)},
+                            child: AnimatedSwitcher(
+                              duration: Duration(milliseconds: 1000),
+                              transitionBuilder:
+                                  (Widget child, Animation<double> animation) {
+                                return RotationTransition(
+                                    child: child, turns: animation);
+                              },
+                              child: vacancyInfo[9]["isVacant"]
+                                  ? Icon(Icons.check_circle,
+                                      color: Colors.blue,
+                                      size: 35.0,
+                                      key: UniqueKey())
+                                  : Icon(Icons.remove_circle_outline,
+                                      color: Colors.red,
+                                      size: 35.0,
+                                      key: UniqueKey()),
+                            ),
+                          ),
+                        )
+                      ],
                     ),
-                  )
-                ],
-              ),
-            ),
-          ),
-          Text(
-            "9 Person",
-            textAlign: TextAlign.center,
-          ),
-          Center(
-            child: AnimatedContainer(
-              duration: Duration(milliseconds: 1000),
-              height: 40.0,
-              width: 100.0,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20.0),
-                  color: vacancyInfo[8]["isVacant"]
-                      ? Colors.blueAccent[100]
-                      : Colors.redAccent[100].withOpacity(0.5)),
-              child: Stack(
-                children: <Widget>[
-                  AnimatedPositioned(
+                  ),
+                ),
+                Text(
+                  "11 Person",
+                  textAlign: TextAlign.center,
+                ),
+                Center(
+                  child: AnimatedContainer(
                     duration: Duration(milliseconds: 1000),
-                    curve: Curves.easeIn,
-                    top: 3.0,
-                    left: vacancyInfo[8]["isVacant"] ? 60.0 : 0.0,
-                    right: vacancyInfo[8]["isVacant"] ? 0.0 : 60.0,
-                    child: InkWell(
-                      onTap: () => {toggleButton(8)},
-                      child: AnimatedSwitcher(
-                        duration: Duration(milliseconds: 1000),
-                        transitionBuilder:
-                            (Widget child, Animation<double> animation) {
-                          return RotationTransition(
-                              child: child, turns: animation);
-                        },
-                        child: vacancyInfo[8]["isVacant"]
-                            ? Icon(Icons.check_circle,
-                                color: Colors.blue,
-                                size: 35.0,
-                                key: UniqueKey())
-                            : Icon(Icons.remove_circle_outline,
-                                color: Colors.red,
-                                size: 35.0,
-                                key: UniqueKey()),
-                      ),
+                    height: 40.0,
+                    width: 100.0,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20.0),
+                        color: vacancyInfo[10]["isVacant"]
+                            ? Colors.blueAccent[100]
+                            : Colors.redAccent[100].withOpacity(0.5)),
+                    child: Stack(
+                      children: <Widget>[
+                        AnimatedPositioned(
+                          duration: Duration(milliseconds: 1000),
+                          curve: Curves.easeIn,
+                          top: 3.0,
+                          left: vacancyInfo[10]["isVacant"] ? 60.0 : 0.0,
+                          right: vacancyInfo[10]["isVacant"] ? 0.0 : 60.0,
+                          child: InkWell(
+                            onTap: () => {toggleButton(10)},
+                            child: AnimatedSwitcher(
+                              duration: Duration(milliseconds: 1000),
+                              transitionBuilder:
+                                  (Widget child, Animation<double> animation) {
+                                return RotationTransition(
+                                    child: child, turns: animation);
+                              },
+                              child: vacancyInfo[10]["isVacant"]
+                                  ? Icon(Icons.check_circle,
+                                      color: Colors.blue,
+                                      size: 35.0,
+                                      key: UniqueKey())
+                                  : Icon(Icons.remove_circle_outline,
+                                      color: Colors.red,
+                                      size: 35.0,
+                                      key: UniqueKey()),
+                            ),
+                          ),
+                        )
+                      ],
                     ),
-                  )
-                ],
-              ),
-            ),
-          ),
-          Text(
-            "10 Person",
-            textAlign: TextAlign.center,
-          ),
-          Center(
-            child: AnimatedContainer(
-              duration: Duration(milliseconds: 1000),
-              height: 40.0,
-              width: 100.0,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20.0),
-                  color: vacancyInfo[9]["isVacant"]
-                      ? Colors.blueAccent[100]
-                      : Colors.redAccent[100].withOpacity(0.5)),
-              child: Stack(
-                children: <Widget>[
-                  AnimatedPositioned(
+                  ),
+                ),
+                Text(
+                  "12 Person",
+                  textAlign: TextAlign.center,
+                ),
+                Center(
+                  child: AnimatedContainer(
                     duration: Duration(milliseconds: 1000),
-                    curve: Curves.easeIn,
-                    top: 3.0,
-                    left: vacancyInfo[9]["isVacant"] ? 60.0 : 0.0,
-                    right: vacancyInfo[9]["isVacant"] ? 0.0 : 60.0,
-                    child: InkWell(
-                      onTap: () => {toggleButton(9)},
-                      child: AnimatedSwitcher(
-                        duration: Duration(milliseconds: 1000),
-                        transitionBuilder:
-                            (Widget child, Animation<double> animation) {
-                          return RotationTransition(
-                              child: child, turns: animation);
-                        },
-                        child: vacancyInfo[9]["isVacant"]
-                            ? Icon(Icons.check_circle,
-                                color: Colors.blue,
-                                size: 35.0,
-                                key: UniqueKey())
-                            : Icon(Icons.remove_circle_outline,
-                                color: Colors.red,
-                                size: 35.0,
-                                key: UniqueKey()),
-                      ),
+                    height: 40.0,
+                    width: 100.0,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20.0),
+                        color: vacancyInfo[11]["isVacant"]
+                            ? Colors.blueAccent[100]
+                            : Colors.redAccent[100].withOpacity(0.5)),
+                    child: Stack(
+                      children: <Widget>[
+                        AnimatedPositioned(
+                          duration: Duration(milliseconds: 1000),
+                          curve: Curves.easeIn,
+                          top: 3.0,
+                          left: vacancyInfo[11]["isVacant"] ? 60.0 : 0.0,
+                          right: vacancyInfo[11]["isVacant"] ? 0.0 : 60.0,
+                          child: InkWell(
+                            onTap: () => {toggleButton(11)},
+                            child: AnimatedSwitcher(
+                              duration: Duration(milliseconds: 1000),
+                              transitionBuilder:
+                                  (Widget child, Animation<double> animation) {
+                                return RotationTransition(
+                                    child: child, turns: animation);
+                              },
+                              child: vacancyInfo[11]["isVacant"]
+                                  ? Icon(Icons.check_circle,
+                                      color: Colors.blue,
+                                      size: 35.0,
+                                      key: UniqueKey())
+                                  : Icon(Icons.remove_circle_outline,
+                                      color: Colors.red,
+                                      size: 35.0,
+                                      key: UniqueKey()),
+                            ),
+                          ),
+                        )
+                      ],
                     ),
-                  )
-                ],
-              ),
-            ),
-          ),
-          Text(
-            "11 Person",
-            textAlign: TextAlign.center,
-          ),
-          Center(
-            child: AnimatedContainer(
-              duration: Duration(milliseconds: 1000),
-              height: 40.0,
-              width: 100.0,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20.0),
-                  color: vacancyInfo[10]["isVacant"]
-                      ? Colors.blueAccent[100]
-                      : Colors.redAccent[100].withOpacity(0.5)),
-              child: Stack(
-                children: <Widget>[
-                  AnimatedPositioned(
-                    duration: Duration(milliseconds: 1000),
-                    curve: Curves.easeIn,
-                    top: 3.0,
-                    left: vacancyInfo[10]["isVacant"] ? 60.0 : 0.0,
-                    right: vacancyInfo[10]["isVacant"] ? 0.0 : 60.0,
-                    child: InkWell(
-                      onTap: () => {toggleButton(10)},
-                      child: AnimatedSwitcher(
-                        duration: Duration(milliseconds: 1000),
-                        transitionBuilder:
-                            (Widget child, Animation<double> animation) {
-                          return RotationTransition(
-                              child: child, turns: animation);
-                        },
-                        child: vacancyInfo[10]["isVacant"]
-                            ? Icon(Icons.check_circle,
-                                color: Colors.blue,
-                                size: 35.0,
-                                key: UniqueKey())
-                            : Icon(Icons.remove_circle_outline,
-                                color: Colors.red,
-                                size: 35.0,
-                                key: UniqueKey()),
-                      ),
-                    ),
-                  )
-                ],
-              ),
-            ),
-          ),
-          Text(
-            "12 Person",
-            textAlign: TextAlign.center,
-          ),
-          Center(
-            child: AnimatedContainer(
-              duration: Duration(milliseconds: 1000),
-              height: 40.0,
-              width: 100.0,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20.0),
-                  color: vacancyInfo[11]["isVacant"]
-                      ? Colors.blueAccent[100]
-                      : Colors.redAccent[100].withOpacity(0.5)),
-              child: Stack(
-                children: <Widget>[
-                  AnimatedPositioned(
-                    duration: Duration(milliseconds: 1000),
-                    curve: Curves.easeIn,
-                    top: 3.0,
-                    left: vacancyInfo[11]["isVacant"] ? 60.0 : 0.0,
-                    right: vacancyInfo[11]["isVacant"] ? 0.0 : 60.0,
-                    child: InkWell(
-                      onTap: () => {toggleButton(11)},
-                      child: AnimatedSwitcher(
-                        duration: Duration(milliseconds: 1000),
-                        transitionBuilder:
-                            (Widget child, Animation<double> animation) {
-                          return RotationTransition(
-                              child: child, turns: animation);
-                        },
-                        child: vacancyInfo[11]["isVacant"]
-                            ? Icon(Icons.check_circle,
-                                color: Colors.blue,
-                                size: 35.0,
-                                key: UniqueKey())
-                            : Icon(Icons.remove_circle_outline,
-                                color: Colors.red,
-                                size: 35.0,
-                                key: UniqueKey()),
-                      ),
-                    ),
-                  )
-                ],
-              ),
-            ),
-          ),
-        ]));
+                  ),
+                ),
+              ]);
+        },
+      ),
+    );
   }
-
-  // toggleButton2() {
-  //   setState(() {
-  //     toggle2 = !toggle2;
-  //   });
-  // }
-
-  // toggleButton3() {
-  //   setState(() {
-  //     toggle3 = !toggle3;
-  //   });
-  // }
-
-  // toggleButton4() {
-  //   setState(() {
-  //     toggle4 = !toggle4;
-  //   });
-  // }
-
-  // toggleButton5() {
-  //   setState(() {
-  //     toggle5 = !toggle5;
-  //   });
-  // }
-
-  // toggleButton6() {
-  //   setState(() {
-  //     toggle6 = !toggle6;
-  //   });
-  // }
-
-  // toggleButton7() {
-  //   setState(() {
-  //     toggle7 = !toggle7;
-  //   });
-  // }
-
-  // toggleButton8() {
-  //   setState(() {
-  //     toggle8 = !toggle8;
-  //   });
-  // }
-
-  // toggleButton9() {
-  //   setState(() {
-  //     toggle9 = !toggle9;
-  //   });
-  // }
-
-  // toggleButton10() {
-  //   setState(() {
-  //     toggle10 = !toggle10;
-  //   });
-  // }
-
-  // toggleButton11() {
-  //   setState(() {
-  //     toggle11 = !toggle11;
-  //   });
-  // }
-
-  // toggleButton12() {
-  //   setState(() {
-  //     toggle12 = !toggle12;
-  //   });
-  // }
 }
