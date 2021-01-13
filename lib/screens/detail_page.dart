@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import '../app.dart';
 
 class DetailPage extends StatefulWidget {
   final String id;
@@ -81,9 +82,10 @@ class _DetailPageState extends State<DetailPage> {
                               fontSize: 20.0,
                             ),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(right: 50.0),
-                            child: RichText(
+                          // Padding(
+                          //   padding: const EdgeInsets.only(right: 50.0),
+                            // child: 
+                            RichText(
                               textAlign: TextAlign.end,
                               text: TextSpan(
                                 text: "URL",
@@ -99,7 +101,7 @@ class _DetailPageState extends State<DetailPage> {
                                   },
                               ),
                             ),
-                          ),
+                          // ),
                         ],
                       ),
                     ],
@@ -296,11 +298,10 @@ class _DetailPageState extends State<DetailPage> {
                         return AlertDialog(
                           title: Text("Booking Confirmation"),
                           content:
-                          Column(
-                          children: [
-                              Text('GroupNumber:$groupNum'),
-                              Text('Deposit:$price Yen'),
-                              ],
+                            Text('GroupNumber:$groupNum \n Deposit:$price Yen',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           actions: <Widget>[
                             FlatButton(
@@ -310,7 +311,7 @@ class _DetailPageState extends State<DetailPage> {
                             FlatButton(
                               child: Text("Go Payment"),
                               onPressed: () => {
-                                //_goTimerPage(context),
+                                _goTimerPage(context),
                               }, //goto payment page
                             ),
                           ],
@@ -393,7 +394,9 @@ class _DetailPageState extends State<DetailPage> {
       print('Request failed with status: ${response.statusCode}.');
     }
   }
-  // void _goTimerPage(BuildContext context) {
-  //   Navigator.pushNamed(context, TimerRoute); //arguments: to pass data
-  // }
+
+  void _goTimerPage(BuildContext context) {
+    Navigator.pushNamed(context, TimerRoute);
+    print("goTimerPage was triggered");
+  }
 }
