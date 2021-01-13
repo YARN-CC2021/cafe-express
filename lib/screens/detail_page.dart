@@ -91,23 +91,23 @@ class _DetailPageState extends State<DetailPage> {
                           ),
                           // Padding(
                           //   padding: const EdgeInsets.only(right: 50.0),
-                            // child: 
-                            RichText(
-                              textAlign: TextAlign.end,
-                              text: TextSpan(
-                                text: "URL",
-                                style: TextStyle(color: Colors.lightBlue),
-                                recognizer: TapGestureRecognizer()
-                                  ..onTap = () async {
-                                    final url = shopData['storeURL'];
-                                    if (await canLaunch(url)) {
-                                      await launch(url);
-                                    } else {
-                                      return InfoWindow(title: "No URL");
-                                    }
-                                  },
-                              ),
+                          // child:
+                          RichText(
+                            textAlign: TextAlign.end,
+                            text: TextSpan(
+                              text: "URL",
+                              style: TextStyle(color: Colors.lightBlue),
+                              recognizer: TapGestureRecognizer()
+                                ..onTap = () async {
+                                  final url = shopData['storeURL'];
+                                  if (await canLaunch(url)) {
+                                    await launch(url);
+                                  } else {
+                                    return InfoWindow(title: "No URL");
+                                  }
+                                },
                             ),
+                          ),
                           // ),
                         ],
                       ),
@@ -304,12 +304,12 @@ class _DetailPageState extends State<DetailPage> {
                       builder: (_) {
                         return AlertDialog(
                           title: Text("Booking Confirmation"),
-                          content:
-                            Text('GroupNumber:$groupNum \n Deposit:$price Yen',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                              ),
+                          content: Text(
+                            'GroupNumber:$groupNum \n Deposit:$price Yen',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
                             ),
+                          ),
                           actions: <Widget>[
                             FlatButton(
                               child: Text("Cancel"),
@@ -318,11 +318,11 @@ class _DetailPageState extends State<DetailPage> {
                             FlatButton(
                               child: Text("Go Payment"),
                               onPressed: () => {
-                                channel.sink.add({
+                                channel.sink.add(json.encode({
                                   "action": "onBook",
-                                  "bookedAt": "11:30",
-                                  "bookingId": "Hi Test Booking",
-                                  "bookName": "Mr.Popo",
+                                  "bookedAt": "Who Knows",
+                                  "bookingId": "dummydummydummy",
+                                  "bookName": "Naoto",
                                   "coupon": {
                                     "codeForQR": "XXXXXXXX",
                                     "couponAttached": true,
@@ -336,18 +336,17 @@ class _DetailPageState extends State<DetailPage> {
                                   "customerInfo": {
                                     "customerId":
                                         "c7076e59-5072-42ec-86f0-944d151f7869"
-                                    // globals.userId
                                   },
-                                  "depositAmount": 2000,
-                                  "expiredAt": "12:00",
+                                  "depositAmount": 1000,
+                                  "expiredAt": "Who Cares",
                                   "index": 3,
-                                  "partySize": 4,
+                                  "partySize": 2,
                                   "status": "checked-in",
                                   "storeInfo": {
                                     "address": "六本木３－１－１",
                                     "category": "Cafe",
                                     "id":
-                                        "17fcd86a-8fa6-419c-ba43-67d64dafce9f",
+                                        "21dcac49-26a3-4eae-96b0-ee3db3da8eb3",
                                     "name": "CCbucks",
                                     "rating": 3.8,
                                     "tel": "123-2313-1231"
@@ -360,7 +359,7 @@ class _DetailPageState extends State<DetailPage> {
                                   },
                                   "updatedAt": "2021-01-12-02:01:00",
                                   "vacancyType": "strict"
-                                }),
+                                })),
                                 _goTimerPage(context),
                               }, //goto payment page
                             ),
