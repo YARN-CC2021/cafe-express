@@ -38,24 +38,23 @@ function getCustomerConnectionId() {
 }
 
 function updateVacancy(bodyParsed) {
-  const storeId = bodyParsed.storeId;
-  const indexOfTable = bodyParsed.index;
-  const vacancyType = bodyParsed.vacancyType;
-  const isVacant = bodyParsed.isVacant;
+  const { storeId, index, vacancyType, isVacant, cancelFee } = bodyParsed;
 
   const params = {
     TableName: "store",
     Key: {
       id: storeId,
     },
-    UpdateExpression: `set #vac.#type[${indexOfTable}].#isV = :isVacant`,
+    UpdateExpression: `set #vac.#type[${index}].#isV = :isVacant, #vac.#type[${index}].#can = :cancelFee`,
     ExpressionAttributeNames: {
       "#vac": "vacancy",
       "#type": vacancyType,
       "#isV": "isVacant",
+      "#can": "cancelFee",
     },
     ExpressionAttributeValues: {
       ":isVacant": isVacant,
+      ":cancelFee": cancelFee,
     },
     ReturnValues: "UPDATED_NEW",
   };
@@ -71,13 +70,14 @@ exports.handler = async (event, context, sendResponse) => {
 
   await updateVacancy(bodyParsed);
 
-  const { index, storeId, vacancyType, isVacant } = bodyParsed;
+  const { index, storeId, vacancyType, isVacant, cancelFee } = bodyParsed;
 
   const customerResponseBody = JSON.stringify({
     storeId,
     index,
     vacancyType,
     isVacant,
+    cancelFee,
   });
 
   const customers = await getCustomerConnectionId();

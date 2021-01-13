@@ -131,72 +131,84 @@ const createStore = (body) => {
             Min: 1,
             Max: 1,
             isVacant: false,
+            cancelFee: 0,
           },
           {
             label: "2 Seat Table",
             Min: 2,
             Max: 2,
             isVacant: false,
+            cancelFee: 0,
           },
           {
             label: "3 Seat Table",
             Min: 3,
             Max: 3,
             isVacant: false,
+            cancelFee: 0,
           },
           {
             label: "4 Seat Table",
             Min: 4,
             Max: 4,
             isVacant: false,
+            cancelFee: 0,
           },
           {
             label: "5 Seat Table",
             Min: 5,
             Max: 5,
             isVacant: false,
+            cancelFee: 0,
           },
           {
             label: "6 Seat Table",
             Min: 6,
             Max: 6,
             isVacant: false,
+            cancelFee: 0,
           },
           {
             label: "7 Seat Table",
             Min: 7,
             Max: 7,
             isVacant: false,
+            cancelFee: 0,
           },
           {
             label: "8 Seat Table",
             Min: 8,
             Max: 8,
             isVacant: false,
+            cancelFee: 0,
           },
           {
             label: "9 Seat Table",
             Min: 9,
             Max: 9,
             isVacant: false,
+            cancelFee: 0,
           },
           {
             label: "10 Seat Table",
             Min: 10,
             Max: 10,
             isVacant: false,
+            cancelFee: 0,
           },
           {
             label: "11 Seat Table",
             Min: 11,
             Max: 11,
             isVacant: false,
+            cancelFee: 0,
           },
           {
             label: "12 Seat Table",
             Min: 12,
             Max: 12,
             isVacant: false,
+            cancelFee: 0,
           },
         ],
         flex: [
@@ -205,36 +217,42 @@ const createStore = (body) => {
             Min: 1,
             Max: 2,
             isVacant: false,
+            cancelFee: 0
           },
           {
             label: "3-4 Seat Table",
             Min: 3,
             Max: 4,
             isVacant: false,
+            cancelFee: 0
           },
           {
             label: "5-6 Seat Table",
             Min: 5,
             Max: 6,
             isVacant: false,
+            cancelFee: 0
           },
           {
             label: "7-8 Seat Table",
             Min: 7,
             Max: 8,
             isVacant: false,
+            cancelFee: 0
           },
           {
             label: "9-10 Seat Table",
             Min: 9,
             Max: 10,
             isVacant: false,
+            cancelFee: 0
           },
           {
             label: "11-12 Seat Table",
             Min: 11,
             Max: 12,
             isVacant: false,
+            cancelFee: 0
           },
         ],
         custom: [
@@ -243,12 +261,14 @@ const createStore = (body) => {
             Min: 1,
             Max: 5,
             isVacant: false,
+            cancelFee: 0
           },
           {
             label: "1-5 Seat Table",
             Min: 1,
             Max: 5,
             isVacant: false,
+            cancelFee: 0
           },
         ],
       },

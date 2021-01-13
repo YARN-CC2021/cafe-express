@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
+import "package:flutter_barcode_scanner/flutter_barcode_scanner.dart";
 
 class TimerPage extends StatefulWidget {
   @override
@@ -10,6 +11,18 @@ class _TimerPageState extends State<TimerPage> {
   Timer timer;
   int totalTime = 1800; //60;
   String timetodisplay = '';
+  String barcode = "";
+  String lockedTime = "";
+
+  _scan() async {
+    return FlutterBarcodeScanner.scanBarcode(
+            "#000000", "cancel", true, ScanMode.BARCODE)
+        .then((value) => setState(() {
+              barcode = value;
+              lockedTime = timetodisplay.toString();
+            }));
+  }
+
   @override
   void initState() {
     //if (totalTime == 1800) { //初期値の時だけタイマースタート？
@@ -78,6 +91,21 @@ class _TimerPageState extends State<TimerPage> {
                       width: MediaQuery.of(context).size.width * 0.7,
                       child: Column(
                         children: [
+                          Container(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 10.0, horizontal: 80.0),
+                              child: RaisedButton(
+                                child: Text("Scan Barcode"),
+                                onPressed: () => _scan(),
+                              )),
+                          Container(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 10.0, horizontal: 80.0),
+                              child: Text(barcode)),
+                          Container(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 10.0, horizontal: 80.0),
+                              child: Text(lockedTime)),
                           RaisedButton(
                               child: const Text(
                                 'I Got Here!',
