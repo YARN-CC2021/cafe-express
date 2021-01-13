@@ -22,7 +22,23 @@ class _DetailPageState extends State<DetailPage> {
 
   final channel = IOWebSocketChannel.connect(
       "wss://gu2u8vdip2.execute-api.ap-northeast-1.amazonaws.com/CafeExpressWS?id=${globals.userId}");
-
+  var bookedTime;  //DateTime.now().parse('');??
+  var expireTime;
+  Map testMap = {
+    "a": "a",
+    "testa": {
+      "vacancy": {
+        "flex": [
+          {"Min": 1, "label": "1-2 Seat Table", "Max": 2, "isVacant": true},
+          {"Min": 3, "label": "3-4 Seat Table", "Max": 4, "isVacant": true},
+          {"Min": 5, "label": "5-6 Seat Table", "Max": 6, "isVacant": true},
+          {"Min": 7, "label": "7-8 Seat Table", "Max": 8, "isVacant": true},
+          {"Min": 9, "label": "9-10 Seat Table", "Max": 10, "isVacant": true},
+          {"Min": 11, "label": "11-12 Seat Table", "Max": 12, "isVacant": true}
+        ],
+      }
+    },
+  };
   Map shopData;
   String vacancyType;
   String groupNum = '1';
@@ -318,11 +334,13 @@ class _DetailPageState extends State<DetailPage> {
                             FlatButton(
                               child: Text("Go Payment"),
                               onPressed: () => {
+                                bookedTime = DateTime.now(),
+                                print('TIME$bookedTime'),
                                 channel.sink.add(json.encode({
                                   "action": "onBook",
-                                  "bookedAt": "Who Knows",
-                                  "bookingId": "dummydummydummy",
-                                  "bookName": "Naoto",
+                                  "bookedAt": "Who Knows", //same to createdAt?
+                                  "bookingId": "", //?
+                                  "bookName": "Naoto", //?
                                   "coupon": {
                                     "codeForQR": "XXXXXXXX",
                                     "couponAttached": true,
@@ -338,8 +356,8 @@ class _DetailPageState extends State<DetailPage> {
                                         "c7076e59-5072-42ec-86f0-944d151f7869"
                                   },
                                   "depositAmount": 1000,
-                                  "expiredAt": "Who Cares",
-                                  "index": 3,
+                                  "expiredAt": "Who Cares", //booked_At の 30分後
+                                  "index": 3, //どこのテーブルかを把握するため
                                   "partySize": 2,
                                   "status": "checked-in",
                                   "storeInfo": {
@@ -400,30 +418,33 @@ class _DetailPageState extends State<DetailPage> {
   }
 
   Widget imageCard() {
-    try {
-      //Can't handle invalid URL
-      return CachedNetworkImage(
-        imageUrl: shopData['imagePaths'][0],
-        placeholder: (context, url) => Center(child: LinearProgressIndicator()),
-        errorWidget: (context, url, error) => Text('No Image or Loading Error'),
-      );
-    } catch (e) {
-      print(e);
-      return Text('No Image or Loading Error');
-    }
+    // try {
+    // //Can't handle invalid URL
+    //   return CachedNetworkImage(
+    //     imageUrl: shopData['imagePaths'][0],
+    //     placeholder: (context, url) => Center(child: LinearProgressIndicator()),
+    //     errorWidget: (context, url, error) => Text('No Image or Loading Error'),
+    //   );
+    // } catch (e) {
+    //   print(e);
+    //   return Text('No Image or Loading Error');
+    // }
 
-    // return Card(
-    //   child: Image.network(
-    //     '${shopData['imagePaths'][0]}',
-    //     loadingBuilder: (context, child, loadingProgress) {
-    //         if (loadingProgress == null) return child;
-    //         return Center(child: Text('Loading...'));
-    //       },
-    //     errorBuilder: (BuildContext context, Object exception, StackTrace stackTrace) {
-    //       return Text('No Image or Loading Error');
-    //     },
-    //   ),
-    // );
+    return Card(
+      child: Image.network(
+        '${shopData['imagePaths'][0]}',
+        fit: BoxFit.contain,
+        loadingBuilder: (context, child, loadingProgress) {
+          if (loadingProgress == null) return child;
+          return Center(
+              child: LinearProgressIndicator()); //Text('Loading...'));
+        },
+        errorBuilder:
+            (BuildContext context, Object exception, StackTrace stackTrace) {
+          return Text('No Image or Loading Error');
+        },
+      ),
+    );
   }
 
   Future<void> _getShopData(String id) async {
@@ -439,6 +460,17 @@ class _DetailPageState extends State<DetailPage> {
             .where((sheet) => sheet['isVacant'] == true)
             .toList();
       });
+      testMap['coupon'] = {
+                        "codeForQR": "XXXXXXXX",
+                        "couponAttached": true,
+                        "couponId": "pk_XXXXXXXXX",
+                        "description":
+                            "メロスは激怒した。必ず、かの邪智暴虐じゃちぼうぎゃくの王を除かなければならぬと決意した。メロスには政治がわからぬ。メロスは、村の牧人である。笛を吹き、羊と遊んで暮して来た。けれども邪悪に対しては、人一倍に敏感であった。きょう未明メロスは村を出発し、野を越え山越え、十里はなれた此このシラクスの市にやって来た。メロスには父も、母も無い。女房も無い。十六の、内気な妹と二人暮しだ。この妹は、村の或る律気な一牧人を、近々、花婿はなむことして迎える事になっていた。結婚式も間近かなのである。メロスは、それゆえ、花嫁の衣裳やら祝宴の御馳走やらを買いに、はるばる市にやって来たのだ。先ず、その品々を買い集め、それから都の大路をぶらぶら歩いた。メロスには竹馬の友があった。セリヌンティウスである。今は此のシラクスの市で、石工をしている。その友を、これから訪ねてみるつもりなのだ。久しく逢わなかったのだから、訪ねて行くのが楽しみである。歩いているうちにメロスは、まちの様子を怪しく思った。",
+                        "imagePath": "http://....",
+                        "title": "２万引き"
+                      }; //for-in使えるのか
+
+      print('TESTMAP:$testMap');
     } else {
       print('Request failed with status: ${response.statusCode}.');
     }
