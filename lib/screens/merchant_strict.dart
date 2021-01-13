@@ -2,7 +2,7 @@ import "package:flutter/material.dart";
 import '../global.dart' as globals;
 import 'package:web_socket_channel/io.dart';
 import 'dart:convert';
-import 'package:web_socket_channel/web_socket_channel.dart';
+import 'package:http/http.dart' as http;
 
 class MerchantStrict extends StatefulWidget {
   @override
@@ -10,26 +10,56 @@ class MerchantStrict extends StatefulWidget {
 }
 
 class _MerchantStrictState extends State<MerchantStrict> {
-  bool toggle1 = false;
-  bool toggle2 = false;
-  bool toggle3 = false;
-  bool toggle4 = false;
-  bool toggle5 = false;
-  bool toggle6 = false;
-  bool toggle7 = false;
-  bool toggle8 = false;
-  bool toggle9 = false;
-  bool toggle10 = false;
-  bool toggle11 = false;
-  bool toggle12 = false;
-
   final channel = IOWebSocketChannel.connect(
       "wss://gu2u8vdip2.execute-api.ap-northeast-1.amazonaws.com/CafeExpressWS?id=${globals.userId}");
+
+  @override
+  void initState() {
+    super.initState();
+    _getShopData();
+  }
 
   @override
   void dispose() {
     channel.sink.close();
     super.dispose();
+  }
+
+  Map shopData;
+  List vacancyInfo;
+
+  void toggleButton(int index) {
+    setState(() {
+      vacancyInfo[index]["isVacant"] = !vacancyInfo[index]["isVacant"];
+    });
+
+    channel.sink.add(json.encode({
+      "action": "onVacancyChange",
+      "storeId": globals.userId,
+      "index": index,
+      "vacancyType": shopData["vacancyType"],
+      "isVacant": vacancyInfo[index]["isVacant"]
+    }));
+  }
+
+  Future<void> _getShopData() async {
+    var response = await http.get(
+        'https://pq3mbzzsbg.execute-api.ap-northeast-1.amazonaws.com/CaffeExpressRESTAPI/store/${globals.userId}');
+    if (response.statusCode == 200) {
+      final jsonResponse = await json.decode(utf8.decode(response.bodyBytes));
+      setState(() {
+        shopData = jsonResponse['body'];
+      });
+      print("This is ShopData: $shopData");
+      _mapMountedVacancyInfo();
+      print("This is Vacancy Info: $vacancyInfo");
+    } else {
+      print('Request failed with status: ${response.statusCode}.');
+    }
+  }
+
+  void _mapMountedVacancyInfo() {
+    vacancyInfo = shopData["vacancy"][shopData["vacancyType"]];
   }
 
   @override
@@ -81,7 +111,7 @@ class _MerchantStrictState extends State<MerchantStrict> {
               width: 100.0,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20.0),
-                  color: toggle1
+                  color: vacancyInfo[0]["isVacant"]
                       ? Colors.blueAccent[100]
                       : Colors.redAccent[100].withOpacity(0.5)),
               child: Stack(
@@ -90,10 +120,10 @@ class _MerchantStrictState extends State<MerchantStrict> {
                     duration: Duration(milliseconds: 1000),
                     curve: Curves.easeIn,
                     top: 3.0,
-                    left: toggle1 ? 60.0 : 0.0,
-                    right: toggle1 ? 0.0 : 60.0,
+                    left: vacancyInfo[0]["isVacant"] ? 60.0 : 0.0,
+                    right: vacancyInfo[0]["isVacant"] ? 0.0 : 60.0,
                     child: InkWell(
-                      onTap: toggleButton1,
+                      onTap: () => {toggleButton(0)},
                       child: AnimatedSwitcher(
                         duration: Duration(milliseconds: 1000),
                         transitionBuilder:
@@ -101,7 +131,7 @@ class _MerchantStrictState extends State<MerchantStrict> {
                           return RotationTransition(
                               child: child, turns: animation);
                         },
-                        child: toggle1
+                        child: vacancyInfo[0]["isVacant"]
                             ? Icon(Icons.check_circle,
                                 color: Colors.blue,
                                 size: 35.0,
@@ -128,7 +158,7 @@ class _MerchantStrictState extends State<MerchantStrict> {
               width: 100.0,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20.0),
-                  color: toggle2
+                  color: vacancyInfo[1]["isVacant"]
                       ? Colors.blueAccent[100]
                       : Colors.redAccent[100].withOpacity(0.5)),
               child: Stack(
@@ -137,10 +167,10 @@ class _MerchantStrictState extends State<MerchantStrict> {
                     duration: Duration(milliseconds: 1000),
                     curve: Curves.easeIn,
                     top: 3.0,
-                    left: toggle2 ? 60.0 : 0.0,
-                    right: toggle2 ? 0.0 : 60.0,
+                    left: vacancyInfo[1]["isVacant"] ? 60.0 : 0.0,
+                    right: vacancyInfo[1]["isVacant"] ? 0.0 : 60.0,
                     child: InkWell(
-                      onTap: toggleButton2,
+                      onTap: () => {toggleButton(1)},
                       child: AnimatedSwitcher(
                         duration: Duration(milliseconds: 1000),
                         transitionBuilder:
@@ -148,7 +178,7 @@ class _MerchantStrictState extends State<MerchantStrict> {
                           return RotationTransition(
                               child: child, turns: animation);
                         },
-                        child: toggle2
+                        child: vacancyInfo[1]["isVacant"]
                             ? Icon(Icons.check_circle,
                                 color: Colors.blue,
                                 size: 35.0,
@@ -175,7 +205,7 @@ class _MerchantStrictState extends State<MerchantStrict> {
               width: 100.0,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20.0),
-                  color: toggle3
+                  color: vacancyInfo[2]["isVacant"]
                       ? Colors.blueAccent[100]
                       : Colors.redAccent[100].withOpacity(0.5)),
               child: Stack(
@@ -184,10 +214,10 @@ class _MerchantStrictState extends State<MerchantStrict> {
                     duration: Duration(milliseconds: 1000),
                     curve: Curves.easeIn,
                     top: 3.0,
-                    left: toggle3 ? 60.0 : 0.0,
-                    right: toggle3 ? 0.0 : 60.0,
+                    left: vacancyInfo[2]["isVacant"] ? 60.0 : 0.0,
+                    right: vacancyInfo[2]["isVacant"] ? 0.0 : 60.0,
                     child: InkWell(
-                      onTap: toggleButton3,
+                      onTap: () => {toggleButton(2)},
                       child: AnimatedSwitcher(
                         duration: Duration(milliseconds: 1000),
                         transitionBuilder:
@@ -195,7 +225,7 @@ class _MerchantStrictState extends State<MerchantStrict> {
                           return RotationTransition(
                               child: child, turns: animation);
                         },
-                        child: toggle3
+                        child: vacancyInfo[2]["isVacant"]
                             ? Icon(Icons.check_circle,
                                 color: Colors.blue,
                                 size: 35.0,
@@ -222,7 +252,7 @@ class _MerchantStrictState extends State<MerchantStrict> {
               width: 100.0,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20.0),
-                  color: toggle4
+                  color: vacancyInfo[3]["isVacant"]
                       ? Colors.blueAccent[100]
                       : Colors.redAccent[100].withOpacity(0.5)),
               child: Stack(
@@ -231,10 +261,10 @@ class _MerchantStrictState extends State<MerchantStrict> {
                     duration: Duration(milliseconds: 1000),
                     curve: Curves.easeIn,
                     top: 3.0,
-                    left: toggle4 ? 60.0 : 0.0,
-                    right: toggle4 ? 0.0 : 60.0,
+                    left: vacancyInfo[3]["isVacant"] ? 60.0 : 0.0,
+                    right: vacancyInfo[3]["isVacant"] ? 0.0 : 60.0,
                     child: InkWell(
-                      onTap: toggleButton4,
+                      onTap: () => {toggleButton(3)},
                       child: AnimatedSwitcher(
                         duration: Duration(milliseconds: 1000),
                         transitionBuilder:
@@ -242,7 +272,7 @@ class _MerchantStrictState extends State<MerchantStrict> {
                           return RotationTransition(
                               child: child, turns: animation);
                         },
-                        child: toggle4
+                        child: vacancyInfo[3]["isVacant"]
                             ? Icon(Icons.check_circle,
                                 color: Colors.blue,
                                 size: 35.0,
@@ -269,7 +299,7 @@ class _MerchantStrictState extends State<MerchantStrict> {
               width: 100.0,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20.0),
-                  color: toggle5
+                  color: vacancyInfo[4]["isVacant"]
                       ? Colors.blueAccent[100]
                       : Colors.redAccent[100].withOpacity(0.5)),
               child: Stack(
@@ -278,10 +308,10 @@ class _MerchantStrictState extends State<MerchantStrict> {
                     duration: Duration(milliseconds: 1000),
                     curve: Curves.easeIn,
                     top: 3.0,
-                    left: toggle5 ? 60.0 : 0.0,
-                    right: toggle5 ? 0.0 : 60.0,
+                    left: vacancyInfo[4]["isVacant"] ? 60.0 : 0.0,
+                    right: vacancyInfo[4]["isVacant"] ? 0.0 : 60.0,
                     child: InkWell(
-                      onTap: toggleButton5,
+                      onTap: () => {toggleButton(4)},
                       child: AnimatedSwitcher(
                         duration: Duration(milliseconds: 1000),
                         transitionBuilder:
@@ -289,7 +319,7 @@ class _MerchantStrictState extends State<MerchantStrict> {
                           return RotationTransition(
                               child: child, turns: animation);
                         },
-                        child: toggle5
+                        child: vacancyInfo[4]["isVacant"]
                             ? Icon(Icons.check_circle,
                                 color: Colors.blue,
                                 size: 35.0,
@@ -316,7 +346,7 @@ class _MerchantStrictState extends State<MerchantStrict> {
               width: 100.0,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20.0),
-                  color: toggle6
+                  color: vacancyInfo[5]["isVacant"]
                       ? Colors.blueAccent[100]
                       : Colors.redAccent[100].withOpacity(0.5)),
               child: Stack(
@@ -325,10 +355,10 @@ class _MerchantStrictState extends State<MerchantStrict> {
                     duration: Duration(milliseconds: 1000),
                     curve: Curves.easeIn,
                     top: 3.0,
-                    left: toggle6 ? 60.0 : 0.0,
-                    right: toggle6 ? 0.0 : 60.0,
+                    left: vacancyInfo[5]["isVacant"] ? 60.0 : 0.0,
+                    right: vacancyInfo[5]["isVacant"] ? 0.0 : 60.0,
                     child: InkWell(
-                      onTap: toggleButton6,
+                      onTap: () => {toggleButton(5)},
                       child: AnimatedSwitcher(
                         duration: Duration(milliseconds: 1000),
                         transitionBuilder:
@@ -336,7 +366,7 @@ class _MerchantStrictState extends State<MerchantStrict> {
                           return RotationTransition(
                               child: child, turns: animation);
                         },
-                        child: toggle6
+                        child: vacancyInfo[5]["isVacant"]
                             ? Icon(Icons.check_circle,
                                 color: Colors.blue,
                                 size: 35.0,
@@ -363,7 +393,7 @@ class _MerchantStrictState extends State<MerchantStrict> {
               width: 100.0,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20.0),
-                  color: toggle7
+                  color: vacancyInfo[6]["isVacant"]
                       ? Colors.blueAccent[100]
                       : Colors.redAccent[100].withOpacity(0.5)),
               child: Stack(
@@ -372,10 +402,10 @@ class _MerchantStrictState extends State<MerchantStrict> {
                     duration: Duration(milliseconds: 1000),
                     curve: Curves.easeIn,
                     top: 3.0,
-                    left: toggle7 ? 60.0 : 0.0,
-                    right: toggle7 ? 0.0 : 60.0,
+                    left: vacancyInfo[6]["isVacant"] ? 60.0 : 0.0,
+                    right: vacancyInfo[6]["isVacant"] ? 0.0 : 60.0,
                     child: InkWell(
-                      onTap: toggleButton7,
+                      onTap: () => {toggleButton(6)},
                       child: AnimatedSwitcher(
                         duration: Duration(milliseconds: 1000),
                         transitionBuilder:
@@ -383,7 +413,7 @@ class _MerchantStrictState extends State<MerchantStrict> {
                           return RotationTransition(
                               child: child, turns: animation);
                         },
-                        child: toggle7
+                        child: vacancyInfo[6]["isVacant"]
                             ? Icon(Icons.check_circle,
                                 color: Colors.blue,
                                 size: 35.0,
@@ -410,7 +440,7 @@ class _MerchantStrictState extends State<MerchantStrict> {
               width: 100.0,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20.0),
-                  color: toggle8
+                  color: vacancyInfo[7]["isVacant"]
                       ? Colors.blueAccent[100]
                       : Colors.redAccent[100].withOpacity(0.5)),
               child: Stack(
@@ -419,10 +449,10 @@ class _MerchantStrictState extends State<MerchantStrict> {
                     duration: Duration(milliseconds: 1000),
                     curve: Curves.easeIn,
                     top: 3.0,
-                    left: toggle8 ? 60.0 : 0.0,
-                    right: toggle8 ? 0.0 : 60.0,
+                    left: vacancyInfo[7]["isVacant"] ? 60.0 : 0.0,
+                    right: vacancyInfo[7]["isVacant"] ? 0.0 : 60.0,
                     child: InkWell(
-                      onTap: toggleButton8,
+                      onTap: () => {toggleButton(7)},
                       child: AnimatedSwitcher(
                         duration: Duration(milliseconds: 1000),
                         transitionBuilder:
@@ -430,7 +460,7 @@ class _MerchantStrictState extends State<MerchantStrict> {
                           return RotationTransition(
                               child: child, turns: animation);
                         },
-                        child: toggle8
+                        child: vacancyInfo[7]["isVacant"]
                             ? Icon(Icons.check_circle,
                                 color: Colors.blue,
                                 size: 35.0,
@@ -457,7 +487,7 @@ class _MerchantStrictState extends State<MerchantStrict> {
               width: 100.0,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20.0),
-                  color: toggle9
+                  color: vacancyInfo[8]["isVacant"]
                       ? Colors.blueAccent[100]
                       : Colors.redAccent[100].withOpacity(0.5)),
               child: Stack(
@@ -466,10 +496,10 @@ class _MerchantStrictState extends State<MerchantStrict> {
                     duration: Duration(milliseconds: 1000),
                     curve: Curves.easeIn,
                     top: 3.0,
-                    left: toggle9 ? 60.0 : 0.0,
-                    right: toggle9 ? 0.0 : 60.0,
+                    left: vacancyInfo[8]["isVacant"] ? 60.0 : 0.0,
+                    right: vacancyInfo[8]["isVacant"] ? 0.0 : 60.0,
                     child: InkWell(
-                      onTap: toggleButton9,
+                      onTap: () => {toggleButton(8)},
                       child: AnimatedSwitcher(
                         duration: Duration(milliseconds: 1000),
                         transitionBuilder:
@@ -477,7 +507,7 @@ class _MerchantStrictState extends State<MerchantStrict> {
                           return RotationTransition(
                               child: child, turns: animation);
                         },
-                        child: toggle9
+                        child: vacancyInfo[8]["isVacant"]
                             ? Icon(Icons.check_circle,
                                 color: Colors.blue,
                                 size: 35.0,
@@ -504,7 +534,7 @@ class _MerchantStrictState extends State<MerchantStrict> {
               width: 100.0,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20.0),
-                  color: toggle10
+                  color: vacancyInfo[9]["isVacant"]
                       ? Colors.blueAccent[100]
                       : Colors.redAccent[100].withOpacity(0.5)),
               child: Stack(
@@ -513,10 +543,10 @@ class _MerchantStrictState extends State<MerchantStrict> {
                     duration: Duration(milliseconds: 1000),
                     curve: Curves.easeIn,
                     top: 3.0,
-                    left: toggle10 ? 60.0 : 0.0,
-                    right: toggle10 ? 0.0 : 60.0,
+                    left: vacancyInfo[9]["isVacant"] ? 60.0 : 0.0,
+                    right: vacancyInfo[9]["isVacant"] ? 0.0 : 60.0,
                     child: InkWell(
-                      onTap: toggleButton10,
+                      onTap: () => {toggleButton(9)},
                       child: AnimatedSwitcher(
                         duration: Duration(milliseconds: 1000),
                         transitionBuilder:
@@ -524,7 +554,7 @@ class _MerchantStrictState extends State<MerchantStrict> {
                           return RotationTransition(
                               child: child, turns: animation);
                         },
-                        child: toggle10
+                        child: vacancyInfo[9]["isVacant"]
                             ? Icon(Icons.check_circle,
                                 color: Colors.blue,
                                 size: 35.0,
@@ -551,7 +581,7 @@ class _MerchantStrictState extends State<MerchantStrict> {
               width: 100.0,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20.0),
-                  color: toggle11
+                  color: vacancyInfo[10]["isVacant"]
                       ? Colors.blueAccent[100]
                       : Colors.redAccent[100].withOpacity(0.5)),
               child: Stack(
@@ -560,10 +590,10 @@ class _MerchantStrictState extends State<MerchantStrict> {
                     duration: Duration(milliseconds: 1000),
                     curve: Curves.easeIn,
                     top: 3.0,
-                    left: toggle11 ? 60.0 : 0.0,
-                    right: toggle11 ? 0.0 : 60.0,
+                    left: vacancyInfo[10]["isVacant"] ? 60.0 : 0.0,
+                    right: vacancyInfo[10]["isVacant"] ? 0.0 : 60.0,
                     child: InkWell(
-                      onTap: toggleButton11,
+                      onTap: () => {toggleButton(10)},
                       child: AnimatedSwitcher(
                         duration: Duration(milliseconds: 1000),
                         transitionBuilder:
@@ -571,7 +601,7 @@ class _MerchantStrictState extends State<MerchantStrict> {
                           return RotationTransition(
                               child: child, turns: animation);
                         },
-                        child: toggle11
+                        child: vacancyInfo[10]["isVacant"]
                             ? Icon(Icons.check_circle,
                                 color: Colors.blue,
                                 size: 35.0,
@@ -598,7 +628,7 @@ class _MerchantStrictState extends State<MerchantStrict> {
               width: 100.0,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20.0),
-                  color: toggle12
+                  color: vacancyInfo[11]["isVacant"]
                       ? Colors.blueAccent[100]
                       : Colors.redAccent[100].withOpacity(0.5)),
               child: Stack(
@@ -607,10 +637,10 @@ class _MerchantStrictState extends State<MerchantStrict> {
                     duration: Duration(milliseconds: 1000),
                     curve: Curves.easeIn,
                     top: 3.0,
-                    left: toggle12 ? 60.0 : 0.0,
-                    right: toggle12 ? 0.0 : 60.0,
+                    left: vacancyInfo[11]["isVacant"] ? 60.0 : 0.0,
+                    right: vacancyInfo[11]["isVacant"] ? 0.0 : 60.0,
                     child: InkWell(
-                      onTap: toggleButton12,
+                      onTap: () => {toggleButton(11)},
                       child: AnimatedSwitcher(
                         duration: Duration(milliseconds: 1000),
                         transitionBuilder:
@@ -618,7 +648,7 @@ class _MerchantStrictState extends State<MerchantStrict> {
                           return RotationTransition(
                               child: child, turns: animation);
                         },
-                        child: toggle12
+                        child: vacancyInfo[11]["isVacant"]
                             ? Icon(Icons.check_circle,
                                 color: Colors.blue,
                                 size: 35.0,
@@ -637,75 +667,69 @@ class _MerchantStrictState extends State<MerchantStrict> {
         ]));
   }
 
-  toggleButton1() {
-    setState(() {
-      toggle1 = !toggle1;
-    });
-  }
+  // toggleButton2() {
+  //   setState(() {
+  //     toggle2 = !toggle2;
+  //   });
+  // }
 
-  toggleButton2() {
-    setState(() {
-      toggle2 = !toggle2;
-    });
-  }
+  // toggleButton3() {
+  //   setState(() {
+  //     toggle3 = !toggle3;
+  //   });
+  // }
 
-  toggleButton3() {
-    setState(() {
-      toggle3 = !toggle3;
-    });
-  }
+  // toggleButton4() {
+  //   setState(() {
+  //     toggle4 = !toggle4;
+  //   });
+  // }
 
-  toggleButton4() {
-    setState(() {
-      toggle4 = !toggle4;
-    });
-  }
+  // toggleButton5() {
+  //   setState(() {
+  //     toggle5 = !toggle5;
+  //   });
+  // }
 
-  toggleButton5() {
-    setState(() {
-      toggle5 = !toggle5;
-    });
-  }
+  // toggleButton6() {
+  //   setState(() {
+  //     toggle6 = !toggle6;
+  //   });
+  // }
 
-  toggleButton6() {
-    setState(() {
-      toggle6 = !toggle6;
-    });
-  }
+  // toggleButton7() {
+  //   setState(() {
+  //     toggle7 = !toggle7;
+  //   });
+  // }
 
-  toggleButton7() {
-    setState(() {
-      toggle7 = !toggle7;
-    });
-  }
+  // toggleButton8() {
+  //   setState(() {
+  //     toggle8 = !toggle8;
+  //   });
+  // }
 
-  toggleButton8() {
-    setState(() {
-      toggle8 = !toggle8;
-    });
-  }
+  // toggleButton9() {
+  //   setState(() {
+  //     toggle9 = !toggle9;
+  //   });
+  // }
 
-  toggleButton9() {
-    setState(() {
-      toggle9 = !toggle9;
-    });
-  }
+  // toggleButton10() {
+  //   setState(() {
+  //     toggle10 = !toggle10;
+  //   });
+  // }
 
-  toggleButton10() {
-    setState(() {
-      toggle10 = !toggle10;
-    });
-  }
+  // toggleButton11() {
+  //   setState(() {
+  //     toggle11 = !toggle11;
+  //   });
+  // }
 
-  toggleButton11() {
-    setState(() {
-      toggle11 = !toggle11;
-    });
-  }
-
-  toggleButton12() {
-    setState(() {
-      toggle12 = !toggle12;
-    });
-  }
+  // toggleButton12() {
+  //   setState(() {
+  //     toggle12 = !toggle12;
+  //   });
+  // }
 }
