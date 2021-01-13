@@ -8,7 +8,7 @@ class TimerPage extends StatefulWidget {
 
 class _TimerPageState extends State<TimerPage> {
   Timer timer;
-  int totalTime = 1800;//60; 
+  int totalTime = 1800; //60;
   String timetodisplay = '';
   @override
   void initState() {
