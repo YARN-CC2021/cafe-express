@@ -8,7 +8,7 @@ class TimerPage extends StatefulWidget {
 
 class _TimerPageState extends State<TimerPage> {
   Timer timer;
-  int totalTime = 1800;//60; 
+  int totalTime = 1800; //60;
   String timetodisplay = '';
   @override
   void initState() {
@@ -160,14 +160,18 @@ class _TimerPageState extends State<TimerPage> {
         ), (Timer t) {
       setState(() {
         if (totalTime < 0) {
-          print(totalTime);
+          print('TOTAL$totalTime');
           //go fail page
           timer.cancel();
           totalTime = 1800;
         } else if (totalTime < 3600) {
           int m = totalTime ~/ 60;
           int s = totalTime - (60 * m);
-          timetodisplay = m.toString() + ":" + s.toString();
+          if (s == 0) {
+            timetodisplay = m.toString() + ":" + "0" + s.toString();
+          } else {
+            timetodisplay = m.toString() + ":" + s.toString();
+          }
           totalTime -= 1;
         }
       });
