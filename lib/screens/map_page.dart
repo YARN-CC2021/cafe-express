@@ -19,6 +19,7 @@ class _MapPageState extends State<MapPage> {
   var shopData;
   String category = "All";
   String distance = '100m';
+  String groupNum = "All";
 
   Completer<GoogleMapController> _controller = Completer();
   Location _locationService = Location();
@@ -65,7 +66,7 @@ class _MapPageState extends State<MapPage> {
         Expanded(child: _makeGoogleMap()),
         Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
           Column(children: [
-            Text("Filter by Distance!"),
+            Text("Distance"),
             DropdownButton<String>(
               value: distance,
               icon: Icon(Icons.arrow_drop_down),
@@ -79,7 +80,7 @@ class _MapPageState extends State<MapPage> {
               onChanged: (String newValue) {
                 setState(() {
                   distance = newValue;
-                  _filterShop(distance, category);
+                  _filterShop(distance, category, groupNum);
                 });
               },
               items: <String>['100m', '500m', '1km', '2km']
@@ -92,7 +93,7 @@ class _MapPageState extends State<MapPage> {
             ),
           ]),
           Column(children: [
-            Text("Filter by Category"),
+            Text("Category"),
             DropdownButton<String>(
               value: category,
               icon: Icon(Icons.arrow_drop_down),
@@ -106,11 +107,51 @@ class _MapPageState extends State<MapPage> {
               onChanged: (String newValue) {
                 setState(() {
                   category = newValue;
-                  _filterShop(distance, category);
+                  _filterShop(distance, category, groupNum);
                 });
               },
               items: <String>['All', 'Cafe', 'Restaurant', 'Bar']
                   .map<DropdownMenuItem<String>>((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                );
+              }).toList(),
+            ),
+          ]),
+          Column(children: [
+            Text("GroupSize"),
+            DropdownButton<String>(
+              value: groupNum,
+              icon: Icon(Icons.arrow_drop_down),
+              iconSize: 24,
+              elevation: 16,
+              style: TextStyle(color: Colors.deepPurple),
+              underline: Container(
+                height: 2,
+                color: Colors.deepPurpleAccent,
+              ),
+              onChanged: (String newValue) {
+                setState(() {
+                  groupNum = newValue;
+                  _filterShop(distance, category, groupNum);
+                });
+              },
+              items: <String>[
+                'All',
+                '1',
+                '2',
+                '3',
+                '4',
+                '5',
+                '6',
+                '7',
+                '8',
+                '9',
+                '10',
+                '11',
+                '12'
+              ].map<DropdownMenuItem<String>>((String value) {
                 return DropdownMenuItem<String>(
                   value: value,
                   child: Text(value),
@@ -137,15 +178,15 @@ class _MapPageState extends State<MapPage> {
           target: LatLng(_yourLocation.latitude, _yourLocation.longitude),
           zoom: 18.0,
         ),
-        markers: listShops.map((data) {
+        markers: listShops.map((shop) {
           return Marker(
-            markerId: MarkerId(data['id']),
-            position: LatLng(data['lat'], data['lng']),
+            markerId: MarkerId('${shop['id']}'),
+            position: LatLng(shop['lat'].toDouble(), shop['lng'].toDouble()),
             infoWindow: InfoWindow(
-              title: '${data['name']}',
-              snippet: data['category'],
+              title: '${shop['name']}',
+              snippet: shop['category'],
               onTap: () {
-                _onTap(context, data['id']);
+                _onTap(context, shop['id']);
                 //move to detail page with its id
               },
             ),
@@ -177,25 +218,27 @@ class _MapPageState extends State<MapPage> {
       shopData = await jsonResponse['body']
           .where((shop) => shop['lat'] != null && shop['lng'] != null)
           .toList();
-      listShops = shopData;
-      _filterShop(distance, category);
+      shopData = listShops = shopData;
+      _filterShop(distance, category, groupNum);
     } else {
       print('Request failed with status: ${response.statusCode}.');
     }
   }
 
-  void _filterShop(String distance, String category) {
+  void _filterShop(String distance, String category, String groupNum) {
+    //, int groupNum) {
     listShops = shopData;
-    if (category == 'All') {
-      listShops = _filterShopByDistance(distance);
-    } else {
-      listShops = _filterShopByDistance(distance);
-      listShops = _filterShopByCategory(category);
-    }
+    listShops = _filterShopByDistance(distance);
+    listShops = _filterShopByCategory(category);
+    listShops = _filterShopByGroupSize(groupNum);
   }
 
   List _filterShopByCategory(String category) {
-    return listShops.where((data) => data['category'] == category).toList();
+    if (category == 'All') {
+      return listShops;
+    } else {
+      return listShops.where((data) => data['category'] == category).toList();
+    }
   }
 
   List _filterShopByDistance(String distance) {
@@ -205,13 +248,26 @@ class _MapPageState extends State<MapPage> {
     } else {
       numDistance = int.parse(distance.replaceAll('m', ''));
     }
-
     return listShops
         .where((shop) => _getDistance(shop) <= numDistance)
         .toList();
   }
 
-  List _filterShpByGroupSize(int groupNum, List shops) {}
+  List _filterShopByGroupSize(String groupNum) {
+    if (groupNum == 'All') {
+      return listShops;
+    } else {
+      return listShops.map((shop) {
+        var vacancyType = shop['vacancyType'];
+        return shop['$vacancyType']
+            .contains((sheet) =>
+                  sheet['isVacant'] == true &&
+                      sheet['Min'] <= int.parse(groupNum) &&
+                      sheet['Max'] >= int.parse(groupNum)
+                );
+      }).toList();
+    }
+  }
 
   int _getDistance(Map shop) {
     double distanceInMeters = Geolocator.distanceBetween(
