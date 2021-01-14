@@ -484,7 +484,7 @@ class _MerchantCalendarPageState extends State<MerchantCalendarPage> {
                   _updateStoreProfile();
                   _goMerchantPage(context);
                 },
-                child: Text('Submit'),
+                child: Text('保存'),
               )
             ]),
       ),
