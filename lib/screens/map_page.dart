@@ -185,19 +185,20 @@ class _MapPageState extends State<MapPage> {
   }
 
   void _filterShop(String distance, String category) {
+    listShops = shopData;
     if (category == 'All') {
-      listShops = _filterShopByDistance(distance, shopData);
+      listShops = _filterShopByDistance(distance);
     } else {
-      final tmp = _filterShopByDistance(distance, shopData);
-      listShops = _filterShopByCategory(category, tmp);
+      listShops = _filterShopByDistance(distance);
+      listShops = _filterShopByCategory(category);
     }
   }
 
-  List _filterShopByCategory(String category, List shops) {
-    return shops.where((data) => data['category'] == category).toList();
+  List _filterShopByCategory(String category) {
+    return listShops.where((data) => data['category'] == category).toList();
   }
 
-  List _filterShopByDistance(String distance, List shops) {
+  List _filterShopByDistance(String distance) {
     int numDistance;
     if (distance.contains('km')) {
       numDistance = int.parse(distance.replaceAll('km', '000'));
@@ -205,12 +206,12 @@ class _MapPageState extends State<MapPage> {
       numDistance = int.parse(distance.replaceAll('m', ''));
     }
 
-    return shops.where((shop) => _getDistance(shop) <= numDistance).toList();
+    return listShops
+        .where((shop) => _getDistance(shop) <= numDistance)
+        .toList();
   }
 
-  Future<void> _filterAvailable(List shops) async {}
-
-  Future<void> _filterGroupSize(List shops) async {}
+  List _filterShpByGroupSize(int groupNum, List shops) {}
 
   int _getDistance(Map shop) {
     double distanceInMeters = Geolocator.distanceBetween(
@@ -222,6 +223,7 @@ class _MapPageState extends State<MapPage> {
     // print(distanceInMeters.toInt());
     return distanceInMeters.toInt();
   }
+
   void _onTap(BuildContext context, String shopId) {
     Navigator.pushNamed(context, DetailRoute, arguments: {"id": shopId});
   }
