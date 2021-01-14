@@ -4,8 +4,6 @@ import 'screens/merchant_strict.dart';
 import 'screens/merchant_flex.dart';
 import 'screens/merchant_page.dart';
 import 'wrapper.dart';
-import 'package:provider/provider.dart';
-import 'models/user_status.dart';
 import 'screens/detail_page.dart';
 import 'screens/user_category_page.dart';
 import 'screens/validation.dart';
@@ -16,7 +14,8 @@ const WrapperRoute = "/";
 const MapSearchRoute = "/map_search";
 const DetailRoute = "/detail";
 const MerchantRoute = "/merchant_settings";
-const MerchantflexRoute = "/merchant_settings_flex";
+const MerchantFlexRoute = "/merchant_settings_flex";
+const MerchantStrictRoute = "/merchant_settings_strict";
 const UserCategoryRoute = "/user_category";
 const ValidationRoute = "validation";
 const MerchantProfileRoute = "/merchant_profile";
@@ -28,10 +27,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       onGenerateRoute: _routes(),
-      home: ChangeNotifierProvider<Status>(
-        create: (context) => Status(),
-        child: Wrapper(),
-      ),
+      home: Wrapper(),
     );
   }
 
@@ -53,8 +49,11 @@ class MyApp extends StatelessWidget {
         case MerchantRoute:
           screen = MerchantPage();
           break;
-        case MerchantflexRoute:
+        case MerchantFlexRoute:
           screen = MerchantFlex();
+          break;
+        case MerchantStrictRoute:
+          screen = MerchantStrict();
           break;
         case UserCategoryRoute:
           screen = UserCategoryPage();
