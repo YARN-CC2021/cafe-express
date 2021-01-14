@@ -259,12 +259,12 @@ class _MapPageState extends State<MapPage> {
     } else {
       return listShops.map((shop) {
         var vacancyType = shop['vacancyType'];
-        return shop['$vacancyType']
-            .contains((sheet) =>
+        return shop['vacancy']['$vacancyType']
+            .where((sheet) =>
                   sheet['isVacant'] == true &&
                       sheet['Min'] <= int.parse(groupNum) &&
                       sheet['Max'] >= int.parse(groupNum)
-                );
+                ).toList;
       }).toList();
     }
   }
