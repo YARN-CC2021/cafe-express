@@ -6,9 +6,6 @@ import 'package:http/http.dart' as http;
 import 'package:amplify_core/amplify_core.dart';
 
 class MerchantCalendarPage extends StatefulWidget {
-  final Map<dynamic, dynamic> shopData;
-  MerchantCalendarPage({Key key, @required this.shopData}) : super(key: key);
-
   @override
   _MerchantCalendarPageState createState() => _MerchantCalendarPageState();
 }
