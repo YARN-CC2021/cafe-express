@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
       onGenerateRoute: _routes(),
       home: ChangeNotifierProvider<Status>(
         create: (context) => Status(),
-        child: Wrapper(),
+        child: MapPage(),
       ),
     );
   }

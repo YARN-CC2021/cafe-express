@@ -337,14 +337,14 @@ class _DetailPageState extends State<DetailPage> {
                                     bookedTime.add(new Duration(minutes: 30)),
                                 bookData["bookedAt"] = "$bookedTime",
                                 bookData["bookingId"] =
-                                    "${globals.userId}${bookedTime.toUtc().toIso8601String()}",
+                                    "${globals.userId}${bookedTime.millisecondsSinceEpoch}",
                                 bookData["bookName"] = globals.userId,
                                 bookData["createdAt"] = "$bookedTime",
                                 bookData["depositAmount"] = price,
                                 bookData["expiredAt"] = "$expireTime",
                                 bookData["index"] = sheetindex,
                                 bookData["partySize"] = groupNum,
-                                bookData["status"] = "checked-in",
+                                bookData["status"] = "payed",
                                 bookData["tableType"] = sheet,
                                 bookData["updatedAt"] = "$bookedTime",
                                 debugPrint(json.encode(bookData)),
@@ -483,7 +483,7 @@ class _DetailPageState extends State<DetailPage> {
       };
       bookData['vacancyType'] = shopData['vacancyType'];
       bookData['customerInfo'] = {
-        "costomerId": globals.userId,
+        "customerId": globals.userId,
       };
     } else {
       print('Request failed with status: ${response.statusCode}.');
@@ -492,15 +492,14 @@ class _DetailPageState extends State<DetailPage> {
 
   void detectSheet(int groupNum) {
     print("detectsheet called");
-    var intGroupNum = groupNum;
     sheet = shopData['vacancy']['$vacancyType'].firstWhere((sheet) =>
         sheet['isVacant'] == true &&
-        sheet['Min'] <= intGroupNum &&
-        sheet['Max'] >= intGroupNum);
+        sheet['Min'] <= groupNum &&
+        sheet['Max'] >= groupNum);
     sheetindex = shopData['vacancy']['$vacancyType'].indexWhere((sheet) =>
         sheet['isVacant'] == true &&
-        sheet['Min'] <= intGroupNum &&
-        sheet['Max'] >= intGroupNum);
+        sheet['Min'] <= groupNum &&
+        sheet['Max'] >= groupNum);
     print(sheet);
     print(sheetindex);
   }
