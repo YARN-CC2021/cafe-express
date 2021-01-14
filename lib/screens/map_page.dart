@@ -58,7 +58,7 @@ class _MapPageState extends State<MapPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Cafe Express"),
-        backgroundColor: Colors.blue,
+        backgroundColor: Theme.of(context).primaryColor,
         elevation: 0.0,
       ),
       body: Column(children: [
@@ -221,6 +221,7 @@ class _MapPageState extends State<MapPage> {
     );
     return distanceInMeters.toInt();
   }
+
   void _onTap(BuildContext context, String shopId) {
     Navigator.pushNamed(context, DetailRoute, arguments: {"id": shopId});
   }

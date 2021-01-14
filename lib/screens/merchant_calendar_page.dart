@@ -6,8 +6,8 @@ import 'package:http/http.dart' as http;
 import 'package:amplify_core/amplify_core.dart';
 
 class MerchantCalendarPage extends StatefulWidget {
-  final Map<dynamic, dynamic> shopData;
-  MerchantCalendarPage({Key key, @required this.shopData}) : super(key: key);
+  // final Map<dynamic, dynamic> shopData;
+  // MerchantCalendarPage({Key key, @required this.shopData}) : super(key: key);
 
   @override
   _MerchantCalendarPageState createState() => _MerchantCalendarPageState();
@@ -148,7 +148,7 @@ class _MerchantCalendarPageState extends State<MerchantCalendarPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Cafe Express"),
-        backgroundColor: Colors.blue,
+        backgroundColor: Theme.of(context).primaryColor,
         elevation: 0.0,
       ),
       body: Center(

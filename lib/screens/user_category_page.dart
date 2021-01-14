@@ -26,7 +26,7 @@ class _UserCategoryPageState extends State<UserCategoryPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Cafe Express"),
-        backgroundColor: Colors.blue,
+        backgroundColor: Theme.of(context).primaryColor,
         elevation: 0.0,
       ),
       body: Column(children: [
