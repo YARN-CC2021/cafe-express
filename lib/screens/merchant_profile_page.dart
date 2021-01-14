@@ -308,7 +308,7 @@ class _MerchantProfilePageState extends State<MerchantProfilePage> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => MerchantCalendarPage(shopData: shopData),
+        builder: (context) => MerchantCalendarPage(),
       ),
     );
   }
