@@ -45,10 +45,6 @@ dependencies:
   shared_preferences: ^0.5.4+5
   font_awesome_flutter: ^8.5.0
   carousel_slider: ^1.4.1
-<<<<<<< HEAD
-=======
-  uuid: ^2.2.2
->>>>>>> 5633c1a8c444c008c2bcf0ae860b327f1f10c479
 
 dev_dependencies:
   flutter_test:
