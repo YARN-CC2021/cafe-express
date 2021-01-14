@@ -40,6 +40,7 @@ class _MerchantCalendarPageState extends State<MerchantCalendarPage> {
   Future<void> _getShopData() async {
     var userData = await Amplify.Auth.getCurrentUser();
     var userId = userData.userId;
+    print("Calendar Page $userId");
     setState(() => _userId = userId);
     var response = await http.get(
         'https://pq3mbzzsbg.execute-api.ap-northeast-1.amazonaws.com/CaffeExpressRESTAPI/store/$userId');
@@ -145,7 +146,7 @@ class _MerchantCalendarPageState extends State<MerchantCalendarPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Cafe Express"),
-        backgroundColor: Colors.blue,
+        backgroundColor: Theme.of(context).primaryColor,
         elevation: 0.0,
       ),
       body: Center(
@@ -481,7 +482,7 @@ class _MerchantCalendarPageState extends State<MerchantCalendarPage> {
                   _updateStoreProfile();
                   _goMerchantPage(context);
                 },
-                child: Text('Submit'),
+                child: Text('保存'),
               )
             ]),
       ),

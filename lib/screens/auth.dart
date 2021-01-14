@@ -4,6 +4,7 @@ import '../amplifyconfiguration.dart';
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import "package:flutter_login/flutter_login.dart";
 import "../app.dart";
+import "../global.dart" as globals;
 
 import "../models/user_status.dart";
 
@@ -22,6 +23,7 @@ class _AuthState extends State<Auth> {
   @override
   initState() {
     super.initState();
+    print("Very beginning auth: ${globals.userId}");
     if (!isConfigured) config();
   }
 

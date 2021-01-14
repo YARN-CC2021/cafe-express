@@ -43,6 +43,7 @@ const createStore = (body) => {
       createdAt: createdAt,
       updatedAt: createdAt,
       name: "",
+      zipCode: "",
       address: "",
       description: "",
       lat: 0,
