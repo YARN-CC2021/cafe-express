@@ -6,9 +6,6 @@ import 'package:http/http.dart' as http;
 import 'package:amplify_core/amplify_core.dart';
 
 class MerchantCalendarPage extends StatefulWidget {
-  // final Map<dynamic, dynamic> shopData;
-  // MerchantCalendarPage({Key key, @required this.shopData}) : super(key: key);
-
   @override
   _MerchantCalendarPageState createState() => _MerchantCalendarPageState();
 }
@@ -43,6 +40,7 @@ class _MerchantCalendarPageState extends State<MerchantCalendarPage> {
   Future<void> _getShopData() async {
     var userData = await Amplify.Auth.getCurrentUser();
     var userId = userData.userId;
+    print("Calendar Page $userId");
     setState(() => _userId = userId);
     var response = await http.get(
         'https://pq3mbzzsbg.execute-api.ap-northeast-1.amazonaws.com/CaffeExpressRESTAPI/store/$userId');
