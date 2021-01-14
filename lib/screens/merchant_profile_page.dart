@@ -3,7 +3,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:amplify_core/amplify_core.dart';
-import './merchant_calendar_page.dart';
+import '../app.dart';
 
 class MerchantProfilePage extends StatefulWidget {
   @override
@@ -303,14 +303,9 @@ class _MerchantProfilePageState extends State<MerchantProfilePage> {
                 ])));
   }
 
-  void _goToCalendarPage(BuildContext context) {
-    print("triggered _goToCalendarPage");
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => MerchantCalendarPage(),
-      ),
-    );
+  void _changePage(BuildContext context, String route) {
+    Navigator.pushNamed(context, route);
+    print("Going to $route was triggered");
   }
 
   Future<void> _updateStoreProfile() async {
@@ -326,7 +321,7 @@ class _MerchantProfilePageState extends State<MerchantProfilePage> {
     if (response.statusCode == 200) {
       final jsonResponse = json.decode(response.body);
       print("_updateStoreProfile jsonResponse= $jsonResponse");
-      _goToCalendarPage(context);
+      _changePage(context, MerchantRoute);
     } else {
       print('Request failed with status: ${response.statusCode}.');
     }
