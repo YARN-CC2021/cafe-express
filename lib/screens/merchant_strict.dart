@@ -5,6 +5,10 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:badges/badges.dart';
+import 'merchant_calendar_page.dart';
+import 'qr_page.dart';
+import 'merchant_page.dart';
+import '../app.dart';
 
 class MerchantStrict extends StatefulWidget {
   @override
@@ -148,11 +152,12 @@ class _MerchantStrictState extends State<MerchantStrict> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: new Container(),
         title: Text(
           "Cafe Express Control Panel",
           textAlign: TextAlign.center,
         ),
-        backgroundColor: Colors.blue,
+        backgroundColor: Theme.of(context).primaryColor,
         elevation: 0.0,
       ),
       body: StreamBuilder(
@@ -794,6 +799,74 @@ class _MerchantStrictState extends State<MerchantStrict> {
               ]);
         },
       ),
+      bottomNavigationBar: BottomAppBar(
+        child: new Row(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            SizedBox(width: 7),
+            IconButton(
+              icon: Icon(
+                Icons.qr_code_rounded,
+                size: 24.0,
+              ),
+              color: Colors.black,
+              onPressed: () => {_changePage(context, QrRoute)},
+            ),
+            IconButton(
+              icon: Icon(
+                Icons.calendar_today_rounded,
+                size: 24.0,
+              ),
+              color: Colors.black,
+              onPressed: () => {_changePage(context, MerchantCalendarRoute)},
+            ),
+            IconButton(
+              icon: Icon(
+                Icons.search,
+                size: 24.0,
+                color: Theme.of(context).primaryColor,
+              ),
+              color: Colors.black,
+              onPressed: () => {_changePage(context, MerchantCalendarRoute)},
+            ),
+            IconButton(
+              icon: Icon(
+                Icons.assignment,
+                size: 24.0,
+              ),
+              color: Colors.black,
+              onPressed: () => {_changePage(context, BookingListRoute)},
+            ),
+            IconButton(
+              icon: Icon(
+                Icons.account_circle,
+                size: 24.0,
+              ),
+              color: Colors.black,
+              onPressed: () =>
+                  {_changePage(context, MerchantProfileSettingRoute)},
+            ),
+            SizedBox(width: 7),
+          ],
+        ),
+        color: Theme.of(context).primaryColor,
+        shape: CircularNotchedRectangle(),
+      ),
+      floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: FloatingActionButton(
+        elevation: 4.0,
+        child: Icon(
+          Icons.videogame_asset,
+        ),
+        onPressed: () => {_changePage(context, MerchantRoute)},
+      ),
     );
+  }
+
+  void _changePage(BuildContext context, String route) {
+    Navigator.pushNamed(context, route);
+    print("Going to $route was triggered");
   }
 }

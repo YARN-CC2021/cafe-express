@@ -27,6 +27,7 @@ class Validation extends StatelessWidget {
       key: _scaffoldKey,
       appBar: AppBar(
         title: Text("Confirm your email"),
+        backgroundColor: Theme.of(context).primaryColor,
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),

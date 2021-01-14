@@ -27,7 +27,7 @@ class _MerchantFlexState extends State<MerchantFlex> {
             "Cafe Express Control Panel",
             textAlign: TextAlign.center,
           ),
-          backgroundColor: Colors.blue,
+          backgroundColor: Theme.of(context).primaryColor,
           elevation: 0.0,
         ),
         body: ListView(children: [

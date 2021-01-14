@@ -59,7 +59,7 @@ class _MerchantProfilePageState extends State<MerchantProfilePage> {
     return Scaffold(
         appBar: AppBar(
           title: Text("Cafe Express"),
-          backgroundColor: Colors.blue,
+          backgroundColor: Theme.of(context).primaryColor,
           elevation: 0.0,
         ),
         body: Form(
@@ -308,7 +308,7 @@ class _MerchantProfilePageState extends State<MerchantProfilePage> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => MerchantCalendarPage(shopData: shopData),
+        builder: (context) => MerchantCalendarPage(),
       ),
     );
   }

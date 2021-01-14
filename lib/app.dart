@@ -11,6 +11,10 @@ import 'screens/user_category_page.dart';
 import 'screens/validation.dart';
 import 'screens/merchant_profile_page.dart';
 import 'screens/timer_page.dart';
+import 'screens/merchant_calendar_page.dart';
+import 'screens/qr_page.dart';
+import 'screens/booking_list_page.dart';
+import 'screens/merchant_profile_setting_page.dart';
 
 const WrapperRoute = "/";
 const MapSearchRoute = "/map_search";
@@ -20,13 +24,26 @@ const MerchantflexRoute = "/merchant_settings_flex";
 const UserCategoryRoute = "/user_category";
 const ValidationRoute = "validation";
 const MerchantProfileRoute = "/merchant_profile";
+const MerchantCalendarRoute = "/merchant_calendar";
 const TimerRoute = "/timer";
+const QrRoute = "/qr";
+const BookingListRoute = "/booking_list";
+const MerchantProfileSettingRoute = "/merchant_profile_setting";
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: ThemeData(
+          primaryColor: Colors.greenAccent,
+          accentColor: Colors.teal[600],
+          fontFamily: 'Georgia',
+          textTheme: TextTheme(
+            headline1: TextStyle(fontSize: 72.0, fontWeight: FontWeight.bold),
+            headline6: TextStyle(fontSize: 36.0, fontStyle: FontStyle.italic),
+            bodyText2: TextStyle(fontSize: 14.0, fontFamily: 'Hind'),
+          )),
       onGenerateRoute: _routes(),
       home: ChangeNotifierProvider<Status>(
         create: (context) => Status(),
@@ -65,8 +82,20 @@ class MyApp extends StatelessWidget {
         case MerchantProfileRoute:
           screen = MerchantProfilePage();
           break;
+        case MerchantProfileSettingRoute:
+          screen = MerchantProfileSettingPage();
+          break;
+        case MerchantCalendarRoute:
+          screen = MerchantCalendarPage();
+          break;
         case TimerRoute:
           screen = TimerPage();
+          break;
+        case QrRoute:
+          screen = QrPage();
+          break;
+        case BookingListRoute:
+          screen = BookingListPage();
           break;
         default:
           return null;
