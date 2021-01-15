@@ -237,11 +237,11 @@ class _BookingPageState extends State<BookingPage> {
   _changeCardColor(Map booking) {
     if (booking["status"] == "expired") {
       return LinearGradient(colors: [Colors.redAccent[400], Colors.red[900]]);
-    } else if (booking["status"] == "payed" &&
+    } else if (booking["status"] == "paid" &&
         DateTime.now().isBefore(DateTime.parse(booking["expiredAt"]))) {
       return LinearGradient(
           colors: [Colors.amberAccent[100], Colors.amberAccent]);
-    } else if (booking["status"] == "payed") {
+    } else if (booking["status"] == "paid") {
       return LinearGradient(colors: [Colors.white, Colors.white]);
     } else if (booking["status"] == "checked_in") {
       return LinearGradient(colors: [
@@ -318,7 +318,7 @@ class _BookingPageState extends State<BookingPage> {
                   ),
                   onPressed: DateTime.now()
                               .isBefore(DateTime.parse(booking["expiredAt"])) &&
-                          booking["status"] == "payed"
+                          booking["status"] == "paid"
                       ? () {
                           _statusUpdate(index, "cancelled");
                         }
