@@ -2,6 +2,7 @@ import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_core/amplify_core.dart';
 import 'package:flutter/material.dart';
 import '../app.dart';
+import '../global.dart' as globals;
 
 class Validation extends StatelessWidget {
   final String email;
@@ -27,6 +28,7 @@ class Validation extends StatelessWidget {
       key: _scaffoldKey,
       appBar: AppBar(
         title: Text("Confirm your email"),
+        backgroundColor: Theme.of(context).primaryColor,
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -88,6 +90,8 @@ class Validation extends StatelessWidget {
         await Amplify.Auth.signIn(username: email, password: passcode);
     try {
       if (result.isSignedIn) {
+        globals.firstSignIn = true;
+        print("First Sign In!!! : ${globals.firstSignIn}");
         _goToUserCategory(aContext);
         print(result.isSignedIn);
       }

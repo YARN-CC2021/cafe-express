@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:amplify_core/amplify_core.dart';
+import '../global.dart' as globals;
 
 class UserCategoryPage extends StatefulWidget {
   @override
@@ -26,7 +27,7 @@ class _UserCategoryPageState extends State<UserCategoryPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Cafe Express"),
-        backgroundColor: Colors.blue,
+        backgroundColor: Theme.of(context).primaryColor,
         elevation: 0.0,
       ),
       body: Column(children: [
@@ -65,6 +66,11 @@ class _UserCategoryPageState extends State<UserCategoryPage> {
     var userId = userData.userId;
     var useremail = userData.username;
     final now = DateTime.now();
+
+    print("User Category: Globals : $userId");
+    globals.userId = userId;
+
+    print("User Category $userId");
     print("username= ${userData.username}");
 
     print("_insertUserCategory body= $userId, $isCustomer");
