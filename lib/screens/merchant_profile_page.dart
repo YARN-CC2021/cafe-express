@@ -3,7 +3,9 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:amplify_core/amplify_core.dart';
-import './merchant_calendar_page.dart';
+import 'package:geocoder/geocoder.dart';
+import '../app.dart';
+import '../global.dart' as globals;
 
 class MerchantProfilePage extends StatefulWidget {
   @override
@@ -35,23 +37,10 @@ class _MerchantProfilePageState extends State<MerchantProfilePage> {
   final TextEditingController categoryController = TextEditingController();
   final TextEditingController depositController = TextEditingController();
   final TextEditingController imageController = TextEditingController();
+  final TextEditingController zipCodeController = TextEditingController();
 
   var _vacancyType = "";
   // var profile = {};
-
-  void assignVariable() {
-    shopData["name"] = nameController.text;
-    shopData["description"] = descriptionController.text;
-    shopData["address"] = addressController.text;
-    shopData["tel"] = telController.text;
-    shopData["contactEmail"] = emailController.text;
-    shopData["storeURL"] = storeUrlController.text;
-    shopData["category"] = categoryController.text;
-    shopData["depositAmountPerPerson"] = depositController.text;
-    shopData["imagePaths"] = imageController.text;
-    shopData["vacancyType"] = _vacancyType;
-    shopData["updatedAt"] = DateTime.now().toUtc().toIso8601String();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +48,7 @@ class _MerchantProfilePageState extends State<MerchantProfilePage> {
     return Scaffold(
         appBar: AppBar(
           title: Text("Cafe Express"),
-          backgroundColor: Colors.blue,
+          backgroundColor: Theme.of(context).primaryColor,
           elevation: 0.0,
         ),
         body: Form(
@@ -98,6 +87,47 @@ class _MerchantProfilePageState extends State<MerchantProfilePage> {
                       }
                       return null;
                     },
+                  ),
+                  Row(
+                    children: [
+                      Container(
+                          child: Text(
+                            '郵便番号',
+                            style: TextStyle(fontSize: 18.0),
+                          ),
+                          width: 90),
+                      Expanded(
+                        child: TextFormField(
+                          maxLines: 1,
+                          controller: zipCodeController,
+                          keyboardType: TextInputType.number,
+                          decoration: InputDecoration(
+                            labelText: '郵便番号',
+                            suffixIcon: IconButton(
+                              highlightColor: Colors.transparent,
+                              icon: Container(
+                                  width: 36.0, child: new Icon(Icons.clear)),
+                              onPressed: () {
+                                zipCodeController.clear();
+                                addressController.clear();
+                              },
+                              splashColor: Colors.transparent,
+                            ),
+                          ),
+                        ),
+                      ),
+                      OutlineButton(
+                        child: Text('検索'),
+                        onPressed: () async {
+                          var result = await http.get(
+                              'https://zipcloud.ibsnet.co.jp/api/search?zipcode=${zipCodeController.text}');
+                          Map<String, dynamic> map =
+                              json.decode(result.body)['results'][0];
+                          addressController.text =
+                              '${map['address1']}${map['address2']}${map['address3']}';
+                        },
+                      ),
+                    ],
                   ),
                   TextFormField(
                     // The validator receives the text that the user has entered.
@@ -298,24 +328,34 @@ class _MerchantProfilePageState extends State<MerchantProfilePage> {
                         // );
                       }
                     },
-                    child: Text('Next Page'),
+                    child: Text('保存'),
                   )
                 ])));
   }
 
-  void _goToCalendarPage(BuildContext context) {
-    print("triggered _goToCalendarPage");
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => MerchantCalendarPage(),
-      ),
-    );
+  Future<void> _getAddress(String address) async {
+    var addresses = await Geocoder.local.findAddressesFromQuery(address);
+    var first = addresses.first;
+    print("${first.featureName} : ${first.coordinates}");
+    var strCoordinates = first.coordinates
+        .toString()
+        .substring(1, first.coordinates.toString().length - 1);
+    print("String $strCoordinates");
+    List coordinates = strCoordinates.split(",");
+    shopData['lat'] = double.parse(coordinates[0]);
+    shopData['lng'] = double.parse(coordinates[1]);
+    print("Lat, Lng= ${shopData['lat']}, ${shopData['lng']}");
+  }
+
+  void _changePage(BuildContext context, String route) {
+    Navigator.pushNamed(context, route);
+    print("Going to $route was triggered");
   }
 
   Future<void> _updateStoreProfile() async {
     print("shopData in _updateStoreProfile $shopData");
     print("JSON stringiified shopdata ${jsonEncode(shopData)}");
+    await _getAddress(shopData["address"]);
     var response = await http.patch(
       "https://pq3mbzzsbg.execute-api.ap-northeast-1.amazonaws.com/CaffeExpressRESTAPI/store/$_userId",
       headers: <String, String>{
@@ -326,15 +366,33 @@ class _MerchantProfilePageState extends State<MerchantProfilePage> {
     if (response.statusCode == 200) {
       final jsonResponse = json.decode(response.body);
       print("_updateStoreProfile jsonResponse= $jsonResponse");
-      _goToCalendarPage(context);
+      if (globals.firstSignIn) {
+        globals.firstSignIn = false;
+        _changePage(context, MerchantRoute);
+      }
     } else {
       print('Request failed with status: ${response.statusCode}.');
     }
   }
 
+  void assignVariable() {
+    shopData["name"] = nameController.text;
+    shopData["description"] = descriptionController.text;
+    shopData["address"] = addressController.text;
+    shopData["tel"] = telController.text;
+    shopData["contactEmail"] = emailController.text;
+    shopData["storeURL"] = storeUrlController.text;
+    shopData["category"] = categoryController.text;
+    shopData["depositAmountPerPerson"] = depositController.text;
+    shopData["imagePaths"] = imageController.text;
+    shopData["vacancyType"] = _vacancyType;
+    shopData["updatedAt"] = DateTime.now().toUtc().toIso8601String();
+  }
+
   Future<void> _getShopData() async {
     var userData = await Amplify.Auth.getCurrentUser();
     var userId = userData.userId;
+    print("Profile Page $userId");
     setState(() => _userId = userId);
     var response = await http.get(
         'https://pq3mbzzsbg.execute-api.ap-northeast-1.amazonaws.com/CaffeExpressRESTAPI/store/$userId');
@@ -352,7 +410,7 @@ class _MerchantProfilePageState extends State<MerchantProfilePage> {
   void _mapMountedStoreData() {
     print("shopData in _mapMountedStoreData $shopData");
     nameController.text = shopData['name'];
-    descriptionController.text = shopData['descripti'];
+    descriptionController.text = shopData['description'];
     addressController.text = shopData['address'];
     telController.text = shopData['tel'];
     emailController.text = shopData['contactEmail'];

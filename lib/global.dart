@@ -1,2 +1,3 @@
 String test = "0";
-String userId = "dummy";
+String userId;
+bool firstSignIn = false;

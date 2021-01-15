@@ -98,6 +98,7 @@ class _MerchantStrictState extends State<MerchantStrict> {
   }
 
   Future<void> _getShopData() async {
+    print("Inside Merchant Strict: ${globals.userId}");
     var response = await http.get(
         'https://pq3mbzzsbg.execute-api.ap-northeast-1.amazonaws.com/CaffeExpressRESTAPI/store/${globals.userId}');
     if (response.statusCode == 200) {

@@ -20,6 +20,7 @@ class _WrapperState extends State<Wrapper> {
   @override
   initState() {
     print('init state was called');
+    print("Very beginning: ${globals.userId}");
     super.initState();
     _fetchSession();
     //_fetchType("e34771e7-07df-42e9-b49e-18d7ee4db9b6");
@@ -48,10 +49,12 @@ class _WrapperState extends State<Wrapper> {
     print("Fetch SESSION IS RUNNING $status");
     try {
       var userData = await Amplify.Auth.getCurrentUser();
+      print("fetchsession ${userData.userId}");
       await _fetchType(userData.userId);
       setState(() {
         status = userData.userId;
         globals.userId = userData.userId;
+        print("Wrapper Fetch Session: ${globals.userId}");
       });
     } on AuthError catch (e) {
       print(e);

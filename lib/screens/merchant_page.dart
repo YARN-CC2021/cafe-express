@@ -34,6 +34,7 @@ class _MerchantPageState extends State<MerchantPage> {
     print("Fetch SESSION IS RUNNING $status");
     try {
       var userData = await Amplify.Auth.getCurrentUser();
+      print("Merchant Page ${userData.userId}");
       //await _fetchType(userData.userId);
       setState(() {
         status = userData.userId;
