@@ -17,13 +17,16 @@ class MapPage extends StatefulWidget {
 class _MapPageState extends State<MapPage> {
   List<dynamic> listShops = [];
   var shopData;
-  var vacancyType;
-  var tmp;
-  String category = "All";
+  Map selectedShop;
   String distance = '100m';
+  String category = "All";
   String groupNum = "All";
 
-  Completer<GoogleMapController> _controller = Completer();
+  PageController _pageController = PageController();
+  bool _isPageViewAnimating;
+
+  final Completer<GoogleMapController> _controller =
+      Completer<GoogleMapController>();
   Location _locationService = Location();
 
   // 現在位置
@@ -39,7 +42,12 @@ class _MapPageState extends State<MapPage> {
     // 現在位置の取得
     _getLocation();
 
-    // 現在位置の変化を監視
+    _pageController = PageController(
+      viewportFraction: 0.95,
+    );
+    _isPageViewAnimating = false;
+
+    // 現在位置の変化を監視 backgroundでも動くのかどうか
     _locationChangedListen =
         _locationService.onLocationChanged.listen((LocationData result) async {
       setState(() {
@@ -51,8 +59,7 @@ class _MapPageState extends State<MapPage> {
   @override
   void dispose() {
     super.dispose();
-
-    // 監視を終了
+    _pageController.dispose();
     _locationChangedListen?.cancel();
   }
 
@@ -66,6 +73,56 @@ class _MapPageState extends State<MapPage> {
       ),
       body: Column(children: [
         Expanded(child: _makeGoogleMap()),
+        //test
+        Container(
+          height: 150,
+          child: 
+          PageView(
+            controller: _pageController,
+            children: listShops.map<Widget>((shop) {
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                child: Card(
+                  clipBehavior: Clip.antiAlias,
+                  margin: EdgeInsets.zero,
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(16.0)),
+                  ),
+                  child: Stack(
+                    children: <Widget>[
+                      Positioned(
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        child: Container(
+                          child: Text(
+                            shop['name'],
+                            style: Theme.of(context)
+                                .textTheme
+                                .subhead
+                                .merge(TextStyle(color: Colors.white)),
+                          ),
+                          decoration: const BoxDecoration(
+                              color: Color.fromARGB(0x99, 0, 0, 0)),
+                          padding: const EdgeInsets.all(8),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              );
+            }).toList(),
+            onPageChanged: (int page) {
+              if (_isPageViewAnimating) {
+                return;
+              }
+              _updateSelectedShopForPage(page);
+            },
+          ),
+          decoration: BoxDecoration(color: Colors.transparent),
+        ),
+
+        //test
         Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
           Column(children: [
             Text("Distance"),
@@ -181,12 +238,18 @@ class _MapPageState extends State<MapPage> {
           return Marker(
             markerId: MarkerId(shop['id']),
             position: LatLng(shop['lat'].toDouble(), shop['lng'].toDouble()),
+            icon: shop['id'] == selectedShop['id']
+                ? BitmapDescriptor.defaultMarker
+                : BitmapDescriptor.defaultMarkerWithHue(180),
+            onTap: () {
+              selectedShop = shop;
+              _pageController.jumpToPage(listShops.indexOf(shop));
+            },
             infoWindow: InfoWindow(
               title: '${shop['name']}',
               snippet: shop['category'],
               onTap: () {
                 _onTap(context, shop['id']);
-                //move to detail page with its id
               },
             ),
           );
@@ -216,7 +279,8 @@ class _MapPageState extends State<MapPage> {
       shopData = await jsonResponse['body']
           .where((shop) => shop['lat'] != null && shop['lng'] != null)
           .toList();
-      shopData = listShops = shopData;
+      listShops = shopData;
+      selectedShop = listShops[0];
       _filterShop(distance, category, groupNum);
     } else {
       print('Request failed with status: ${response.statusCode}.');
@@ -225,10 +289,10 @@ class _MapPageState extends State<MapPage> {
 
   void _filterShop(String distance, String category, String groupNum) {
     listShops = shopData;
-    listShops = _filterShopByDistance(distance);
     listShops = _filterShopByCategory(category);
+    listShops = _filterShopByDistance(distance);
     listShops = _filterShopByGroupSize(groupNum);
-    // print(_filterShopByGroupSize(groupNum));
+    print(listShops.length);
   }
 
   List _filterShopByCategory(String category) {
@@ -255,14 +319,15 @@ class _MapPageState extends State<MapPage> {
     if (groupNum == 'All') {
       return listShops;
     } else {
-      return listShops.where((shop) => shop["vacancy"]['${shop['vacancyType']}']
-      .map((sheet) =>
-          sheet['isVacant'] == true &&
-          sheet['Min'] <= int.parse(groupNum) &&
-          sheet['Max'] >= int.parse(groupNum))
-      .toList()
-      .contains(true)
-      ).toList();
+      return listShops
+          .where((shop) => shop["vacancy"]['${shop['vacancyType']}']
+              .map((sheet) =>
+                  sheet['isVacant'] == true &&
+                  sheet['Min'] <= int.parse(groupNum) &&
+                  sheet['Max'] >= int.parse(groupNum))
+              .toList()
+              .contains(true))
+          .toList();
     }
   }
 
@@ -273,8 +338,58 @@ class _MapPageState extends State<MapPage> {
       shop['lat'].toDouble(),
       shop['lng'].toDouble(),
     );
-    // print(distanceInMeters.toInt());
     return distanceInMeters.toInt();
+  }
+
+  void _updateSelectedShopForPage(int page) {
+    if (page >= 0 && page < listShops.length) {
+      _updateSelectedShop(listShops.elementAt(page));
+    } else {
+      _updateSelectedShop(null);
+    }
+  }
+
+  _updateSelectedShop(newShop) {
+    if (selectedShop == newShop) {
+      return;
+    }
+    _hideInfoWindowForSelectedShop();
+    setState(() {
+      selectedShop = newShop;
+      _gotoLocation(selectedShop);
+    });
+    _showInfoWindowForSelectedShop();
+  }
+
+  Future<void> _gotoLocation(shop) async {
+    final GoogleMapController googlemap = await _controller.future;
+    googlemap.animateCamera(CameraUpdate.newLatLng(LatLng(shop['lat'], shop['lng'])));
+  }
+
+  Future<void> _showInfoWindowForSelectedShop() async {
+    if (selectedShop != null && _controller.isCompleted) {
+      final GoogleMapController googleMap = await _controller.future;
+
+      final MarkerId selectedShopMarker = MarkerId(selectedShop['id']);
+      final bool isSelectedShopMarkerShown =
+          await googleMap.isMarkerInfoWindowShown(selectedShopMarker);
+      if (!isSelectedShopMarkerShown) {
+        await googleMap.showMarkerInfoWindow(selectedShopMarker);
+      }
+    }
+  }
+
+  Future<void> _hideInfoWindowForSelectedShop() async {
+    if (selectedShop != null && _controller.isCompleted) {
+      final GoogleMapController googleMap = await _controller.future;
+
+      final MarkerId selectedShopMarker = MarkerId(selectedShop['id']);
+      final bool isSelectedShopMarkerShown =
+          await googleMap.isMarkerInfoWindowShown(selectedShopMarker);
+      if (isSelectedShopMarkerShown) {
+        await googleMap.hideMarkerInfoWindow(selectedShopMarker);
+      }
+    }
   }
 
   void _onTap(BuildContext context, String shopId) {
