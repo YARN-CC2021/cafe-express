@@ -48,23 +48,6 @@ class _TimerPageState extends State<TimerPage> {
         ),
         body: Center(
           child: Container(
-            height: double.infinity,
-            width: double.infinity,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: FractionalOffset.topLeft,
-                end: FractionalOffset.bottomRight,
-                colors: [
-                  const Color(0xffe4a972).withOpacity(0.6),
-                  const Color(0xff9941d8).withOpacity(0.6),
-                ],
-                stops: const [
-                  0.0,
-                  1.0,
-                ],
-              ),
-            ),
-            child: Container(
               child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
@@ -119,66 +102,63 @@ class _TimerPageState extends State<TimerPage> {
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(10)),
                               ),
-                              onPressed: () {
-                                //dialog that user reach the shop
-                                showDialog(
-                                  context: context,
-                                  builder: (_) {
-                                    return AlertDialog(
-                                      title: Text(''),
-                                      content: Text(
-                                        'Are You Here?',
-                                        style: TextStyle(
-                                          fontSize: 18.0,
-                                        ),
-                                      ),
-                                      actions: <Widget>[
-                                        FlatButton(
-                                          child: Text("No"),
-                                          onPressed: () =>
-                                              Navigator.pop(context),
-                                        ),
-                                        FlatButton(
-                                          child: Text("Yes"),
-                                          onPressed: () => {
-                                            // go back to map page? or success pages
-                                          },
-                                        ),
-                                      ],
-                                    );
-                                  },
-                                );
-                              }),
-                          Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(Icons.warning),
-                                Text(
-                                  "Any Issue? Contact:",
-                                  style: TextStyle(
-                                    fontSize: 25.0,
-                                    color: Colors.yellowAccent,
+                          onPressed: () {
+                            //dialog that user reach the shop
+                            showDialog(
+                              context: context,
+                              builder: (_) {
+                                return AlertDialog(
+                                  title: Text(''),
+                                  content: Text(
+                                    'Are You Here?',
+                                    style: TextStyle(
+                                      fontSize: 18.0,
+                                    ),
                                   ),
-                                ),
-                                Icon(Icons.warning),
-                              ]),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              IconButton(
-                                  icon: Icon(Icons.local_phone),
-                                  onPressed: () {}),
-                              IconButton(
-                                  icon: Icon(Icons.mail), onPressed: () {}),
-                            ],
-                          )
+                                  actions: <Widget>[
+                                    FlatButton(
+                                      child: Text("No"),
+                                      onPressed: () => Navigator.pop(context),
+                                    ),
+                                    FlatButton(
+                                      child: Text("Yes"),
+                                      onPressed: () => {
+                                        // go back to map page? or success pages
+                                      },
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          }),
+                      Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.warning),
+                            Text(
+                              "Any Issue? Contact:",
+                              style: TextStyle(
+                                fontSize: 25.0,
+                                color: Colors.yellowAccent,
+                              ),
+                            ),
+                            Icon(Icons.warning),
+                          ]),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          IconButton(
+                              icon: Icon(Icons.local_phone), onPressed: () {}),
+                          IconButton(icon: Icon(Icons.mail), onPressed: () {}),
                         ],
-                      ),
-                    )
-                  ]),
-            ),
-          ),
-        ));
+                      )
+                    ],
+                  ),
+                )
+              ]),
+        ),
+      ),
+    );
   }
 
   void start() {
@@ -188,14 +168,18 @@ class _TimerPageState extends State<TimerPage> {
         ), (Timer t) {
       setState(() {
         if (totalTime < 0) {
-          print(totalTime);
+          print('TOTAL$totalTime');
           //go fail page
           timer.cancel();
           totalTime = 1800;
         } else if (totalTime < 3600) {
           int m = totalTime ~/ 60;
           int s = totalTime - (60 * m);
-          timetodisplay = m.toString() + ":" + s.toString();
+          if (s == 0) {
+            timetodisplay = m.toString() + ":" + "0" + s.toString();
+          } else {
+            timetodisplay = m.toString() + ":" + s.toString();
+          }
           totalTime -= 1;
         }
       });
