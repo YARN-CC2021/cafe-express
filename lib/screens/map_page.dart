@@ -168,14 +168,11 @@ class _MapPageState extends State<MapPage> {
 
   Widget _makeGoogleMap() {
     if (_yourLocation == null) {
-      // 現在位置が取れるまではローディング中
       return Center(
         child: CircularProgressIndicator(),
       );
     } else {
-      // Google Map ウィジェットを返す
       return GoogleMap(
-        // 初期表示される位置情報を現在位置から設定
         initialCameraPosition: CameraPosition(
           target: LatLng(_yourLocation.latitude, _yourLocation.longitude),
           zoom: 18.0,
@@ -199,7 +196,6 @@ class _MapPageState extends State<MapPage> {
           _getAllShopData();
           _controller.complete(controller);
         },
-        // 現在位置にアイコン（青い円形のやつ）を置く
         myLocationEnabled: true,
         myLocationButtonEnabled: true,
         mapToolbarEnabled: false,
@@ -231,8 +227,8 @@ class _MapPageState extends State<MapPage> {
     listShops = shopData;
     listShops = _filterShopByDistance(distance);
     listShops = _filterShopByCategory(category);
-    // listShops = _filterShopByGroupSize(groupNum);
-    print(_filterShopByGroupSize(groupNum));
+    listShops = _filterShopByGroupSize(groupNum);
+    // print(_filterShopByGroupSize(groupNum));
   }
 
   List _filterShopByCategory(String category) {
@@ -259,48 +255,14 @@ class _MapPageState extends State<MapPage> {
     if (groupNum == 'All') {
       return listShops;
     } else {
-      print(listShops);
-      // return listShops
-      //     .where((shop) => {
-      //           // vacancyType = shop['vacancyType'],
-      //           // print('$vacancyType\n'),
-      //           // debugPrint('OOOOOO${shop['vacancy']['$vacancyType']}\n'),
-      //           tmp = shop['vacancy']['${shop['vacancyType']}']
-      //               .map((sheet) =>
-      //                   sheet['isVacant'] &&
-      //                   sheet['Min'] <= int.parse(groupNum) &&
-      //                   sheet['Max'] >= int.parse(groupNum))
-      //               .toList(),
-      //         })
-      //     .toList();
-      // return listShops
-      //     .where((shop) => {
-      //           print(shop['vacancy']['${shop['vacancyType']}']['isVacant'] == true &&
-      //               shop['vacancy']['${shop['vacancyType']}']['Min'] <=
-      //                   int.parse(groupNum) &&
-      //               shop['vacancy']['${shop['vacancyType']}']['Max'] >=
-      //                   int.parse(groupNum))
-      //         })
-      //     .toList();
-      // return listShops.where((shop) =>{ 
-      //         print(shop),
-      //         return shop['vacancy']['${shop['vacancyType']}']['isVacant'] == true &&
-      //         shop['vacancy']['${shop['vacancyType']}']['Min'] <= int.parse(groupNum) &&
-      //         shop['vacancy']['${shop['vacancyType']}']['Max'] >= int.parse(groupNum),
-      //      }).toList();
-  //     var oneShop;
-  //          return listShops
-  //    .where((shop) => {
-  //           oneShop = shop['vacancy']['${shop['vacancyType']}'],
-  //   for(var i=0;i<oneShop.length;i++){
-  //       if(oneShop[i]["isVacant"] == true){
-  //           return true;
-  //       }
-  //   }
-  // }
-
-      debugPrint('AAAAAAA${json.encode(listShops)}');
-      // return shopData;
+      return listShops.where((shop) => shop["vacancy"]['${shop['vacancyType']}']
+      .map((sheet) =>
+          sheet['isVacant'] == true &&
+          sheet['Min'] <= int.parse(groupNum) &&
+          sheet['Max'] >= int.parse(groupNum))
+      .toList()
+      .contains(true)
+      ).toList();
     }
   }
 

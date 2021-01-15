@@ -33,9 +33,6 @@ class _DetailPageState extends State<DetailPage> {
       "imagePath": "",
       "title": "dummy"
     },
-    "customerInfo": {
-      "customerId": "", //?
-    }
   };
   Map shopData;
   String vacancyType;
