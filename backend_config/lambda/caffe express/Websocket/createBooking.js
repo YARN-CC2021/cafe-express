@@ -116,17 +116,17 @@ exports.handler = async (event, context, sendResponse) => {
     isVacant,
   });
 
-  const storeResponseBody = JSON.stringify({
-    bookingId,
-    customerId,
-    bookName,
-    vacancyType,
-    index,
-    partySize,
-    depositAmount,
-    bookedAt,
-    expiredAt,
-  });
+  // const storeResponseBody = JSON.stringify({
+  //   bookingId,
+  //   customerId,
+  //   bookName,
+  //   vacancyType,
+  //   index,
+  //   partySize,
+  //   depositAmount,
+  //   bookedAt,
+  //   expiredAt,
+  // });
 
   const customers = await getCustomerConnectionId();
   const stores = await getStoreConnectionId(bodyParsed);
@@ -138,7 +138,7 @@ exports.handler = async (event, context, sendResponse) => {
   });
   stores.Items.forEach(function (connection) {
     if (connection.connectionId !== "dummy") {
-      send(connection.connectionId, storeResponseBody);
+      send(connection.connectionId, event.body);
     }
   });
   sendResponse(null, { statusCode: 200 });

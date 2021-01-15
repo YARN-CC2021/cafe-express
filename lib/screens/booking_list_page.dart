@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import '../app.dart';
+import 'dart:async';
+import 'dart:convert';
+import '../global.dart' as globals;
+import 'package:http/http.dart' as http;
+import 'package:web_socket_channel/io.dart';
 
 class BookingListPage extends StatefulWidget {
   @override
@@ -17,53 +21,53 @@ class _BookingListPageState extends State<BookingListPage> {
   }
 }
 
-// Booking Name, BookingTime ExpiiryTime, Date, Status, CheckingButton, Cancel Button,
-class Booking {
-  String bookName;
-  int partySize;
-  int bookedAt;
-  int expiredAt;
-  String status;
-  Booking(
-      {this.bookName,
-      this.partySize,
-      this.bookedAt,
-      this.expiredAt,
-      this.status});
-}
-
-// List<Booking> bookings = List.generate(20, (index) {
-//   bool isRedeem = false;
-//   String name = isRedeem ? "Redeem PS" : "Awarded Point";
-//   double point = isRedeem ? -140000.0 : 1000.0;
-//   return Booking(
-//       name: name,
-//       point: point,
-//       createdMillis: DateTime.now().millisecondsSinceEpoch);
-// })
-//   ..sort((v1, v2) => v2.createdMillis - v1.createdMillis);
-
 class BookingPage extends StatefulWidget {
-  BookingPage({Key key}) : super(key: key);
   @override
   _BookingPageState createState() => _BookingPageState();
 }
 
 class _BookingPageState extends State<BookingPage> {
+  var bookingData;
+  final channel = IOWebSocketChannel.connect(
+      "wss://gu2u8vdip2.execute-api.ap-northeast-1.amazonaws.com/CafeExpressWS?id=${globals.userId}");
+
+  var bookingId;
+
+  @override
+  void initState() {
+    super.initState();
+    _getBookingData();
+  }
+
+  @override
+  void dispose() {
+    channel.sink.close();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).cardColor,
-        brightness: Theme.of(context).brightness,
-        iconTheme: Theme.of(context).iconTheme,
-        title: Text(
-          "Booking History",
-          style: TextStyle(color: Theme.of(context).primaryColor),
+        appBar: AppBar(
+          backgroundColor: Theme.of(context).cardColor,
+          brightness: Theme.of(context).brightness,
+          iconTheme: Theme.of(context).iconTheme,
+          title: Text(
+            "Booking History",
+            style: TextStyle(color: Theme.of(context).primaryColor),
+          ),
         ),
-      ),
-      body: buildListView(),
-    );
+        body: StreamBuilder(
+            stream: channel.stream,
+            builder: (context, snapshot) {
+              if (snapshot.hasData &&
+                  json.decode(snapshot.data)["bookingId"] != bookingId) {
+                print(snapshot.data);
+                _insertBooking(json.decode(snapshot.data));
+                bookingId = json.decode(snapshot.data)["bookingId"];
+              }
+              return buildListView();
+            }));
   }
 
   Future<void> _getBookingData() async {
@@ -74,23 +78,67 @@ class _BookingPageState extends State<BookingPage> {
       setState(() {
         bookingData = jsonResponse['body'];
       });
-      _mapMountedStoreData();
+      await _sortBookingData(bookingData);
     } else {
       print('Request failed with status: ${response.statusCode}.');
     }
   }
+
+  Future<void> _sortBookingData(bookingData) async {
+    setState(() {
+      bookingData
+        ..sort((v1, v2) =>
+            DateTime.parse(v2["bookedAt"]).millisecondsSinceEpoch -
+            DateTime.parse(v1["bookedAt"]).millisecondsSinceEpoch);
+    });
+  }
+
+  void _statusUpdate(int index, String status) {
+    setState(() {
+      bookingData[index]["status"] = status;
+    });
+
+    channel.sink.add(json.encode({
+      "action": "onBookingStatusChange",
+      "bookingId": bookingData[index]["bookingId"],
+      "status": status,
+      "updatedAt": "${DateTime.now()}",
+    }));
+  }
+
+  void _insertBooking(data) {
+    bookingData.insert(0, data);
+  }
+
+//   List<Booking> bookings = List.generate(bookingData, (index) {
+//   String name = isRedeem ? "Redeem PS" : "Awarded Point";
+//   double point = isRedeem ? -140000.0 : 1000.0;
+//   return Booking(
+//       name: name,
+//       point: point,
+//       createdMillis: DateTime.now().millisecondsSinceEpoch);
+// })
+//   ..sort((v1, v2) => v2.createdMillis - v1.createdMillis);
+// }
 
   ListView buildListView() {
     String prevDay;
     String today = DateFormat("EEE, MMM d, y").format(DateTime.now());
     String yesterday = DateFormat("EEE, MMM d, y")
         .format(DateTime.now().add(Duration(days: -1)));
+
     return ListView.builder(
-      itemCount: bookings.length,
+      cacheExtent: 250.0 * 1000.0,
+      itemCount: bookingData.length,
       itemBuilder: (context, index) {
-        Booking booking = bookings[index];
-        DateTime date =
-            DateTime.fromMillisecondsSinceEpoch(booking.createdMillis);
+        var booking = bookingData[index];
+        var bookedAt =
+            DateTime.parse(booking["bookedAt"]).millisecondsSinceEpoch;
+        var expiredAt =
+            DateTime.parse(booking["expiredAt"]).millisecondsSinceEpoch;
+
+        DateTime date = DateTime.fromMillisecondsSinceEpoch(bookedAt);
+        DateTime date2 = DateTime.fromMillisecondsSinceEpoch(expiredAt);
         String dateString = DateFormat("EEE, MMM d, y").format(date);
         if (today == dateString) {
           dateString = "Today";
@@ -108,21 +156,21 @@ class _BookingPageState extends State<BookingPage> {
                     child: Text(
                       dateString,
                       style: Theme.of(context).textTheme.subtitle2.copyWith(
-                            color: Theme.of(context).primaryColor,
+                            color: Theme.of(context).accentColor,
                             fontWeight: FontWeight.bold,
                           ),
                     ),
                   )
                 : Offstage(),
-            buildItem(index, context, date, booking),
+            buildItem(index, context, date, date2, booking),
           ],
         );
       },
     );
   }
 
-  Widget buildItem(
-      int index, BuildContext context, DateTime date, Booking booking) {
+  Widget buildItem(int index, BuildContext context, DateTime date,
+      DateTime date2, Map booking) {
     return IntrinsicHeight(
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -134,64 +182,149 @@ class _BookingPageState extends State<BookingPage> {
               padding: EdgeInsets.symmetric(horizontal: 12, vertical: 16),
               // color: Theme.of(context).accentColor,
               child: Column(children: [
-                Text(
-                  DateFormat("hh:mm a").format(date),
-                  style: Theme.of(context).textTheme.subtitle2.copyWith(
+                Padding(
+                  padding: EdgeInsets.only(right: 26),
+                  child: Text(
+                    "予約時間",
+                    textAlign: TextAlign.start,
+                    style: Theme.of(context).textTheme.subtitle2.copyWith(
                         // color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
+                        fontSize: 10),
+                  ),
                 ),
-                Text(
-                  DateFormat("hh:mm a").format(date),
-                  style: Theme.of(context).textTheme.subtitle2.copyWith(
+                Padding(
+                  padding: EdgeInsets.only(bottom: 2.0),
+                  child: Text(
+                    DateFormat("hh:mm a").format(date),
+                    textAlign: TextAlign.left,
+                    style: Theme.of(context).textTheme.subtitle2.copyWith(
+                          // color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(right: 26),
+                  child: Text(
+                    "到着締切",
+                    textAlign: TextAlign.left,
+                    style: TextStyle(
                         // color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
+                        fontSize: 10,
+                        color: Colors.red),
+                  ),
                 ),
+                Padding(
+                  padding: EdgeInsets.only(),
+                  child: Text(
+                    DateFormat("hh:mm a").format(date2),
+                    style: Theme.of(context).textTheme.subtitle2.copyWith(
+                          // color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                  ),
+                )
               ])),
           Expanded(
             flex: 1,
-            child: buildItemInfo(booking, context),
+            child: buildItemInfo(booking, index, context),
           ),
         ],
       ),
     );
   }
 
-  Card buildItemInfo(Booking booking, BuildContext context) {
+  _changeCardColor(Map booking) {
+    if (booking["status"] == "expired") {
+      return LinearGradient(colors: [Colors.redAccent[400], Colors.red[900]]);
+    } else if (booking["status"] == "payed" &&
+        DateTime.now().isBefore(DateTime.parse(booking["expiredAt"]))) {
+      return LinearGradient(
+          colors: [Colors.amberAccent[100], Colors.amberAccent]);
+    } else if (booking["status"] == "payed") {
+      return LinearGradient(colors: [Colors.white, Colors.white]);
+    } else if (booking["status"] == "checked_in") {
+      return LinearGradient(colors: [
+        Theme.of(context).primaryColor,
+        Colors.greenAccent[400],
+      ]);
+    } else if (booking["status"] == "cancelled") {
+      return LinearGradient(
+          colors: [Colors.blueGrey[100], Colors.blueGrey[300]]);
+    }
+  }
+
+  Card buildItemInfo(Map booking, int index, BuildContext context) {
     return Card(
       clipBehavior: Clip.antiAliasWithSaveLayer,
       child: Container(
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-              colors: booking.point.isNegative
-                  ? [Colors.deepOrange, Colors.red]
-                  : [Colors.green, Colors.teal]),
+          gradient: _changeCardColor(booking),
         ),
         child: Row(
           children: <Widget>[
             Expanded(
-              flex: 1,
-              child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                child: Text(
-                  booking.name,
-                  style: Theme.of(context)
-                      .textTheme
-                      .subtitle2
-                      .copyWith(color: Colors.white),
-                ),
-              ),
-            ),
+                flex: 1,
+                child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                    child: Column(children: [
+                      Padding(
+                        padding: EdgeInsets.only(bottom: 10, top: 8),
+                        child: SizedBox(
+                          width: 100,
+                          child: Text(
+                            // booking["bookName"],
+                            "隆盛カフェ",
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                            textAlign: TextAlign.left,
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(right: 15),
+                        child: Text(
+                          // "種類：${booking["tableType"]["label"]}\n人数：${booking["partySize"]}人",
+                          "種類：１２人席\n人数：${booking["partySize"]}人",
+                          style: TextStyle(fontSize: 10),
+                        ),
+                      ),
+                    ]))),
             Container(
               padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-              child: Text(
-                NumberFormat("###,###,#### P").format(booking.point),
-                style: Theme.of(context)
-                    .textTheme
-                    .subtitle2
-                    .copyWith(color: Colors.white, fontWeight: FontWeight.bold),
-              ),
+              child: Column(children: [
+                MaterialButton(
+                  minWidth: 110,
+                  child: Text('チェックイン',
+                      style: TextStyle(fontSize: 12, color: Colors.white)),
+                  color: Theme.of(context).accentColor,
+                  shape: const StadiumBorder(
+                    side: BorderSide(color: Colors.white),
+                  ),
+                  onPressed: booking["status"] == "checked_in" ||
+                          booking["status"] == "cancelled"
+                      ? null
+                      : () {
+                          _statusUpdate(index, "checked_in");
+                        },
+                ),
+                MaterialButton(
+                  minWidth: 110,
+                  // disabledColor: Colors.blueGrey[100],
+                  child: Text('キャンセル',
+                      style: TextStyle(fontSize: 12, color: Colors.white)),
+                  color: Colors.redAccent,
+                  shape: const StadiumBorder(
+                    side: BorderSide(color: Colors.white),
+                  ),
+                  onPressed: DateTime.now()
+                              .isBefore(DateTime.parse(booking["expiredAt"])) &&
+                          booking["status"] == "payed"
+                      ? () {
+                          _statusUpdate(index, "cancelled");
+                        }
+                      : null,
+                ),
+              ]),
             ),
           ],
         ),

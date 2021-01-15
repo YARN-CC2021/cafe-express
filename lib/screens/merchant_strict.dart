@@ -180,15 +180,15 @@ class _MerchantStrictState extends State<MerchantStrict> {
                   // btnCancelOnPress: () {},
                   btnOkText: '予約リストを開く',
                   // btnCancelText: 'Go To\n Booking List',
-                  // btnCancelColor: Colors.redAccent[400],
+                  // btnCancelColor: Colors.blueGreyAccent[400],
                   dismissOnTouchOutside: false,
                   headerAnimationLoop: false,
                   showCloseIcon: true,
                   buttonsBorderRadius: BorderRadius.all(Radius.circular(100)),
                 )..show());
             bookingId = json.decode(snapshot.data)["bookingId"];
-            // vacancyInfo[json.decode(snapshot.data)["index"]]["isVacant"] =
-            //     false;
+            vacancyInfo[json.decode(snapshot.data)["index"]]["isVacant"] =
+                false;
           }
           return ListView(
               padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 30.0),
@@ -264,8 +264,8 @@ class _MerchantStrictState extends State<MerchantStrict> {
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(20.0),
                                     color: vacancyInfo[0]["isVacant"]
-                                        ? Colors.blueAccent[100]
-                                        : Colors.redAccent[100]
+                                        ? Theme.of(context).primaryColor
+                                        : Colors.blueGrey[100]
                                             .withOpacity(0.5)),
                                 child: Stack(
                                   children: <Widget>[
@@ -290,12 +290,13 @@ class _MerchantStrictState extends State<MerchantStrict> {
                                           },
                                           child: vacancyInfo[0]["isVacant"]
                                               ? Icon(Icons.check_circle,
-                                                  color: Colors.blue,
+                                                  color: Theme.of(context)
+                                                      .accentColor,
                                                   size: 32.0,
                                                   key: UniqueKey())
                                               : Icon(
                                                   Icons.remove_circle_outline,
-                                                  color: Colors.red,
+                                                  color: Colors.blueGrey,
                                                   size: 32.0,
                                                   key: UniqueKey()),
                                         ),
@@ -353,8 +354,8 @@ class _MerchantStrictState extends State<MerchantStrict> {
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(20.0),
                                       color: vacancyInfo[1]["isVacant"]
-                                          ? Colors.blueAccent[100]
-                                          : Colors.redAccent[100]
+                                          ? Theme.of(context).primaryColor
+                                          : Colors.blueGrey[100]
                                               .withOpacity(0.5)),
                                   child: Stack(
                                     children: <Widget>[
@@ -381,12 +382,13 @@ class _MerchantStrictState extends State<MerchantStrict> {
                                             },
                                             child: vacancyInfo[1]["isVacant"]
                                                 ? Icon(Icons.check_circle,
-                                                    color: Colors.blue,
+                                                    color: Theme.of(context)
+                                                        .accentColor,
                                                     size: 32.0,
                                                     key: UniqueKey())
                                                 : Icon(
                                                     Icons.remove_circle_outline,
-                                                    color: Colors.red,
+                                                    color: Colors.blueGrey,
                                                     size: 32.0,
                                                     key: UniqueKey()),
                                           ),
@@ -443,8 +445,8 @@ class _MerchantStrictState extends State<MerchantStrict> {
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(20.0),
                                       color: vacancyInfo[2]["isVacant"]
-                                          ? Colors.blueAccent[100]
-                                          : Colors.redAccent[100]
+                                          ? Theme.of(context).primaryColor
+                                          : Colors.blueGrey[100]
                                               .withOpacity(0.5)),
                                   child: Stack(
                                     children: <Widget>[
@@ -471,12 +473,13 @@ class _MerchantStrictState extends State<MerchantStrict> {
                                             },
                                             child: vacancyInfo[2]["isVacant"]
                                                 ? Icon(Icons.check_circle,
-                                                    color: Colors.blue,
+                                                    color: Theme.of(context)
+                                                        .accentColor,
                                                     size: 32.0,
                                                     key: UniqueKey())
                                                 : Icon(
                                                     Icons.remove_circle_outline,
-                                                    color: Colors.red,
+                                                    color: Colors.blueGrey,
                                                     size: 32.0,
                                                     key: UniqueKey()),
                                           ),
@@ -533,8 +536,8 @@ class _MerchantStrictState extends State<MerchantStrict> {
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(20.0),
                                       color: vacancyInfo[3]["isVacant"]
-                                          ? Colors.blueAccent[100]
-                                          : Colors.redAccent[100]
+                                          ? Theme.of(context).primaryColor
+                                          : Colors.blueGrey[100]
                                               .withOpacity(0.5)),
                                   child: Stack(
                                     children: <Widget>[
@@ -561,12 +564,13 @@ class _MerchantStrictState extends State<MerchantStrict> {
                                             },
                                             child: vacancyInfo[3]["isVacant"]
                                                 ? Icon(Icons.check_circle,
-                                                    color: Colors.blue,
+                                                    color: Theme.of(context)
+                                                        .accentColor,
                                                     size: 32.0,
                                                     key: UniqueKey())
                                                 : Icon(
                                                     Icons.remove_circle_outline,
-                                                    color: Colors.red,
+                                                    color: Colors.blueGrey,
                                                     size: 32.0,
                                                     key: UniqueKey()),
                                           ),
@@ -623,8 +627,8 @@ class _MerchantStrictState extends State<MerchantStrict> {
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(20.0),
                                       color: vacancyInfo[4]["isVacant"]
-                                          ? Colors.blueAccent[100]
-                                          : Colors.redAccent[100]
+                                          ? Theme.of(context).primaryColor
+                                          : Colors.blueGrey[100]
                                               .withOpacity(0.5)),
                                   child: Stack(
                                     children: <Widget>[
@@ -651,12 +655,13 @@ class _MerchantStrictState extends State<MerchantStrict> {
                                             },
                                             child: vacancyInfo[4]["isVacant"]
                                                 ? Icon(Icons.check_circle,
-                                                    color: Colors.blue,
+                                                    color: Theme.of(context)
+                                                        .accentColor,
                                                     size: 32.0,
                                                     key: UniqueKey())
                                                 : Icon(
                                                     Icons.remove_circle_outline,
-                                                    color: Colors.red,
+                                                    color: Colors.blueGrey,
                                                     size: 32.0,
                                                     key: UniqueKey()),
                                           ),
@@ -713,8 +718,8 @@ class _MerchantStrictState extends State<MerchantStrict> {
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(20.0),
                                       color: vacancyInfo[5]["isVacant"]
-                                          ? Colors.blueAccent[100]
-                                          : Colors.redAccent[100]
+                                          ? Theme.of(context).primaryColor
+                                          : Colors.blueGrey[100]
                                               .withOpacity(0.5)),
                                   child: Stack(
                                     children: <Widget>[
@@ -741,12 +746,13 @@ class _MerchantStrictState extends State<MerchantStrict> {
                                             },
                                             child: vacancyInfo[5]["isVacant"]
                                                 ? Icon(Icons.check_circle,
-                                                    color: Colors.blue,
+                                                    color: Theme.of(context)
+                                                        .accentColor,
                                                     size: 32.0,
                                                     key: UniqueKey())
                                                 : Icon(
                                                     Icons.remove_circle_outline,
-                                                    color: Colors.red,
+                                                    color: Colors.blueGrey,
                                                     size: 32.0,
                                                     key: UniqueKey()),
                                           ),
@@ -803,8 +809,8 @@ class _MerchantStrictState extends State<MerchantStrict> {
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(20.0),
                                       color: vacancyInfo[6]["isVacant"]
-                                          ? Colors.blueAccent[100]
-                                          : Colors.redAccent[100]
+                                          ? Theme.of(context).primaryColor
+                                          : Colors.blueGrey[100]
                                               .withOpacity(0.5)),
                                   child: Stack(
                                     children: <Widget>[
@@ -831,12 +837,13 @@ class _MerchantStrictState extends State<MerchantStrict> {
                                             },
                                             child: vacancyInfo[6]["isVacant"]
                                                 ? Icon(Icons.check_circle,
-                                                    color: Colors.blue,
+                                                    color: Theme.of(context)
+                                                        .accentColor,
                                                     size: 32.0,
                                                     key: UniqueKey())
                                                 : Icon(
                                                     Icons.remove_circle_outline,
-                                                    color: Colors.red,
+                                                    color: Colors.blueGrey,
                                                     size: 32.0,
                                                     key: UniqueKey()),
                                           ),
@@ -893,8 +900,8 @@ class _MerchantStrictState extends State<MerchantStrict> {
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(20.0),
                                       color: vacancyInfo[7]["isVacant"]
-                                          ? Colors.blueAccent[100]
-                                          : Colors.redAccent[100]
+                                          ? Theme.of(context).primaryColor
+                                          : Colors.blueGrey[100]
                                               .withOpacity(0.5)),
                                   child: Stack(
                                     children: <Widget>[
@@ -921,12 +928,13 @@ class _MerchantStrictState extends State<MerchantStrict> {
                                             },
                                             child: vacancyInfo[7]["isVacant"]
                                                 ? Icon(Icons.check_circle,
-                                                    color: Colors.blue,
+                                                    color: Theme.of(context)
+                                                        .accentColor,
                                                     size: 32.0,
                                                     key: UniqueKey())
                                                 : Icon(
                                                     Icons.remove_circle_outline,
-                                                    color: Colors.red,
+                                                    color: Colors.blueGrey,
                                                     size: 32.0,
                                                     key: UniqueKey()),
                                           ),
@@ -983,8 +991,8 @@ class _MerchantStrictState extends State<MerchantStrict> {
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(20.0),
                                       color: vacancyInfo[8]["isVacant"]
-                                          ? Colors.blueAccent[100]
-                                          : Colors.redAccent[100]
+                                          ? Theme.of(context).primaryColor
+                                          : Colors.blueGrey[100]
                                               .withOpacity(0.5)),
                                   child: Stack(
                                     children: <Widget>[
@@ -1011,12 +1019,13 @@ class _MerchantStrictState extends State<MerchantStrict> {
                                             },
                                             child: vacancyInfo[8]["isVacant"]
                                                 ? Icon(Icons.check_circle,
-                                                    color: Colors.blue,
+                                                    color: Theme.of(context)
+                                                        .accentColor,
                                                     size: 32.0,
                                                     key: UniqueKey())
                                                 : Icon(
                                                     Icons.remove_circle_outline,
-                                                    color: Colors.red,
+                                                    color: Colors.blueGrey,
                                                     size: 32.0,
                                                     key: UniqueKey()),
                                           ),
@@ -1073,8 +1082,8 @@ class _MerchantStrictState extends State<MerchantStrict> {
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(20.0),
                                       color: vacancyInfo[9]["isVacant"]
-                                          ? Colors.blueAccent[100]
-                                          : Colors.redAccent[100]
+                                          ? Theme.of(context).primaryColor
+                                          : Colors.blueGrey[100]
                                               .withOpacity(0.5)),
                                   child: Stack(
                                     children: <Widget>[
@@ -1101,12 +1110,13 @@ class _MerchantStrictState extends State<MerchantStrict> {
                                             },
                                             child: vacancyInfo[9]["isVacant"]
                                                 ? Icon(Icons.check_circle,
-                                                    color: Colors.blue,
+                                                    color: Theme.of(context)
+                                                        .accentColor,
                                                     size: 32.0,
                                                     key: UniqueKey())
                                                 : Icon(
                                                     Icons.remove_circle_outline,
-                                                    color: Colors.red,
+                                                    color: Colors.blueGrey,
                                                     size: 32.0,
                                                     key: UniqueKey()),
                                           ),
@@ -1163,8 +1173,8 @@ class _MerchantStrictState extends State<MerchantStrict> {
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(20.0),
                                       color: vacancyInfo[10]["isVacant"]
-                                          ? Colors.blueAccent[100]
-                                          : Colors.redAccent[100]
+                                          ? Theme.of(context).primaryColor
+                                          : Colors.blueGrey[100]
                                               .withOpacity(0.5)),
                                   child: Stack(
                                     children: <Widget>[
@@ -1191,12 +1201,13 @@ class _MerchantStrictState extends State<MerchantStrict> {
                                             },
                                             child: vacancyInfo[10]["isVacant"]
                                                 ? Icon(Icons.check_circle,
-                                                    color: Colors.blue,
+                                                    color: Theme.of(context)
+                                                        .accentColor,
                                                     size: 32.0,
                                                     key: UniqueKey())
                                                 : Icon(
                                                     Icons.remove_circle_outline,
-                                                    color: Colors.red,
+                                                    color: Colors.blueGrey,
                                                     size: 32.0,
                                                     key: UniqueKey()),
                                           ),
@@ -1253,8 +1264,8 @@ class _MerchantStrictState extends State<MerchantStrict> {
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(20.0),
                                       color: vacancyInfo[11]["isVacant"]
-                                          ? Colors.blueAccent[100]
-                                          : Colors.redAccent[100]
+                                          ? Theme.of(context).primaryColor
+                                          : Colors.blueGrey[100]
                                               .withOpacity(0.5)),
                                   child: Stack(
                                     children: <Widget>[
@@ -1281,12 +1292,13 @@ class _MerchantStrictState extends State<MerchantStrict> {
                                             },
                                             child: vacancyInfo[11]["isVacant"]
                                                 ? Icon(Icons.check_circle,
-                                                    color: Colors.blue,
+                                                    color: Theme.of(context)
+                                                        .accentColor,
                                                     size: 32.0,
                                                     key: UniqueKey())
                                                 : Icon(
                                                     Icons.remove_circle_outline,
-                                                    color: Colors.red,
+                                                    color: Colors.blueGrey,
                                                     size: 32.0,
                                                     key: UniqueKey()),
                                           ),
@@ -1362,6 +1374,7 @@ class _MerchantStrictState extends State<MerchantStrict> {
   }
 
   void _changePage(BuildContext context, String route) {
+    channel.sink.close();
     Navigator.pushNamed(context, route);
     print("Going to $route was triggered");
   }
