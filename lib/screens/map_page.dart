@@ -18,6 +18,7 @@ class _MapPageState extends State<MapPage> {
   List<dynamic> listShops = [];
   var shopData;
   var vacancyType;
+  var tmp;
   String category = "All";
   String distance = '100m';
   String groupNum = "All";
@@ -230,8 +231,8 @@ class _MapPageState extends State<MapPage> {
     listShops = shopData;
     listShops = _filterShopByDistance(distance);
     listShops = _filterShopByCategory(category);
-    listShops = _filterShopByGroupSize(groupNum);
-    // debugPrint(json.encode(_filterShopByGroupSize(groupNum)));
+    // listShops = _filterShopByGroupSize(groupNum);
+    print(_filterShopByGroupSize(groupNum));
   }
 
   List _filterShopByCategory(String category) {
@@ -258,18 +259,48 @@ class _MapPageState extends State<MapPage> {
     if (groupNum == 'All') {
       return listShops;
     } else {
-      return listShops.map((shop) => {
-        vacancyType = shop['vacancyType'],
-        // print('$vacancyType\n'),
-        // debugPrint('OOOOOO${shop['vacancy']['$vacancyType']}\n'),
-            shop['vacancy']['$vacancyType'].contains((sheet) =>
-            sheet['isVacant'] == true &&
-            sheet['Min'] <= int.parse(groupNum) &&
-            sheet['Max'] >= int.parse(groupNum)),
-        // .toList(),
-        }
-      ).toList();
-      // return listShops;
+      print(listShops);
+      // return listShops
+      //     .where((shop) => {
+      //           // vacancyType = shop['vacancyType'],
+      //           // print('$vacancyType\n'),
+      //           // debugPrint('OOOOOO${shop['vacancy']['$vacancyType']}\n'),
+      //           tmp = shop['vacancy']['${shop['vacancyType']}']
+      //               .map((sheet) =>
+      //                   sheet['isVacant'] &&
+      //                   sheet['Min'] <= int.parse(groupNum) &&
+      //                   sheet['Max'] >= int.parse(groupNum))
+      //               .toList(),
+      //         })
+      //     .toList();
+      // return listShops
+      //     .where((shop) => {
+      //           print(shop['vacancy']['${shop['vacancyType']}']['isVacant'] == true &&
+      //               shop['vacancy']['${shop['vacancyType']}']['Min'] <=
+      //                   int.parse(groupNum) &&
+      //               shop['vacancy']['${shop['vacancyType']}']['Max'] >=
+      //                   int.parse(groupNum))
+      //         })
+      //     .toList();
+      // return listShops.where((shop) =>{ 
+      //         print(shop),
+      //         return shop['vacancy']['${shop['vacancyType']}']['isVacant'] == true &&
+      //         shop['vacancy']['${shop['vacancyType']}']['Min'] <= int.parse(groupNum) &&
+      //         shop['vacancy']['${shop['vacancyType']}']['Max'] >= int.parse(groupNum),
+      //      }).toList();
+  //     var oneShop;
+  //          return listShops
+  //    .where((shop) => {
+  //           oneShop = shop['vacancy']['${shop['vacancyType']}'],
+  //   for(var i=0;i<oneShop.length;i++){
+  //       if(oneShop[i]["isVacant"] == true){
+  //           return true;
+  //       }
+  //   }
+  // }
+
+      debugPrint('AAAAAAA${json.encode(listShops)}');
+      // return shopData;
     }
   }
 
