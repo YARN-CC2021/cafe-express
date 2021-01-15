@@ -17,8 +17,11 @@ class MapPage extends StatefulWidget {
 class _MapPageState extends State<MapPage> {
   List<dynamic> listShops = [];
   var shopData;
+  var vacancyType;
+  var tmp;
   String category = "All";
   String distance = '100m';
+  String groupNum = "All";
 
   Completer<GoogleMapController> _controller = Completer();
   Location _locationService = Location();
@@ -65,7 +68,7 @@ class _MapPageState extends State<MapPage> {
         Expanded(child: _makeGoogleMap()),
         Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
           Column(children: [
-            Text("Filter by Distance!"),
+            Text("Distance"),
             DropdownButton<String>(
               value: distance,
               icon: Icon(Icons.arrow_drop_down),
@@ -79,7 +82,7 @@ class _MapPageState extends State<MapPage> {
               onChanged: (String newValue) {
                 setState(() {
                   distance = newValue;
-                  _filterShop(distance, category);
+                  _filterShop(distance, category, groupNum);
                 });
               },
               items: <String>['100m', '500m', '1km', '2km']
@@ -92,7 +95,7 @@ class _MapPageState extends State<MapPage> {
             ),
           ]),
           Column(children: [
-            Text("Filter by Category"),
+            Text("Category"),
             DropdownButton<String>(
               value: category,
               icon: Icon(Icons.arrow_drop_down),
@@ -106,11 +109,51 @@ class _MapPageState extends State<MapPage> {
               onChanged: (String newValue) {
                 setState(() {
                   category = newValue;
-                  _filterShop(distance, category);
+                  _filterShop(distance, category, groupNum);
                 });
               },
               items: <String>['All', 'Cafe', 'Restaurant', 'Bar']
                   .map<DropdownMenuItem<String>>((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                );
+              }).toList(),
+            ),
+          ]),
+          Column(children: [
+            Text("GroupSize"),
+            DropdownButton<String>(
+              value: groupNum,
+              icon: Icon(Icons.arrow_drop_down),
+              iconSize: 24,
+              elevation: 16,
+              style: TextStyle(color: Colors.deepPurple),
+              underline: Container(
+                height: 2,
+                color: Colors.deepPurpleAccent,
+              ),
+              onChanged: (String newValue) {
+                setState(() {
+                  groupNum = newValue;
+                  _filterShop(distance, category, groupNum);
+                });
+              },
+              items: <String>[
+                'All',
+                '1',
+                '2',
+                '3',
+                '4',
+                '5',
+                '6',
+                '7',
+                '8',
+                '9',
+                '10',
+                '11',
+                '12'
+              ].map<DropdownMenuItem<String>>((String value) {
                 return DropdownMenuItem<String>(
                   value: value,
                   child: Text(value),
@@ -125,27 +168,24 @@ class _MapPageState extends State<MapPage> {
 
   Widget _makeGoogleMap() {
     if (_yourLocation == null) {
-      // 現在位置が取れるまではローディング中
       return Center(
         child: CircularProgressIndicator(),
       );
     } else {
-      // Google Map ウィジェットを返す
       return GoogleMap(
-        // 初期表示される位置情報を現在位置から設定
         initialCameraPosition: CameraPosition(
           target: LatLng(_yourLocation.latitude, _yourLocation.longitude),
           zoom: 18.0,
         ),
-        markers: listShops.map((data) {
+        markers: listShops.map((shop) {
           return Marker(
-            markerId: MarkerId(data['id']),
-            position: LatLng(data['lat'], data['lng']),
+            markerId: MarkerId(shop['id']),
+            position: LatLng(shop['lat'].toDouble(), shop['lng'].toDouble()),
             infoWindow: InfoWindow(
-              title: '${data['name']}',
-              snippet: data['category'],
+              title: '${shop['name']}',
+              snippet: shop['category'],
               onTap: () {
-                _onTap(context, data['id']);
+                _onTap(context, shop['id']);
                 //move to detail page with its id
               },
             ),
@@ -156,7 +196,6 @@ class _MapPageState extends State<MapPage> {
           _getAllShopData();
           _controller.complete(controller);
         },
-        // 現在位置にアイコン（青い円形のやつ）を置く
         myLocationEnabled: true,
         myLocationButtonEnabled: true,
         mapToolbarEnabled: false,
@@ -177,40 +216,55 @@ class _MapPageState extends State<MapPage> {
       shopData = await jsonResponse['body']
           .where((shop) => shop['lat'] != null && shop['lng'] != null)
           .toList();
-      listShops = shopData;
-      _filterShop(distance, category);
+      shopData = listShops = shopData;
+      _filterShop(distance, category, groupNum);
     } else {
       print('Request failed with status: ${response.statusCode}.');
     }
   }
 
-  void _filterShop(String distance, String category) {
+  void _filterShop(String distance, String category, String groupNum) {
+    listShops = shopData;
+    listShops = _filterShopByDistance(distance);
+    listShops = _filterShopByCategory(category);
+    listShops = _filterShopByGroupSize(groupNum);
+    // print(_filterShopByGroupSize(groupNum));
+  }
+
+  List _filterShopByCategory(String category) {
     if (category == 'All') {
-      listShops = _filterShopByDistance(distance, shopData);
+      return listShops;
     } else {
-      final tmp = _filterShopByDistance(distance, shopData);
-      listShops = _filterShopByCategory(category, tmp);
+      return listShops.where((data) => data['category'] == category).toList();
     }
   }
 
-  List _filterShopByCategory(String category, List shops) {
-    return shops.where((data) => data['category'] == category).toList();
-  }
-
-  List _filterShopByDistance(String distance, List shops) {
+  List _filterShopByDistance(String distance) {
     int numDistance;
     if (distance.contains('km')) {
       numDistance = int.parse(distance.replaceAll('km', '000'));
     } else {
       numDistance = int.parse(distance.replaceAll('m', ''));
     }
-
-    return shops.where((shop) => _getDistance(shop) <= numDistance).toList();
+    return listShops
+        .where((shop) => _getDistance(shop) <= numDistance)
+        .toList();
   }
 
-  Future<void> _filterAvailable(List shops) async {}
-
-  Future<void> _filterGroupSize(List shops) async {}
+  List _filterShopByGroupSize(String groupNum) {
+    if (groupNum == 'All') {
+      return listShops;
+    } else {
+      return listShops.where((shop) => shop["vacancy"]['${shop['vacancyType']}']
+      .map((sheet) =>
+          sheet['isVacant'] == true &&
+          sheet['Min'] <= int.parse(groupNum) &&
+          sheet['Max'] >= int.parse(groupNum))
+      .toList()
+      .contains(true)
+      ).toList();
+    }
+  }
 
   int _getDistance(Map shop) {
     double distanceInMeters = Geolocator.distanceBetween(
@@ -219,6 +273,7 @@ class _MapPageState extends State<MapPage> {
       shop['lat'].toDouble(),
       shop['lng'].toDouble(),
     );
+    // print(distanceInMeters.toInt());
     return distanceInMeters.toInt();
   }
 
