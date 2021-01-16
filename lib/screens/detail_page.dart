@@ -23,7 +23,7 @@ class _DetailPageState extends State<DetailPage> {
       "wss://gu2u8vdip2.execute-api.ap-northeast-1.amazonaws.com/CafeExpressWS?id=${globals.userId}");
   var bookedTime; //DateTime.now().parse('');??
   var expireTime;
-  Map bookData = {
+  final Map bookData = {
     "action": "onBook",
     "coupon": {
       "codeForQR": "XXXXXXXX",
@@ -31,8 +31,11 @@ class _DetailPageState extends State<DetailPage> {
       "couponId": "pk_XXXXXXXXX",
       "description": "",
       "imagePath": "",
-      "title": "dummy"
+      "title": "dummy",
     },
+    "storeInfo": "",
+    "customerInfo": "",
+    "vacancyType": ""
   };
   Map shopData;
   String vacancyType;
@@ -456,10 +459,12 @@ class _DetailPageState extends State<DetailPage> {
   }
 
   Future<void> _getShopData(String id) async {
+    print("_getShopData RUN!!");
     var response = await http.get(
         'https://pq3mbzzsbg.execute-api.ap-northeast-1.amazonaws.com/CaffeExpressRESTAPI/store/$id');
+    print("RESPONSE ${response.statusCode}");
     if (response.statusCode == 200) {
-      final jsonResponse = json.decode(utf8.decode(response.bodyBytes));
+      final jsonResponse = await json.decode(utf8.decode(response.bodyBytes));
       setState(() {
         shopData = jsonResponse['body'];
         price = shopData['depositAmountPerPerson'];
@@ -487,17 +492,16 @@ class _DetailPageState extends State<DetailPage> {
   }
 
   void detectSheet(int groupNum) {
-    print("detectsheet called");
-    sheet = shopData['vacancy']['$vacancyType'].firstWhere((sheet) =>
-        sheet['isVacant'] == true &&
-        sheet['Min'] <= groupNum &&
-        sheet['Max'] >= groupNum);
-    sheetindex = shopData['vacancy']['$vacancyType'].indexWhere((sheet) =>
-        sheet['isVacant'] == true &&
-        sheet['Min'] <= groupNum &&
-        sheet['Max'] >= groupNum);
-    print(sheet);
-    print(sheetindex);
+    sheet = shopData['vacancy']['$vacancyType'].firstWhere(
+        (seat) =>
+            seat['isVacant'] == true &&
+            seat['Min'] <= groupNum &&
+            seat['Max'] >= groupNum,
+        orElse: () => print('No matching element.'));
+    sheetindex = shopData['vacancy']['$vacancyType'].indexWhere((seat) =>
+        seat['isVacant'] == true &&
+        seat['Min'] <= groupNum &&
+        seat['Max'] >= groupNum);
   }
 
   void _goTimerPage(BuildContext context) {
