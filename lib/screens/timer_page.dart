@@ -136,10 +136,10 @@ class _TimerPageState extends State<TimerPage> {
                           children: [
                             Icon(Icons.warning),
                             Text(
-                              "Any Issue? Contact:",
+                              "Any Issue? Contact",
                               style: TextStyle(
                                 fontSize: 25.0,
-                                color: Colors.yellowAccent,
+                                color: Colors.amber,
                               ),
                             ),
                             Icon(Icons.warning),
