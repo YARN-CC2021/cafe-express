@@ -3,6 +3,7 @@ const ddb = new AWS.DynamoDB.DocumentClient();
 
 function updateBookingStatus(bodyParsed) {
   const { bookingId, status, updatedAt } = bodyParsed;
+  console.log("bookingId, status, updatedAt", bookingId, status, updatedAt);
 
   const params = {
     TableName: "booking",
