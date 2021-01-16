@@ -12,6 +12,7 @@ import 'screens/timer_page.dart';
 import 'screens/merchant_calendar_page.dart';
 import 'screens/qr_page.dart';
 import 'screens/booking_list_page.dart';
+import 'screens/booking_history_page.dart';
 import 'screens/merchant_profile_setting_page.dart';
 
 const WrapperRoute = "/";
@@ -27,6 +28,7 @@ const MerchantCalendarRoute = "/merchant_calendar";
 const TimerRoute = "/timer";
 const QrRoute = "/qr";
 const BookingListRoute = "/booking_list";
+const BookingHistoryRoute = "/booking_history_route";
 const MerchantProfileSettingRoute = "/merchant_profile_setting";
 
 class MyApp extends StatelessWidget {
@@ -95,6 +97,9 @@ class MyApp extends StatelessWidget {
           break;
         case BookingListRoute:
           screen = BookingListPage();
+          break;
+        case BookingHistoryRoute:
+          screen = BookingHistoryPage();
           break;
         default:
           return null;
