@@ -233,7 +233,56 @@ class _MapPageState extends State<MapPage> {
           ]),
         ]),
       ]),
+      bottomNavigationBar: BottomAppBar(
+        child: new Row(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            SizedBox(width: 7),
+            IconButton(
+              ///Timer
+              icon: Icon(
+                Icons.qr_code_rounded,
+                size: 24.0,
+              ),
+              color: Colors.black,
+              onPressed: () => {_changePage(context, QrRoute)},
+            ),
+            Container(
+              width: 56.0,
+              height: 10,
+            ),
+            IconButton(
+              /// booking history
+              icon: Icon(
+                Icons.assignment,
+                size: 24.0,
+              ),
+              color: Colors.black,
+              onPressed: () => {_changePage(context, BookingHistoryRoute)},
+            ),
+            SizedBox(width: 7),
+          ],
+        ),
+        color: Theme.of(context).primaryColor,
+        shape: CircularNotchedRectangle(),
+      ),
+      floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: FloatingActionButton(
+        elevation: 4.0,
+        child: Icon(
+          ///map search
+          Icons.videogame_asset,
+        ),
+        onPressed: () => {_changePage(context, MerchantRoute)},
+      ),
     );
+  }
+
+  void _changePage(BuildContext context, String route) {
+    Navigator.pushNamed(context, route);
+    print("Going to $route was triggered");
   }
 
   Widget _makeGoogleMap() {
