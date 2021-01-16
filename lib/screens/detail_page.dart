@@ -275,6 +275,7 @@ class _DetailPageState extends State<DetailPage> {
                         onChanged: (int newValue) {
                           setState(() {
                             groupNum = newValue;
+                            detectSheet(groupNum);
                             (() {
                               if (sheet == null) {
                                 price = 0;
@@ -282,7 +283,7 @@ class _DetailPageState extends State<DetailPage> {
                                 price = newValue * sheet['cancelFee'];
                               }
                             })();
-                            detectSheet(groupNum);
+                            print('PRICE:$price');
                           });
                         },
                         items: <int>[
@@ -325,11 +326,17 @@ class _DetailPageState extends State<DetailPage> {
                             builder: (_) {
                               return AlertDialog(
                                 title: Text("Booking Confirmation"),
-                                content: Text(
-                                  '人数:$groupNum人 \n 頭金:$price 円 \n 予約するテーブル:${sheet['label']}',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
+                                content: 
+                                Column(
+                                  children:[ 
+                                    Text(
+                                    '人数:$groupNum人 \n 頭金:$price 円 \n 予約するテーブル:${sheet['label']}',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
+
+                                  ],
                                 ),
                                 actions: <Widget>[
                                   FlatButton(
@@ -416,8 +423,9 @@ class _DetailPageState extends State<DetailPage> {
         availableSheets = shopData['vacancy']['$vacancyType']
             .where((sheet) => sheet['isVacant'] == true)
             .toList();
+        detectSheet(groupNum);
+        price = groupNum * sheet['cancelFee'];
       });
-      detectSheet(groupNum);
       bookData["storeInfo"] = {
         "address": shopData['address'],
         "category": shopData['category'],
