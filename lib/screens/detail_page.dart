@@ -24,7 +24,7 @@ class _DetailPageState extends State<DetailPage> {
 
   var bookedTime;
   var expireTime;
-  Map bookData = {
+  final Map bookData = {
     "action": "onBook",
     "coupon": {
       "codeForQR": "XXXXXXXX",
@@ -32,8 +32,11 @@ class _DetailPageState extends State<DetailPage> {
       "couponId": "pk_XXXXXXXXX",
       "description": "",
       "imagePath": "",
-      "title": "dummy"
+      "title": "dummy",
     },
+    "storeInfo": "",
+    "customerInfo": "",
+    "vacancyType": ""
   };
   Map shopData;
   String vacancyType;
@@ -326,16 +329,14 @@ class _DetailPageState extends State<DetailPage> {
                             builder: (_) {
                               return AlertDialog(
                                 title: Text("Booking Confirmation"),
-                                content: 
-                                Column(
-                                  children:[ 
+                                content: Column(
+                                  children: [
                                     Text(
-                                    '人数:$groupNum人 \n 頭金:$price 円 \n 予約するテーブル:${sheet['label']}',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
+                                      '人数:$groupNum人 \n 頭金:$price 円 \n 予約するテーブル:${sheet['label']}',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
-                                  ),
-
                                   ],
                                 ),
                                 actions: <Widget>[
@@ -412,10 +413,12 @@ class _DetailPageState extends State<DetailPage> {
   }
 
   Future<void> _getShopData(String id) async {
+    print("_getShopData RUN!!");
     var response = await http.get(
         'https://pq3mbzzsbg.execute-api.ap-northeast-1.amazonaws.com/CaffeExpressRESTAPI/store/$id');
+    print("RESPONSE ${response.statusCode}");
     if (response.statusCode == 200) {
-      final jsonResponse = json.decode(utf8.decode(response.bodyBytes));
+      final jsonResponse = await json.decode(utf8.decode(response.bodyBytes));
       setState(() {
         shopData = jsonResponse['body'];
         price = shopData['depositAmountPerPerson'];
