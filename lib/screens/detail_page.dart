@@ -20,9 +20,8 @@ class _DetailPageState extends State<DetailPage> {
   final _scrollController = ScrollController();
 
   final channel = IOWebSocketChannel.connect(
-      "wss://gu2u8vdip2.execute-api.ap-northeast-1.amazonaws.com/CafeExpressWS?id=${globals.userId}"
-      );
-      
+      "wss://gu2u8vdip2.execute-api.ap-northeast-1.amazonaws.com/CafeExpressWS?id=${globals.userId}");
+
   var bookedTime;
   var expireTime;
   Map bookData = {
@@ -116,7 +115,7 @@ class _DetailPageState extends State<DetailPage> {
                                   if (await canLaunch(url)) {
                                     await launch(url);
                                   } else {
-                                    return InfoWindow(title: "No URL");
+                                    return Text('有効なURLがありません');
                                   }
                                 },
                             ),
@@ -136,7 +135,7 @@ class _DetailPageState extends State<DetailPage> {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       Text(
-                        'Booking Available Time',
+                        '予約が可能な時間',
                         style: TextStyle(
                           fontSize: 20.0,
                         ),
@@ -144,7 +143,7 @@ class _DetailPageState extends State<DetailPage> {
                       Card(
                         child: Row(
                           children: [
-                            Text("Mon : "),
+                            Text("月 : "),
                             changeTime(
                                 shopData['hours']['Mon']['bookingStart']),
                             Text("~"),
@@ -155,7 +154,7 @@ class _DetailPageState extends State<DetailPage> {
                       Card(
                         child: Row(
                           children: [
-                            Text("Tue : "),
+                            Text("火 : "),
                             changeTime(
                                 shopData['hours']['Tue']['bookingStart']),
                             Text("~"),
@@ -166,7 +165,7 @@ class _DetailPageState extends State<DetailPage> {
                       Card(
                         child: Row(
                           children: [
-                            Text("Wed : "),
+                            Text("水 : "),
                             changeTime(
                                 shopData['hours']['Wed']['bookingStart']),
                             Text("~"),
@@ -177,7 +176,7 @@ class _DetailPageState extends State<DetailPage> {
                       Card(
                         child: Row(
                           children: [
-                            Text("Thu : "),
+                            Text("木 : "),
                             changeTime(
                                 shopData['hours']['Thu']['bookingStart']),
                             Text("~"),
@@ -188,7 +187,7 @@ class _DetailPageState extends State<DetailPage> {
                       Card(
                         child: Row(
                           children: [
-                            Text("Fri : "),
+                            Text("金 : "),
                             changeTime(
                                 shopData['hours']['Fri']['bookingStart']),
                             Text("~"),
@@ -199,7 +198,7 @@ class _DetailPageState extends State<DetailPage> {
                       Card(
                         child: Row(
                           children: [
-                            Text("Sat : "),
+                            Text("土 : "),
                             changeTime(
                                 shopData['hours']['Sat']['bookingStart']),
                             Text("~"),
@@ -210,7 +209,7 @@ class _DetailPageState extends State<DetailPage> {
                       Card(
                         child: Row(
                           children: [
-                            Text("Sun : "),
+                            Text("日 : "),
                             changeTime(
                                 shopData['hours']['Sun']['bookingStart']),
                             Text("~"),
@@ -221,7 +220,7 @@ class _DetailPageState extends State<DetailPage> {
                       Card(
                         child: Row(
                           children: [
-                            Text("Hol : "),
+                            Text("祝 : "),
                             changeTime(
                                 shopData['hours']['Holiday']['bookingStart']),
                             Text("~"),
@@ -236,7 +235,7 @@ class _DetailPageState extends State<DetailPage> {
                 Card(
                   child: Column(children: [
                     Text(
-                      'Available Sheets',
+                      '現在空いている席',
                       style: TextStyle(
                         fontSize: 25.0,
                         fontWeight: FontWeight.bold,
@@ -261,7 +260,7 @@ class _DetailPageState extends State<DetailPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        'How Many Members ?',
+                        '何人で予約しますか？',
                       ),
                       DropdownButton<int>(
                         value: groupNum,
@@ -276,8 +275,13 @@ class _DetailPageState extends State<DetailPage> {
                         onChanged: (int newValue) {
                           setState(() {
                             groupNum = newValue;
-                            price =
-                                newValue * shopData['depositAmountPerPerson'];
+                            (() {
+                              if (sheet == null) {
+                                price = 0;
+                              } else {
+                                price = newValue * sheet['cancelFee'];
+                              }
+                            })();
                             detectSheet(groupNum);
                           });
                         },
@@ -309,7 +313,7 @@ class _DetailPageState extends State<DetailPage> {
                   borderSide: BorderSide(color: Colors.lightBlue),
                   child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children:[
+                      children: [
                         Icon(
                           Icons.menu_book,
                         ),
@@ -322,7 +326,7 @@ class _DetailPageState extends State<DetailPage> {
                               return AlertDialog(
                                 title: Text("Booking Confirmation"),
                                 content: Text(
-                                  'GroupNumber:$groupNum \n Deposit:$price Yen',
+                                  '人数:$groupNum人 \n 頭金:$price 円 \n 予約するテーブル:${sheet['label']}',
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -353,14 +357,13 @@ class _DetailPageState extends State<DetailPage> {
                                       // debugPrint(json.encode(bookData)),
                                       channel.sink.add(json.encode(bookData)),
                                       _goTimerPage(context),
-                                    }, 
+                                    },
                                   ),
                                 ],
                               );
                             },
                           )
                       : null,
-                  
                 ),
               ],
             ),
@@ -385,15 +388,13 @@ class _DetailPageState extends State<DetailPage> {
   }
 
   Widget imageCard() {
-
     return Card(
       child: Image.network(
         '${shopData['imagePaths'][0]}',
         fit: BoxFit.contain,
         loadingBuilder: (context, child, loadingProgress) {
           if (loadingProgress == null) return child;
-          return Center(
-              child: LinearProgressIndicator()); //Text('Loading...'));
+          return Center(child: LinearProgressIndicator());
         },
         errorBuilder:
             (BuildContext context, Object exception, StackTrace stackTrace) {
@@ -454,6 +455,7 @@ class _DetailPageState extends State<DetailPage> {
         isSheetAvailable = false;
       }
     });
+    print(sheet);
   }
 
   void _goTimerPage(BuildContext context) {
