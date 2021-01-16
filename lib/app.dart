@@ -13,6 +13,7 @@ import 'screens/merchant_calendar_page.dart';
 import 'screens/qr_page.dart';
 import 'screens/booking_list_page.dart';
 import 'screens/merchant_profile_setting_page.dart';
+import 'screens/stripe.dart';
 
 const WrapperRoute = "/";
 const MapSearchRoute = "/map_search";
@@ -44,7 +45,7 @@ class MyApp extends StatelessWidget {
             bodyText2: TextStyle(fontSize: 14.0, fontFamily: 'Hind'),
           )),
       onGenerateRoute: _routes(),
-      home: MapPage(),
+      home: StripePage(),
     );
   }
 
