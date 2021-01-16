@@ -21,7 +21,8 @@ class _DetailPageState extends State<DetailPage> {
 
   final channel = IOWebSocketChannel.connect(
       "wss://gu2u8vdip2.execute-api.ap-northeast-1.amazonaws.com/CafeExpressWS?id=${globals.userId}");
-  var bookedTime; //DateTime.now().parse('');??
+
+  var bookedTime;
   var expireTime;
   Map bookData = {
     "action": "onBook",
@@ -41,6 +42,8 @@ class _DetailPageState extends State<DetailPage> {
   Map sheet;
   int sheetindex;
   var availableSheets;
+  bool isSheetAvailable = false;
+
   @override
   void initState() {
     super.initState();
@@ -101,9 +104,6 @@ class _DetailPageState extends State<DetailPage> {
                               fontSize: 20.0,
                             ),
                           ),
-                          // Padding(
-                          //   padding: const EdgeInsets.only(right: 50.0),
-                          // child:
                           RichText(
                             textAlign: TextAlign.end,
                             text: TextSpan(
@@ -115,12 +115,11 @@ class _DetailPageState extends State<DetailPage> {
                                   if (await canLaunch(url)) {
                                     await launch(url);
                                   } else {
-                                    return InfoWindow(title: "No URL");
+                                    return Text('有効なURLがありません');
                                   }
                                 },
                             ),
                           ),
-                          // ),
                         ],
                       ),
                     ],
@@ -136,7 +135,7 @@ class _DetailPageState extends State<DetailPage> {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       Text(
-                        'Booking Available Time',
+                        '予約が可能な時間',
                         style: TextStyle(
                           fontSize: 20.0,
                         ),
@@ -144,7 +143,7 @@ class _DetailPageState extends State<DetailPage> {
                       Card(
                         child: Row(
                           children: [
-                            Text("Mon : "),
+                            Text("月 : "),
                             changeTime(
                                 shopData['hours']['Mon']['bookingStart']),
                             Text("~"),
@@ -155,7 +154,7 @@ class _DetailPageState extends State<DetailPage> {
                       Card(
                         child: Row(
                           children: [
-                            Text("Tue : "),
+                            Text("火 : "),
                             changeTime(
                                 shopData['hours']['Tue']['bookingStart']),
                             Text("~"),
@@ -166,7 +165,7 @@ class _DetailPageState extends State<DetailPage> {
                       Card(
                         child: Row(
                           children: [
-                            Text("Wed : "),
+                            Text("水 : "),
                             changeTime(
                                 shopData['hours']['Wed']['bookingStart']),
                             Text("~"),
@@ -177,7 +176,7 @@ class _DetailPageState extends State<DetailPage> {
                       Card(
                         child: Row(
                           children: [
-                            Text("Thu : "),
+                            Text("木 : "),
                             changeTime(
                                 shopData['hours']['Thu']['bookingStart']),
                             Text("~"),
@@ -188,7 +187,7 @@ class _DetailPageState extends State<DetailPage> {
                       Card(
                         child: Row(
                           children: [
-                            Text("Fri : "),
+                            Text("金 : "),
                             changeTime(
                                 shopData['hours']['Fri']['bookingStart']),
                             Text("~"),
@@ -199,7 +198,7 @@ class _DetailPageState extends State<DetailPage> {
                       Card(
                         child: Row(
                           children: [
-                            Text("Sat : "),
+                            Text("土 : "),
                             changeTime(
                                 shopData['hours']['Sat']['bookingStart']),
                             Text("~"),
@@ -210,7 +209,7 @@ class _DetailPageState extends State<DetailPage> {
                       Card(
                         child: Row(
                           children: [
-                            Text("Sun : "),
+                            Text("日 : "),
                             changeTime(
                                 shopData['hours']['Sun']['bookingStart']),
                             Text("~"),
@@ -221,7 +220,7 @@ class _DetailPageState extends State<DetailPage> {
                       Card(
                         child: Row(
                           children: [
-                            Text("Hol : "),
+                            Text("祝 : "),
                             changeTime(
                                 shopData['hours']['Holiday']['bookingStart']),
                             Text("~"),
@@ -236,7 +235,7 @@ class _DetailPageState extends State<DetailPage> {
                 Card(
                   child: Column(children: [
                     Text(
-                      'Available Sheets',
+                      '現在空いている席',
                       style: TextStyle(
                         fontSize: 25.0,
                         fontWeight: FontWeight.bold,
@@ -245,7 +244,6 @@ class _DetailPageState extends State<DetailPage> {
                     Wrap(
                       children: availableSheets.map<Widget>((table) {
                         return Card(
-                          //Return All isVacant and false onPressed:null
                           child: Text(
                             '${table['label']}',
                             style: TextStyle(
@@ -262,7 +260,7 @@ class _DetailPageState extends State<DetailPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        'How Many Members ?',
+                        '何人で予約しますか？',
                       ),
                       DropdownButton<int>(
                         value: groupNum,
@@ -277,9 +275,15 @@ class _DetailPageState extends State<DetailPage> {
                         onChanged: (int newValue) {
                           setState(() {
                             groupNum = newValue;
-                            price =
-                                newValue * shopData['depositAmountPerPerson'];
                             detectSheet(groupNum);
+                            (() {
+                              if (sheet == null) {
+                                price = 0;
+                              } else {
+                                price = newValue * sheet['cancelFee'];
+                              }
+                            })();
+                            print('PRICE:$price');
                           });
                         },
                         items: <int>[
@@ -308,92 +312,6 @@ class _DetailPageState extends State<DetailPage> {
                 ),
                 OutlineButton(
                   borderSide: BorderSide(color: Colors.lightBlue),
-                  onPressed: () {
-                    showDialog(
-                      context: context,
-                      builder: (_) {
-                        return AlertDialog(
-                          title: Text("Booking Confirmation"),
-                          content: Text(
-                            'GroupNumber:$groupNum \n Deposit:$price Yen',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          actions: <Widget>[
-                            FlatButton(
-                              child: Text("Cancel"),
-                              onPressed: () => Navigator.pop(context),
-                            ),
-                            FlatButton(
-                              child: Text("Go Payment"),
-                              onPressed: () => {
-                                bookedTime = DateTime.now(),
-                                expireTime =
-                                    bookedTime.add(new Duration(minutes: 30)),
-                                bookData["bookedAt"] = "$bookedTime",
-                                bookData["bookingId"] =
-                                    "${globals.userId}${bookedTime.millisecondsSinceEpoch}",
-                                bookData["bookName"] = globals.userId,
-                                bookData["createdAt"] = "$bookedTime",
-                                bookData["depositAmount"] = price,
-                                bookData["expiredAt"] = "$expireTime",
-                                bookData["index"] = sheetindex,
-                                bookData["partySize"] = groupNum,
-                                bookData["status"] = "paid",
-                                bookData["tableType"] = sheet,
-                                bookData["updatedAt"] = "$bookedTime",
-                                debugPrint(json.encode(bookData)),
-                                channel.sink.add(json.encode(bookData)),
-                                //   "action": "onBook",
-                                //   "bookedAt": "Who Knows", //same to createdAt?
-                                //   "bookingId": "", //?
-                                //   "bookName": "Naoto", //?
-                                //   "coupon": {
-                                //     "codeForQR": "XXXXXXXX",
-                                //     "couponAttached": true,
-                                //     "couponId": "pk_XXXXXXXXX",
-                                //     "description":
-                                //         "メロスは激怒した。必ず、かの邪智暴虐じゃちぼうぎゃくの王を除かなければならぬと決意した。メロスには政治がわからぬ。メロスは、村の牧人である。笛を吹き、羊と遊んで暮して来た。けれども邪悪に対しては、人一倍に敏感であった。きょう未明メロスは村を出発し、野を越え山越え、十里はなれた此このシラクスの市にやって来た。メロスには父も、母も無い。女房も無い。十六の、内気な妹と二人暮しだ。この妹は、村の或る律気な一牧人を、近々、花婿はなむことして迎える事になっていた。結婚式も間近かなのである。メロスは、それゆえ、花嫁の衣裳やら祝宴の御馳走やらを買いに、はるばる市にやって来たのだ。先ず、その品々を買い集め、それから都の大路をぶらぶら歩いた。メロスには竹馬の友があった。セリヌンティウスである。今は此のシラクスの市で、石工をしている。その友を、これから訪ねてみるつもりなのだ。久しく逢わなかったのだから、訪ねて行くのが楽しみである。歩いているうちにメロスは、まちの様子を怪しく思った。",
-                                //     "imagePath": "http://....",
-                                //     "title": "２万引き"
-                                //   },
-                                //   "createdAt": "datetime",
-                                //   "customerInfo": {
-                                //     "customerId":
-                                //         "c7076e59-5072-42ec-86f0-944d151f7869"
-                                //   },
-                                //   "depositAmount": 1000,
-                                //   "expiredAt": "Who Cares", //booked_At の 30分後
-                                //   "index": 3, //どこのテーブルかを把握するため
-                                //   "partySize": 2,
-                                //   "status": "checked-in",
-                                //   "storeInfo": {
-                                //     "address": "六本木３－１－１",
-                                //     "category": "Cafe",
-                                //     "id":
-                                //         "21dcac49-26a3-4eae-96b0-ee3db3da8eb3",
-                                //     "name": "CCbucks",
-                                //     "rating": 3.8,
-                                //     "tel": "123-2313-1231"
-                                //   },
-                                //   "tableType": {
-                                //     "isVacant": true,
-                                //     "label": "1 Seat Table",
-                                //     "Max": 1,
-                                //     "Min": 1
-                                //   },
-                                //   "updatedAt": "2021-01-12-02:01:00",
-                                //   "vacancyType": "strict"
-                                // })),
-                                _goTimerPage(context),
-                              }, //goto payment page
-                            ),
-                          ],
-                        );
-                      },
-                    );
-                  },
                   child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -402,6 +320,57 @@ class _DetailPageState extends State<DetailPage> {
                         ),
                         Text("Book now!"),
                       ]),
+                  onPressed: isSheetAvailable
+                      ? () => showDialog(
+                            context: context,
+                            builder: (_) {
+                              return AlertDialog(
+                                title: Text("Booking Confirmation"),
+                                content: 
+                                Column(
+                                  children:[ 
+                                    Text(
+                                    '人数:$groupNum人 \n 頭金:$price 円 \n 予約するテーブル:${sheet['label']}',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+
+                                  ],
+                                ),
+                                actions: <Widget>[
+                                  FlatButton(
+                                    child: Text("Cancel"),
+                                    onPressed: () => Navigator.pop(context),
+                                  ),
+                                  FlatButton(
+                                    child: Text("Go Payment"),
+                                    onPressed: () => {
+                                      bookedTime = DateTime.now(),
+                                      expireTime = bookedTime
+                                          .add(new Duration(minutes: 30)),
+                                      bookData["bookedAt"] = "$bookedTime",
+                                      bookData["bookingId"] =
+                                          "${globals.userId}${bookedTime.millisecondsSinceEpoch}",
+                                      bookData["bookName"] = globals.userId,
+                                      bookData["createdAt"] = "$bookedTime",
+                                      bookData["depositAmount"] = price,
+                                      bookData["expiredAt"] = "$expireTime",
+                                      bookData["index"] = sheetindex,
+                                      bookData["partySize"] = groupNum,
+                                      bookData["status"] = "payed",
+                                      bookData["tableType"] = sheet,
+                                      bookData["updatedAt"] = "$bookedTime",
+                                      // debugPrint(json.encode(bookData)),
+                                      channel.sink.add(json.encode(bookData)),
+                                      _goTimerPage(context),
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
+                          )
+                      : null,
                 ),
               ],
             ),
@@ -426,26 +395,13 @@ class _DetailPageState extends State<DetailPage> {
   }
 
   Widget imageCard() {
-    // try {
-    // //Can't handle invalid URL
-    //   return CachedNetworkImage(
-    //     imageUrl: shopData['imagePaths'][0],
-    //     placeholder: (context, url) => Center(child: LinearProgressIndicator()),
-    //     errorWidget: (context, url, error) => Text('No Image or Loading Error'),
-    //   );
-    // } catch (e) {
-    //   print(e);
-    //   return Text('No Image or Loading Error');
-    // }
-
     return Card(
       child: Image.network(
         '${shopData['imagePaths'][0]}',
         fit: BoxFit.contain,
         loadingBuilder: (context, child, loadingProgress) {
           if (loadingProgress == null) return child;
-          return Center(
-              child: LinearProgressIndicator()); //Text('Loading...'));
+          return Center(child: LinearProgressIndicator());
         },
         errorBuilder:
             (BuildContext context, Object exception, StackTrace stackTrace) {
@@ -467,8 +423,9 @@ class _DetailPageState extends State<DetailPage> {
         availableSheets = shopData['vacancy']['$vacancyType']
             .where((sheet) => sheet['isVacant'] == true)
             .toList();
+        detectSheet(groupNum);
+        price = groupNum * sheet['cancelFee'];
       });
-      detectSheet(groupNum);
       bookData["storeInfo"] = {
         "address": shopData['address'],
         "category": shopData['category'],
@@ -488,20 +445,56 @@ class _DetailPageState extends State<DetailPage> {
 
   void detectSheet(int groupNum) {
     print("detectsheet called");
-    sheet = shopData['vacancy']['$vacancyType'].firstWhere((sheet) =>
-        sheet['isVacant'] == true &&
-        sheet['Min'] <= groupNum &&
-        sheet['Max'] >= groupNum);
+    sheet = shopData['vacancy']['$vacancyType'].firstWhere(
+        (sheet) =>
+            sheet['isVacant'] &&
+            sheet['Min'] <= groupNum &&
+            sheet['Max'] >= groupNum, orElse: () {
+      return null;
+    });
     sheetindex = shopData['vacancy']['$vacancyType'].indexWhere((sheet) =>
         sheet['isVacant'] == true &&
         sheet['Min'] <= groupNum &&
         sheet['Max'] >= groupNum);
+    setState(() {
+      if (sheet != null && sheetindex != -1) {
+        isSheetAvailable = true;
+      } else {
+        isSheetAvailable = false;
+      }
+    });
     print(sheet);
-    print(sheetindex);
   }
 
   void _goTimerPage(BuildContext context) {
     Navigator.pushNamed(context, TimerRoute);
     print("goTimerPage was triggered");
   }
+
+  // WidgetsBinding.instance.addPostFrameCallback((_) => AwesomeDialog(
+  //                 context: context,
+  //                 customHeader: null,
+  //                 animType: AnimType.LEFTSLIDE,
+  //                 dialogType: DialogType.SUCCES,
+  //                 body: Center(
+  //                     child: Column(children: [
+  //                   Text(
+  //                       'Party Size:${json.decode(snapshot.data)["partySize"]}\nBooked Time:${json.decode(snapshot.data)["bookedAt"]}\nArrival Time By:${json.decode(snapshot.data)["expiredAt"]}\nDeposit:${json.decode(snapshot.data)["depositAmount"]} Yen'),
+  //                 ])),
+  //                 btnOkOnPress: () {},
+  //                 useRootNavigator: false,
+  //                 btnOkColor: Colors.tealAccent[400],
+  //                 // btnCancelOnPress: () {},
+  //                 btnOkText: '予約リストを開く',
+  //                 // btnCancelText: 'Go To\n Booking List',
+  //                 // btnCancelColor: Colors.redAccent[400],
+  //                 dismissOnTouchOutside: false,
+  //                 headerAnimationLoop: false,
+  //                 showCloseIcon: true,
+  //                 buttonsBorderRadius: BorderRadius.all(Radius.circular(100)),
+  //               )..show());
+  //           bookingId = json.decode(snapshot.data)["bookingId"];
+  //           // vacancyInfo[json.decode(snapshot.data)["index"]]["isVacant"] =
+  //           //     false;
+  //         }
 }
