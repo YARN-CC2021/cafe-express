@@ -14,6 +14,7 @@ import 'screens/qr_page.dart';
 import 'screens/booking_list_page.dart';
 import 'screens/merchant_profile_setting_page.dart';
 import 'screens/stripe.dart';
+import 'services/stored_cards.dart';
 
 const WrapperRoute = "/";
 const MapSearchRoute = "/map_search";
@@ -29,6 +30,8 @@ const TimerRoute = "/timer";
 const QrRoute = "/qr";
 const BookingListRoute = "/booking_list";
 const MerchantProfileSettingRoute = "/merchant_profile_setting";
+const StripeRoute = "/stripe";
+const StoredCardsRoute = "/stored_cards";
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -96,6 +99,12 @@ class MyApp extends StatelessWidget {
           break;
         case BookingListRoute:
           screen = BookingListPage();
+          break;
+        case StripeRoute:
+          screen = StripePage();
+          break;
+        case StoredCardsRoute:
+          screen = ExistingCardsPage();
           break;
         default:
           return null;

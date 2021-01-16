@@ -340,7 +340,7 @@ class _DetailPageState extends State<DetailPage> {
                                 bookData["expiredAt"] = "$expireTime",
                                 bookData["index"] = sheetindex,
                                 bookData["partySize"] = groupNum,
-                                bookData["status"] = "payed",
+                                bookData["status"] = "paid",
                                 bookData["tableType"] = sheet,
                                 bookData["updatedAt"] = "$bookedTime",
                                 debugPrint(json.encode(bookData)),
