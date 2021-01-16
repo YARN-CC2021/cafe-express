@@ -359,10 +359,11 @@ class _MerchantProfilePageState extends State<MerchantProfilePage> {
       body: jsonEncode(shopData),
     );
     if (response.statusCode == 200) {
-      final jsonResponse = json.decode(response.body);
       if (globals.firstSignIn) {
         globals.firstSignIn = false;
         _changePage(context, MerchantRoute);
+      } else {
+        _changePage(context, MerchantProfileSettingRoute);
       }
     } else {
       print('Request failed with status: ${response.statusCode}.');
