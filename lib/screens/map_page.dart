@@ -71,59 +71,85 @@ class _MapPageState extends State<MapPage> {
         backgroundColor: Theme.of(context).primaryColor,
         elevation: 0.0,
       ),
-      body: Column(children: [
-        Expanded(child: _makeGoogleMap()),
-        //test
-        Container(
-          height: 150,
-          child: 
-          PageView(
-            controller: _pageController,
-            children: listShops.map<Widget>((shop) {
-              return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                child: Card(
-                  clipBehavior: Clip.antiAlias,
-                  margin: EdgeInsets.zero,
-                  shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(16.0)),
-                  ),
-                  child: Stack(
-                    children: <Widget>[
-                      Positioned(
-                        left: 0,
-                        right: 0,
-                        bottom: 0,
-                        child: Container(
-                          child: Text(
-                            shop['name'],
-                            style: Theme.of(context)
-                                .textTheme
-                                .subhead
-                                .merge(TextStyle(color: Colors.white)),
-                          ),
-                          decoration: const BoxDecoration(
-                              color: Color.fromARGB(0x99, 0, 0, 0)),
-                          padding: const EdgeInsets.all(8),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Expanded(      
+            child: Stack(
+            fit: StackFit.loose,
+            overflow: Overflow.visible,
+            children: [
+              _makeGoogleMap(),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Container(
+              height: 150,
+              child: 
+              PageView(
+                controller: _pageController,
+                children: listShops.map<Widget>((shop) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                    child: GestureDetector(
+                        onTap: () {
+                          _onTap(context, shop['id']);
+                        },
+                        child: Card(
+                        clipBehavior: Clip.antiAlias,
+                        margin: EdgeInsets.zero,
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(16.0)),
                         ),
-                      )
-                    ],
-                  ),
-                ),
-              );
-            }).toList(),
-            onPageChanged: (int page) {
-              if (_isPageViewAnimating) {
-                return;
-              }
-              _updateSelectedShopForPage(page);
-            },
+                        child: Stack(
+                          children: <Widget>[
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children:[
+                                imageCard(shop),
+                              ]
+                            ),
+                            Positioned(
+                              left: 0,
+                              right: 0,
+                              bottom: 0,
+                              child: Container(
+                                child: Text(
+                                  shop['name'],
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .subhead
+                                      .merge(TextStyle(color: Colors.white)),
+                                ),
+                                decoration: const BoxDecoration(
+                                    color: Color.fromARGB(0x99, 0, 0, 0)),
+                                padding: const EdgeInsets.all(8),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                }).toList(),
+                onPageChanged: (int page) {
+                  if (_isPageViewAnimating) {
+                    return;
+                  }
+                  _updateSelectedShopForPage(page);
+                },
+              ),
+              decoration: BoxDecoration(color: Colors.transparent),
+            ),
           ),
-          decoration: BoxDecoration(color: Colors.transparent),
+          ],
+          ),
         ),
 
         //test
-        Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
           Column(children: [
             Text("Distance"),
             DropdownButton<String>(
@@ -234,13 +260,14 @@ class _MapPageState extends State<MapPage> {
           target: LatLng(_yourLocation.latitude, _yourLocation.longitude),
           zoom: 18.0,
         ),
+        padding: EdgeInsets.only(bottom: 150.0),
         markers: listShops.map((shop) {
           return Marker(
             markerId: MarkerId(shop['id']),
             position: LatLng(shop['lat'].toDouble(), shop['lng'].toDouble()),
             icon: shop['id'] == selectedShop['id']
                 ? BitmapDescriptor.defaultMarker
-                : BitmapDescriptor.defaultMarkerWithHue(180),
+                : BitmapDescriptor.defaultMarkerWithHue(120.0),
             onTap: () {
               selectedShop = shop;
               _pageController.jumpToPage(listShops.indexOf(shop));
@@ -264,6 +291,25 @@ class _MapPageState extends State<MapPage> {
         mapToolbarEnabled: false,
       );
     }
+  }
+
+  Widget imageCard(shop) {
+    return Image.network(
+        '${shop['imagePaths'][0]}',
+        fit: BoxFit.fitWidth,
+        loadingBuilder: (context, child, loadingProgress) {
+          if (loadingProgress == null) return child;
+          return Card(
+              child: Center(
+                child: CircularProgressIndicator(),
+                ),
+              );
+        },
+        errorBuilder:
+            (BuildContext context, Object exception, StackTrace stackTrace) {
+          return Text('No Image or Loading Error');
+        },
+    );
   }
 
   void _getLocation() async {
