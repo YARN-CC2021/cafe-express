@@ -283,7 +283,7 @@ class _MapPageState extends State<MapPage> {
     return Center(
       child: Image.network(
           '${shop['imagePaths'][0]}',
-          fit: BoxFit.fitWidth,
+          fit: BoxFit.cover,
           loadingBuilder: (context, child, loadingProgress) {
             if (loadingProgress == null) return child;
             return CircularProgressIndicator();
