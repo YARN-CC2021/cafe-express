@@ -151,7 +151,7 @@ class _MapPageState extends State<MapPage> {
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
           Column(children: [
-            Text("Distance"),
+            Text("距離"),
             DropdownButton<String>(
               value: distance,
               icon: Icon(Icons.arrow_drop_down),
@@ -178,7 +178,7 @@ class _MapPageState extends State<MapPage> {
             ),
           ]),
           Column(children: [
-            Text("Category"),
+            Text("カテゴリー"),
             DropdownButton<String>(
               value: category,
               icon: Icon(Icons.arrow_drop_down),
@@ -205,7 +205,7 @@ class _MapPageState extends State<MapPage> {
             ),
           ]),
           Column(children: [
-            Text("GroupSize"),
+            Text("人数"),
             DropdownButton<String>(
               value: groupNum,
               icon: Icon(Icons.arrow_drop_down),
@@ -222,20 +222,7 @@ class _MapPageState extends State<MapPage> {
                   _filterShop(distance, category, groupNum);
                 });
               },
-              items: <String>[
-                'All',
-                '1',
-                '2',
-                '3',
-                '4',
-                '5',
-                '6',
-                '7',
-                '8',
-                '9',
-                '10',
-                '11',
-                '12'
+              items: <String>['All','1','2','3','4','5','6','7','8','9','10','11','12'
               ].map<DropdownMenuItem<String>>((String value) {
                 return DropdownMenuItem<String>(
                   value: value,
@@ -282,7 +269,6 @@ class _MapPageState extends State<MapPage> {
           );
         }).toSet(),
         onMapCreated: (GoogleMapController controller) {
-          print('Map Created');
           _getAllShopData();
           _controller.complete(controller);
         },
@@ -294,21 +280,19 @@ class _MapPageState extends State<MapPage> {
   }
 
   Widget imageCard(shop) {
-    return Image.network(
-        '${shop['imagePaths'][0]}',
-        fit: BoxFit.fitWidth,
-        loadingBuilder: (context, child, loadingProgress) {
-          if (loadingProgress == null) return child;
-          return Card(
-              child: Center(
-                child: CircularProgressIndicator(),
-                ),
-              );
-        },
-        errorBuilder:
-            (BuildContext context, Object exception, StackTrace stackTrace) {
-          return Text('No Image or Loading Error');
-        },
+    return Center(
+      child: Image.network(
+          '${shop['imagePaths'][0]}',
+          fit: BoxFit.fitWidth,
+          loadingBuilder: (context, child, loadingProgress) {
+            if (loadingProgress == null) return child;
+            return CircularProgressIndicator();
+          },
+          errorBuilder:
+              (BuildContext context, Object exception, StackTrace stackTrace) {
+            return Text('写真がありません');
+          },
+      ),
     );
   }
 
@@ -338,7 +322,6 @@ class _MapPageState extends State<MapPage> {
     listShops = _filterShopByCategory(category);
     listShops = _filterShopByDistance(distance);
     listShops = _filterShopByGroupSize(groupNum);
-    print(listShops.length);
   }
 
   List _filterShopByCategory(String category) {
@@ -441,4 +424,5 @@ class _MapPageState extends State<MapPage> {
   void _onTap(BuildContext context, String shopId) {
     Navigator.pushNamed(context, DetailRoute, arguments: {"id": shopId});
   }
+
 }
