@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:amplify_core/amplify_core.dart';
 import 'package:geocoder/geocoder.dart';
 import '../app.dart';
 import '../global.dart' as globals;
@@ -91,11 +90,8 @@ class _MerchantProfilePageState extends State<MerchantProfilePage> {
                   Row(
                     children: [
                       Container(
-                          child: Text(
-                            '郵便番号',
-                            style: TextStyle(fontSize: 18.0),
-                          ),
-                          width: 90),
+                          child: Icon(Icons.person, color: Colors.blue[300]),
+                          width: 30),
                       Expanded(
                         child: TextFormField(
                           maxLines: 1,
@@ -390,12 +386,10 @@ class _MerchantProfilePageState extends State<MerchantProfilePage> {
   }
 
   Future<void> _getShopData() async {
-    var userData = await Amplify.Auth.getCurrentUser();
-    var userId = userData.userId;
-    print("Profile Page $userId");
-    setState(() => _userId = userId);
+    setState(() => _userId = globals.userId);
+    print("Profile Page $_userId");
     var response = await http.get(
-        'https://pq3mbzzsbg.execute-api.ap-northeast-1.amazonaws.com/CaffeExpressRESTAPI/store/$userId');
+        'https://pq3mbzzsbg.execute-api.ap-northeast-1.amazonaws.com/CaffeExpressRESTAPI/store/$_userId');
     if (response.statusCode == 200) {
       final jsonResponse = await json.decode(utf8.decode(response.bodyBytes));
       setState(() {
