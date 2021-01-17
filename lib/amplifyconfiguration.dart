@@ -5,7 +5,8 @@ const amplifyconfig = ''' {
         "plugins": {
             "awsS3StoragePlugin": {
                 "bucket": "yarntestbucket",
-                "region": "ap-northeast-1"
+                "region": "ap-northeast-1",
+                "defaultAccessLevel": "guest"
             },
             "awsCognitoAuthPlugin": {
                 "UserAgent": "aws-amplify-cli/0.1.0",
