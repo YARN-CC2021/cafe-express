@@ -50,7 +50,7 @@ class MyApp extends StatelessWidget {
             bodyText2: TextStyle(fontSize: 14.0, fontFamily: 'Hind'),
           )),
       onGenerateRoute: _routes(),
-      home: StripePage(),
+      home: Wrapper(),
     );
   }
 
