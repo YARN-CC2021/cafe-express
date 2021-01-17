@@ -12,33 +12,39 @@ exports.handler = async (event) => {
   const fee = amount / 100 || 0;
   let paymentMethod;
 
-  // try {
-  //   paymentMethod = stripe.paymentMethods.create(
-  //     {
-  //       payment_method: payMethod,
-  //     },
-  //     {
-  //       stripeAccount: storeStripeId,
-  //     }
-  //   );
-  // } catch (error) {
-  //   message = `Failed to create payment method. ERROR=${error}`;
-  //   statusCode = 403;
-  // }
+  try {
+    paymentMethod = await stripe.paymentMethods.create(
+      {
+        payment_method: payMethod,
+      },
+      {
+        stripeAccount: storeStripeId,
+      }
+    );
+    console.log(paymentMethod);
+  } catch (error) {
+    message = `Failed to create payment method. ERROR=${error}`;
+    statusCode = 403;
+  }
 
   try {
-    const paymentIntent = await stripe.paymentIntents.create({
-      // payment_method: paymentMethod.id,
-      payment_method_types: ["card"],
-      amount: amount,
-      currency: "jpy",
-      // confirmation_method: "automatic",
-      // confirm: true,
-      application_fee_amount: fee,
-      transfer_data: {
-        destination: storeStripeId,
+    const paymentIntent = await stripe.paymentIntents.create(
+      {
+        payment_method: paymentMethod.id,
+        // payment_method_types: ['card'],
+        amount: amount,
+        currency: "jpy",
+        confirmation_method: "automatic",
+        confirm: true,
+        application_fee_amount: fee,
+        // transfer_data: {
+        //   destination: storeStripeId,
+        // },
       },
-    });
+      {
+        stripeAccount: storeStripeId,
+      }
+    );
     responseBody = JSON.stringify({
       paymentIntent: paymentIntent,
       storeStripeId: storeStripeId,
