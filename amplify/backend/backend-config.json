@@ -5,5 +5,11 @@
 			"providerPlugin": "awscloudformation",
 			"dependsOn": []
 		}
+	},
+	"storage": {
+		"CafeExpressPhotos": {
+			"service": "S3",
+			"providerPlugin": "awscloudformation"
+		}
 	}
 }
