@@ -3,8 +3,6 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:geolocator/geolocator.dart';
 import 'dart:async';
-import 'dart:math' as math;
-import './detail_page.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import '../app.dart';
@@ -115,10 +113,7 @@ class _MapPageState extends State<MapPage> {
                               child: Container(
                                 child: Text(
                                   shop['name'],
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .subhead
-                                      .merge(TextStyle(color: Colors.white)),
+                                  style: TextStyle(color: Colors.white)
                                 ),
                                 decoration: const BoxDecoration(
                                     color: Color.fromARGB(0x99, 0, 0, 0)),
