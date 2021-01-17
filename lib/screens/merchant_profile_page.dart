@@ -7,6 +7,8 @@ import '../app.dart';
 import '../global.dart' as globals;
 import 'package:file_picker/file_picker.dart';
 import 'dart:io';
+import 'package:amplify_storage_s3/amplify_storage_s3.dart';
+import 'package:amplify_core/amplify_core.dart';
 
 class MerchantProfilePage extends StatefulWidget {
   @override
@@ -44,13 +46,20 @@ class _MerchantProfilePageState extends State<MerchantProfilePage> {
   // var profile = {};
 
   Future<void> _filepick() async {
-    print("Inside File Picker");
-    File file = await FilePicker.getFile(type: FileType.image);
-    if (file != null) {
-      print("File picked: $file");
-    } else {
-      // User canceled the picker
-      print("result == null in _filepick()");
+    print("Im in Filepick");
+    try {
+      // use a file selection mechanism of your choice
+      print("Im in Filepick TRRYYYY");
+      File file = await FilePicker.getFile(type: FileType.image);
+      final key = new DateTime.now().toString();
+      // final local = file.absolute.path;
+      S3UploadFileOptions options =
+          S3UploadFileOptions(accessLevel: StorageAccessLevel.protected);
+      UploadFileResult result = await Amplify.Storage.uploadFile(
+          key: key, local: file, options: options);
+      print("Im in Filepick UPLOADDEDD");
+    } catch (e) {
+      print(e.toString());
     }
   }
 
