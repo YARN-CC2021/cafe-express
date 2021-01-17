@@ -49,7 +49,7 @@ class _StripePageState extends State<StripePage> {
     ThemeData theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text('Home'),
+        title: Text('Cafe Express'),
       ),
       body: Container(
         padding: EdgeInsets.all(20),
