@@ -5,6 +5,7 @@ import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import "package:flutter_login/flutter_login.dart";
 import "../app.dart";
 import "../global.dart" as globals;
+import 'package:amplify_storage_s3/amplify_storage_s3.dart';
 
 import "../models/user_status.dart";
 
@@ -29,7 +30,9 @@ class _AuthState extends State<Auth> {
 
   void config() async {
     AmplifyAuthCognito amplifyAuthCognito = AmplifyAuthCognito();
-    amplify.addPlugin(authPlugins: [amplifyAuthCognito]);
+    AmplifyStorageS3 storage = AmplifyStorageS3();
+    amplify.addPlugin(
+        authPlugins: [amplifyAuthCognito], storagePlugins: [storage]);
     amplify.configure(amplifyconfig);
     setState(() {
       isConfigured = true;
@@ -82,11 +85,11 @@ class _AuthState extends State<Auth> {
   @override
   Widget build(BuildContext context) {
     return FlutterLogin(
-      onLogin: logIn,
-      onSignup: signUp,
-      onRecoverPassword: (_) => null,
-      title: 'Cafe Express',
-    );
+        onLogin: logIn,
+        onSignup: signUp,
+        onRecoverPassword: (_) => null,
+        title: 'Cafe Express',
+        theme: LoginTheme(primaryColor: Colors.teal));
   }
 
   void _returnWrapper(BuildContext context) {
