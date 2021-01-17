@@ -3,6 +3,10 @@ const amplifyconfig = ''' {
     "Version": "1.0",
     "auth": {
         "plugins": {
+            "awsS3StoragePlugin": {
+                "bucket": "yarntestbucket",
+                "region": "ap-northeast-1"
+            },
             "awsCognitoAuthPlugin": {
                 "UserAgent": "aws-amplify-cli/0.1.0",
                 "Version": "0.1.0",
