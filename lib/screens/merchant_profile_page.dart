@@ -17,6 +17,7 @@ class MerchantProfilePage extends StatefulWidget {
 
 Map shopData;
 var _userId;
+var result;
 
 class _MerchantProfilePageState extends State<MerchantProfilePage> {
   @override
@@ -51,13 +52,30 @@ class _MerchantProfilePageState extends State<MerchantProfilePage> {
       // use a file selection mechanism of your choice
       print("Im in Filepick TRRYYYY");
       File file = await FilePicker.getFile(type: FileType.image);
-      final key = new DateTime.now().toString();
-      // final local = file.absolute.path;
+      // final key = new DateTime.now().toString();
+      final key = "raisedByNstm1119";
+      // Map<String, String> metadata = <String, String>{};
+      // metadata['name'] = 'filename';
+      // metadata['desc'] = 'A test file';
       S3UploadFileOptions options =
           S3UploadFileOptions(accessLevel: StorageAccessLevel.protected);
       UploadFileResult result = await Amplify.Storage.uploadFile(
           key: key, local: file, options: options);
-      print("Im in Filepick UPLOADDEDD");
+      print("Im in Filepick UPLOADDEDD $result");
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  Future<void> _showPic() async {
+    final getUrlOptions = GetUrlOptions(
+      accessLevel: StorageAccessLevel.protected,
+    );
+    try {
+      result =
+          await Amplify.Storage.getUrl(key: "testing", options: getUrlOptions);
+      result = result.url;
+      print("done gettinggggggggggggggggggggggggggggg $result");
     } catch (e) {
       print(e.toString());
     }
@@ -83,6 +101,17 @@ class _MerchantProfilePageState extends State<MerchantProfilePage> {
                             padding: EdgeInsets.symmetric(horizontal: 16.0),
                             children: <Widget>[
                           // Add TextFormFields and ElevatedButton here.
+                          Padding(
+                              padding: EdgeInsets.only(left: 5.0, right: 10.0),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(8.0),
+                                child: Image.network(
+                                  result,
+                                  fit: BoxFit.cover,
+                                  width: 100.0,
+                                  height: 500.0,
+                                ),
+                              )),
                           TextFormField(
                             // The validator receives the text that the user has entered.
                             decoration: InputDecoration(
@@ -271,6 +300,9 @@ class _MerchantProfilePageState extends State<MerchantProfilePage> {
                           RaisedButton(onPressed: () {
                             _filepick();
                           }),
+                          RaisedButton(onPressed: () {
+                            _filepick();
+                          }),
                           Padding(
                             padding: EdgeInsets.fromLTRB(0, 10, 10, 0),
                             child: Text(
@@ -417,6 +449,7 @@ class _MerchantProfilePageState extends State<MerchantProfilePage> {
     setState(() => _userId = globals.userId);
     var response = await http.get(
         'https://pq3mbzzsbg.execute-api.ap-northeast-1.amazonaws.com/CaffeExpressRESTAPI/store/$_userId');
+    await _showPic();
     if (response.statusCode == 200) {
       final jsonResponse = await json.decode(utf8.decode(response.bodyBytes));
       setState(() {
