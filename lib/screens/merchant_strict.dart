@@ -194,33 +194,46 @@ class _MerchantStrictState extends State<MerchantStrict> {
                 }
                 return ListView(
                     padding:
-                        EdgeInsets.symmetric(horizontal: 30.0, vertical: 30.0),
+                        EdgeInsets.symmetric(horizontal: 30.0, vertical: 15.0),
                     children: [
                       Container(
                           width: 300,
                           height: 50,
-                          child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                Container(
-                                    width: 50,
-                                    height: 40,
-                                    child: Text("人数",
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(fontSize: 20))),
-                                Container(
-                                    width: 130,
-                                    height: 40,
-                                    child: Text("キャンセル料",
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(fontSize: 20))),
-                                Container(
-                                    width: 70,
-                                    height: 40,
-                                    child: Text("空 / 満",
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(fontSize: 20))),
-                              ])),
+                          child: Container(
+                              child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                Card(
+                                  child: Center(
+                                    child: Container(
+                                        width: 80,
+                                        height: 20,
+                                        child: Text("人数",
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(fontSize: 15))),
+                                  ),
+                                ),
+                                Card(
+                                  child: Center(
+                                    child: Container(
+                                        width: 110,
+                                        height: 20,
+                                        child: Text("キャンセル料",
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(fontSize: 15))),
+                                  ),
+                                ),
+                                Card(
+                                    child: Center(
+                                  child: Container(
+                                      width: 70,
+                                      height: 20,
+                                      child: Text("空 / 満",
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(fontSize: 15))),
+                                ))
+                              ]))),
                       Card(
                         child: Container(
                             width: 300,
@@ -230,20 +243,19 @@ class _MerchantStrictState extends State<MerchantStrict> {
                                     MainAxisAlignment.spaceEvenly,
                                 children: [
                                   Container(
-                                      width: 110,
+                                      width: 90,
                                       child: Badge(
                                         toAnimate: false,
                                         shape: BadgeShape.square,
-                                        badgeColor:
-                                            Theme.of(context).accentColor,
+                                        badgeColor: Colors.grey[100],
                                         borderRadius: BorderRadius.circular(8),
                                         badgeContent: Container(
-                                            width: 110,
-                                            child: Text('１人席',
+                                            width: 90,
+                                            child: Text('1人席',
                                                 textAlign: TextAlign.center,
                                                 style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 23,
+                                                  color: Colors.black,
+                                                  fontSize: 20,
                                                 ))),
                                       )),
                                   Container(
@@ -330,21 +342,20 @@ class _MerchantStrictState extends State<MerchantStrict> {
                                       MainAxisAlignment.spaceEvenly,
                                   children: [
                                     Container(
-                                        width: 110,
+                                        width: 90,
                                         child: Badge(
                                           toAnimate: false,
                                           shape: BadgeShape.square,
-                                          badgeColor:
-                                              Theme.of(context).accentColor,
+                                          badgeColor: Colors.grey[100],
                                           borderRadius:
                                               BorderRadius.circular(8),
                                           badgeContent: Container(
-                                              width: 110,
-                                              child: Text('２人席',
+                                              width: 90,
+                                              child: Text('2人席',
                                                   textAlign: TextAlign.center,
                                                   style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 23,
+                                                    color: Colors.black,
+                                                    fontSize: 20,
                                                   ))),
                                         )),
                                     Container(
@@ -371,7 +382,7 @@ class _MerchantStrictState extends State<MerchantStrict> {
                                             borderRadius:
                                                 BorderRadius.circular(20.0),
                                             color: vacancyInfo[1]["isVacant"]
-                                                ? Theme.of(context).primaryColor
+                                                ? Colors.orange
                                                 : Colors.blueGrey[100]
                                                     .withOpacity(0.5)),
                                         child: Stack(
@@ -403,9 +414,7 @@ class _MerchantStrictState extends State<MerchantStrict> {
                                                   child: vacancyInfo[1]
                                                           ["isVacant"]
                                                       ? Icon(Icons.check_circle,
-                                                          color:
-                                                              Theme.of(context)
-                                                                  .accentColor,
+                                                          color: Colors.red,
                                                           size: 32.0,
                                                           key: UniqueKey())
                                                       : Icon(
@@ -432,21 +441,20 @@ class _MerchantStrictState extends State<MerchantStrict> {
                                       MainAxisAlignment.spaceEvenly,
                                   children: [
                                     Container(
-                                        width: 110,
+                                        width: 90,
                                         child: Badge(
                                           toAnimate: false,
                                           shape: BadgeShape.square,
-                                          badgeColor:
-                                              Theme.of(context).accentColor,
+                                          badgeColor: Colors.grey[100],
                                           borderRadius:
                                               BorderRadius.circular(8),
                                           badgeContent: Container(
-                                              width: 110,
-                                              child: Text('３人席',
+                                              width: 90,
+                                              child: Text('3人席',
                                                   textAlign: TextAlign.center,
                                                   style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 23,
+                                                    color: Colors.black,
+                                                    fontSize: 20,
                                                   ))),
                                         )),
                                     Container(
@@ -534,21 +542,20 @@ class _MerchantStrictState extends State<MerchantStrict> {
                                       MainAxisAlignment.spaceEvenly,
                                   children: [
                                     Container(
-                                        width: 110,
+                                        width: 90,
                                         child: Badge(
                                           toAnimate: false,
                                           shape: BadgeShape.square,
-                                          badgeColor:
-                                              Theme.of(context).accentColor,
+                                          badgeColor: Colors.grey[100],
                                           borderRadius:
                                               BorderRadius.circular(8),
                                           badgeContent: Container(
-                                              width: 110,
-                                              child: Text('４人席',
+                                              width: 90,
+                                              child: Text('4人席',
                                                   textAlign: TextAlign.center,
                                                   style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 23,
+                                                    color: Colors.black,
+                                                    fontSize: 20,
                                                   ))),
                                         )),
                                     Container(
@@ -636,21 +643,20 @@ class _MerchantStrictState extends State<MerchantStrict> {
                                       MainAxisAlignment.spaceEvenly,
                                   children: [
                                     Container(
-                                        width: 110,
+                                        width: 90,
                                         child: Badge(
                                           toAnimate: false,
                                           shape: BadgeShape.square,
-                                          badgeColor:
-                                              Theme.of(context).accentColor,
+                                          badgeColor: Colors.grey[100],
                                           borderRadius:
                                               BorderRadius.circular(8),
                                           badgeContent: Container(
-                                              width: 110,
-                                              child: Text('５人席',
+                                              width: 90,
+                                              child: Text('5人席',
                                                   textAlign: TextAlign.center,
                                                   style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 23,
+                                                    color: Colors.black,
+                                                    fontSize: 20,
                                                   ))),
                                         )),
                                     Container(
@@ -738,21 +744,20 @@ class _MerchantStrictState extends State<MerchantStrict> {
                                       MainAxisAlignment.spaceEvenly,
                                   children: [
                                     Container(
-                                        width: 110,
+                                        width: 90,
                                         child: Badge(
                                           toAnimate: false,
                                           shape: BadgeShape.square,
-                                          badgeColor:
-                                              Theme.of(context).accentColor,
+                                          badgeColor: Colors.grey[100],
                                           borderRadius:
                                               BorderRadius.circular(8),
                                           badgeContent: Container(
-                                              width: 110,
-                                              child: Text('６人席',
+                                              width: 90,
+                                              child: Text('6人席',
                                                   textAlign: TextAlign.center,
                                                   style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 23,
+                                                    color: Colors.black,
+                                                    fontSize: 20,
                                                   ))),
                                         )),
                                     Container(
@@ -840,21 +845,20 @@ class _MerchantStrictState extends State<MerchantStrict> {
                                       MainAxisAlignment.spaceEvenly,
                                   children: [
                                     Container(
-                                        width: 110,
+                                        width: 90,
                                         child: Badge(
                                           toAnimate: false,
                                           shape: BadgeShape.square,
-                                          badgeColor:
-                                              Theme.of(context).accentColor,
+                                          badgeColor: Colors.grey[100],
                                           borderRadius:
                                               BorderRadius.circular(8),
                                           badgeContent: Container(
-                                              width: 110,
-                                              child: Text('７人席',
+                                              width: 90,
+                                              child: Text('7人席',
                                                   textAlign: TextAlign.center,
                                                   style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 23,
+                                                    color: Colors.black,
+                                                    fontSize: 20,
                                                   ))),
                                         )),
                                     Container(
@@ -942,21 +946,20 @@ class _MerchantStrictState extends State<MerchantStrict> {
                                       MainAxisAlignment.spaceEvenly,
                                   children: [
                                     Container(
-                                        width: 110,
+                                        width: 90,
                                         child: Badge(
                                           toAnimate: false,
                                           shape: BadgeShape.square,
-                                          badgeColor:
-                                              Theme.of(context).accentColor,
+                                          badgeColor: Colors.grey[100],
                                           borderRadius:
                                               BorderRadius.circular(8),
                                           badgeContent: Container(
-                                              width: 110,
-                                              child: Text('８人席',
+                                              width: 90,
+                                              child: Text('8人席',
                                                   textAlign: TextAlign.center,
                                                   style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 23,
+                                                    color: Colors.black,
+                                                    fontSize: 20,
                                                   ))),
                                         )),
                                     Container(
@@ -1044,21 +1047,20 @@ class _MerchantStrictState extends State<MerchantStrict> {
                                       MainAxisAlignment.spaceEvenly,
                                   children: [
                                     Container(
-                                        width: 110,
+                                        width: 90,
                                         child: Badge(
                                           toAnimate: false,
                                           shape: BadgeShape.square,
-                                          badgeColor:
-                                              Theme.of(context).accentColor,
+                                          badgeColor: Colors.grey[100],
                                           borderRadius:
                                               BorderRadius.circular(8),
                                           badgeContent: Container(
-                                              width: 110,
-                                              child: Text('９人席',
+                                              width: 90,
+                                              child: Text('9人席',
                                                   textAlign: TextAlign.center,
                                                   style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 23,
+                                                    color: Colors.black,
+                                                    fontSize: 20,
                                                   ))),
                                         )),
                                     Container(
@@ -1146,21 +1148,20 @@ class _MerchantStrictState extends State<MerchantStrict> {
                                       MainAxisAlignment.spaceEvenly,
                                   children: [
                                     Container(
-                                        width: 110,
+                                        width: 90,
                                         child: Badge(
                                           toAnimate: false,
                                           shape: BadgeShape.square,
-                                          badgeColor:
-                                              Theme.of(context).accentColor,
+                                          badgeColor: Colors.grey[100],
                                           borderRadius:
                                               BorderRadius.circular(8),
                                           badgeContent: Container(
-                                              width: 110,
-                                              child: Text('１０人席',
+                                              width: 90,
+                                              child: Text('10人席',
                                                   textAlign: TextAlign.center,
                                                   style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 23,
+                                                    color: Colors.black,
+                                                    fontSize: 20,
                                                   ))),
                                         )),
                                     Container(
@@ -1248,21 +1249,20 @@ class _MerchantStrictState extends State<MerchantStrict> {
                                       MainAxisAlignment.spaceEvenly,
                                   children: [
                                     Container(
-                                        width: 110,
+                                        width: 90,
                                         child: Badge(
                                           toAnimate: false,
                                           shape: BadgeShape.square,
-                                          badgeColor:
-                                              Theme.of(context).accentColor,
+                                          badgeColor: Colors.grey[100],
                                           borderRadius:
                                               BorderRadius.circular(8),
                                           badgeContent: Container(
-                                              width: 110,
-                                              child: Text('１１人席',
+                                              width: 90,
+                                              child: Text('11人席',
                                                   textAlign: TextAlign.center,
                                                   style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 23,
+                                                    color: Colors.black,
+                                                    fontSize: 20,
                                                   ))),
                                         )),
                                     Container(
@@ -1350,21 +1350,20 @@ class _MerchantStrictState extends State<MerchantStrict> {
                                       MainAxisAlignment.spaceEvenly,
                                   children: [
                                     Container(
-                                        width: 110,
+                                        width: 90,
                                         child: Badge(
                                           toAnimate: false,
                                           shape: BadgeShape.square,
-                                          badgeColor:
-                                              Theme.of(context).accentColor,
+                                          badgeColor: Colors.grey[100],
                                           borderRadius:
                                               BorderRadius.circular(8),
                                           badgeContent: Container(
-                                              width: 110,
-                                              child: Text('１２人席',
+                                              width: 90,
+                                              child: Text('12人席',
                                                   textAlign: TextAlign.center,
                                                   style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 23,
+                                                    color: Colors.black,
+                                                    fontSize: 20,
                                                   ))),
                                         )),
                                     Container(
