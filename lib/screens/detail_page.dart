@@ -364,7 +364,10 @@ class _DetailPageState extends State<DetailPage> {
                                       bookData["updatedAt"] = "$bookedTime",
                                       // debugPrint(json.encode(bookData)),
                                       channel.sink.add(json.encode(bookData)),
-                                      _goTimerPage(context),
+                                      price == 0
+                                          ? _goTimerPage(context)
+                                          : _goStripePage(
+                                              context, widget.id, price),
                                     },
                                   ),
                                 ],
@@ -467,6 +470,12 @@ class _DetailPageState extends State<DetailPage> {
       }
     });
     print(sheet);
+  }
+
+  void _goStripePage(BuildContext context, id, price) {
+    Navigator.pushNamed(context, StripeRoute,
+        arguments: {"id": id, "price": price});
+    print("goStripePage was triggered");
   }
 
   void _goTimerPage(BuildContext context) {
