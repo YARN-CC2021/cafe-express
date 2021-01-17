@@ -103,7 +103,7 @@ class MyApp extends StatelessWidget {
           screen = BookingListPage();
           break;
         case StripeRoute:
-          screen = StripePage();
+          screen = StripePage(arguments['id'], arguments['price']);
           break;
         case StoredCardsRoute:
           screen = ExistingCardsPage();
