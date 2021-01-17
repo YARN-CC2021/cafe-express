@@ -142,23 +142,6 @@ class _BookingHistoryPageState extends State<BookingHistoryPage> {
     }
   }
 
-  // void _statusUpdate(int index, String status) {
-  //   setState(() {
-  //     bookingData[index]["status"] = status;
-  //   });
-
-  //   channel.sink.add(json.encode({
-  //     "action": "onBookingStatusChange",
-  //     "bookingId": bookingData[index]["bookingId"],
-  //     "status": status,
-  //     "updatedAt": "${DateTime.now()}",
-  //   }));
-  // }
-
-  // void _insertBooking(data) {
-  //   bookingData.insert(0, data);
-  // }
-
   ListView buildListView() {
     String prevDay;
     String today = DateFormat("EEE, MMM d, y").format(DateTime.now());

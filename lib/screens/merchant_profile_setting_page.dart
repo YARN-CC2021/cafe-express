@@ -3,6 +3,10 @@ import '../app.dart';
 import '../global.dart' as globals;
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:amplify_core/amplify_core.dart';
+import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
+import 'package:awesome_dialog/awesome_dialog.dart';
 
 class MerchantProfileSettingPage extends StatefulWidget {
   @override
@@ -63,15 +67,17 @@ class _MerchantProfileSettingPageState
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
-                      // Padding(
-                      //   padding: EdgeInsets.only(left: 10.0, right: 10.0),
-                      //   child: Image.asset(
-                      //     "assets/cm4.jpeg",
-                      //     fit: BoxFit.cover,
-                      //     width: 100.0,
-                      //     height: 100.0,
-                      //   ),
-                      // ),
+                      Padding(
+                          padding: EdgeInsets.only(left: 5.0, right: 10.0),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(8.0),
+                            child: Image.network(
+                              "https://www.sho-pat.com/e/img/attorneys/ph_takano.jpg",
+                              fit: BoxFit.cover,
+                              width: 100.0,
+                              height: 100.0,
+                            ),
+                          )),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -86,9 +92,16 @@ class _MerchantProfileSettingPageState
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
+                                MaterialButton(
+                                  child: Text(
+                                      shopData["vacancyType"] == "strict"
+                                          ? "テーブル設定：固定モード"
+                                          : "テーブル設定：範囲モード",
+                                      style: TextStyle(fontSize: 10)),
+                                  onPressed: null,
+                                )
                               ],
                             ),
-                            SizedBox(height: 5.0),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: <Widget>[
@@ -101,24 +114,45 @@ class _MerchantProfileSettingPageState
                                 ),
                               ],
                             ),
-                            SizedBox(height: 20.0),
+                            SizedBox(height: 10.0),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: <Widget>[
                                 InkWell(
                                   onTap: () {
-                                    Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder: (BuildContext context) {
-                                          return Text("");
-                                        },
+                                    AwesomeDialog(
+                                      context: context,
+                                      customHeader: null,
+                                      dialogType: DialogType.NO_HEADER,
+                                      animType: AnimType.BOTTOMSLIDE,
+                                      body: Center(
+                                        child: Text('本当にログアウトしますか？'),
                                       ),
-                                    );
+                                      btnOkOnPress: () {
+                                        try {
+                                          Amplify.Auth.signOut();
+                                          _changePage(context, WrapperRoute);
+                                        } on AuthError catch (e) {
+                                          print(e);
+                                        }
+                                      },
+                                      useRootNavigator: false,
+                                      btnOkColor: Colors.tealAccent[400],
+                                      btnCancelOnPress: () {},
+                                      btnOkText: 'ログアウト',
+                                      btnCancelText: 'キャンセル',
+                                      btnCancelColor: Colors.blueGrey[400],
+                                      dismissOnTouchOutside: false,
+                                      headerAnimationLoop: false,
+                                      showCloseIcon: false,
+                                      buttonsBorderRadius: BorderRadius.all(
+                                          Radius.circular(100)),
+                                    )..show();
                                   },
                                   child: Text(
                                     "ログアウト",
                                     style: TextStyle(
-                                      fontSize: 20.0,
+                                      fontSize: 18.0,
                                       fontWeight: FontWeight.w400,
                                       color: Theme.of(context).accentColor,
                                     ),
@@ -134,95 +168,107 @@ class _MerchantProfileSettingPageState
                     ],
                   ),
                   Divider(),
-                  Container(height: 15.0),
                   Padding(
-                    padding: EdgeInsets.all(5.0),
-                    child: Text(
-                      "アカウント情報".toUpperCase(),
-                      style: TextStyle(
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
+                      padding: EdgeInsets.only(left: 5.0, right: 5.0),
+                      child: Row(children: [
+                        Text(
+                          "アカウント情報".toUpperCase(),
+                          style: TextStyle(
+                            fontSize: 16.0,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        IconButton(
+                          // Use the FaIcon Widget + FontAwesomeIcons class for the IconData
+                          icon: FaIcon(FontAwesomeIcons.edit),
+                          onPressed: () {
+                            _changePage(context, MerchantProfileRoute);
+                          },
+                          tooltip: "掲載情報の編集",
+                        )
+                      ])),
                   ListTile(
                     title: Text(
-                      "Full Name",
+                      "店名",
                       style: TextStyle(
                         fontSize: 17,
                         fontWeight: FontWeight.w700,
                       ),
                     ),
                     subtitle: Text(
-                      "Jane Mary Doe",
-                    ),
-                    trailing: IconButton(
-                      icon: Icon(
-                        Icons.edit,
-                        size: 20.0,
-                      ),
-                      onPressed: () {},
-                      tooltip: "Edit",
+                      "${shopData["name"]}",
                     ),
                   ),
                   ListTile(
                     title: Text(
-                      "Email",
+                      "カテゴリー",
                       style: TextStyle(
                         fontSize: 17,
                         fontWeight: FontWeight.w700,
                       ),
                     ),
                     subtitle: Text(
-                      "jane@doefamily.com",
+                      "${shopData["category"]}",
                     ),
                   ),
                   ListTile(
                     title: Text(
-                      "Phone",
+                      "URL",
                       style: TextStyle(
                         fontSize: 17,
                         fontWeight: FontWeight.w700,
                       ),
                     ),
                     subtitle: Text(
-                      "+1 816-926-6241",
+                      "${shopData["storeURL"]}",
                     ),
                   ),
                   ListTile(
                     title: Text(
-                      "Address",
+                      "公開Eメール",
                       style: TextStyle(
                         fontSize: 17,
                         fontWeight: FontWeight.w700,
                       ),
                     ),
                     subtitle: Text(
-                      "1278 Loving Acres RoadKansas City, MO 64110",
+                      "${shopData["contactEmail"]}",
                     ),
                   ),
                   ListTile(
                     title: Text(
-                      "Gender",
+                      "電話番号",
                       style: TextStyle(
                         fontSize: 17,
                         fontWeight: FontWeight.w700,
                       ),
                     ),
                     subtitle: Text(
-                      "Female",
+                      "${shopData["tel"]}",
                     ),
                   ),
                   ListTile(
                     title: Text(
-                      "Date of Birth",
+                      "住所",
                       style: TextStyle(
                         fontSize: 17,
                         fontWeight: FontWeight.w700,
                       ),
                     ),
                     subtitle: Text(
-                      "April 9, 1995",
+                      "${shopData["address"]}",
+                    ),
+                  ),
+                  ListTile(
+                    title: Text(
+                      "詳細",
+                      style: TextStyle(
+                        fontSize: 17,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    subtitle: Text(
+                      "${shopData["description"]}",
                     ),
                   ),
                   MediaQuery.of(context).platformBrightness == Brightness.dark
