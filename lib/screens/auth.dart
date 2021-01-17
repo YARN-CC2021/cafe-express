@@ -71,6 +71,14 @@ class _AuthState extends State<Auth> {
     }
   }
 
+  Future<String> signOut() async {
+    try {
+      await Amplify.Auth.signOut();
+    } catch (error) {
+      return 'Sign out error';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return FlutterLogin(
