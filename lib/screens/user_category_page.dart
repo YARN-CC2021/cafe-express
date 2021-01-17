@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:amplify_core/amplify_core.dart';
 import '../global.dart' as globals;
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class UserCategoryPage extends StatefulWidget {
   @override
@@ -25,47 +26,62 @@ class _UserCategoryPageState extends State<UserCategoryPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Cafe Express"),
-        backgroundColor: Theme.of(context).primaryColor,
-        elevation: 0.0,
-      ),
-      body: Column(children: [
-        Center(heightFactor: 10, child: Text("Which One Are You?")),
-        Row(children: [
-          Center(
+        appBar: AppBar(
+          title: Text("Cafe Express"),
+          backgroundColor: Theme.of(context).primaryColor,
+          elevation: 0.0,
+        ),
+        body: Center(
+            child: Column(mainAxisSize: MainAxisSize.min, children: [
+          Padding(
+              padding: EdgeInsets.symmetric(vertical: 10),
+              child:
+                  Text("ユーザーカテゴリーを選択してください", style: TextStyle(fontSize: 15))),
+          Padding(
+              padding: EdgeInsets.all(10.0),
               child: ButtonTheme(
-                  minWidth: 200.0,
-                  height: 100.0,
+                  minWidth: MediaQuery.of(context).size.width / 1.2,
+                  height: MediaQuery.of(context).size.height / 2.8,
                   child: RaisedButton.icon(
+                      color: Colors.amberAccent,
                       onPressed: () {
-                        // _goMerchant(context);
                         _insertUserCategory(false);
                       },
-                      icon: Icon(Icons.local_restaurant),
-                      label: Text("Establishment")))), //or storefront
-          Center(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      icon: IconButton(
+                        icon: FaIcon(FontAwesomeIcons.store),
+                        onPressed: () {},
+                        iconSize: 70.0,
+                      ),
+                      label: Text("  飲食店の方", style: TextStyle(fontSize: 20))))),
+          Padding(
+              padding: EdgeInsets.all(10.0),
               child: ButtonTheme(
-                  minWidth: 200.0,
-                  height: 100.0,
+                  minWidth: MediaQuery.of(context).size.width / 1.2,
+                  height: MediaQuery.of(context).size.height / 2.8,
                   child: RaisedButton.icon(
+                      color: Colors.indigoAccent,
                       onPressed: () {
-                        // _goMapSearch(context);
                         _insertUserCategory(true);
                       },
-                      icon: Icon(Icons.switch_account),
-                      label: Text("Customer")))),
-        ])
-      ] //
-          ),
-    );
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      icon: IconButton(
+                        icon: FaIcon(FontAwesomeIcons.userAlt),
+                        onPressed: () {},
+                        iconSize: 70.0,
+                      ),
+                      label: Text("一般の方", style: TextStyle(fontSize: 20))))),
+        ])));
   }
 
   Future<dynamic> _insertUserCategory(bool isCustomer) async {
     var userData = await Amplify.Auth.getCurrentUser();
     var userId = userData.userId;
     var useremail = userData.username;
-    final now = DateTime.now();
 
     print("User Category: Globals : $userId");
     globals.userId = userId;
@@ -83,26 +99,23 @@ class _UserCategoryPageState extends State<UserCategoryPage> {
         "id": userId,
         "isCustomer": isCustomer,
         "loginEmail": useremail,
-        "createdAt": now.toUtc().toIso8601String(),
+        "createdAt": DateTime.now(),
       }),
     );
     if (response.statusCode == 200) {
       final jsonResponse = json.decode(response.body);
       print("_insertUserCategory jsonResponse= $jsonResponse");
-      isCustomer ? _goMapSearch(context) : _goMerchantProfile(context);
+      isCustomer
+          ? _changePage(context, MapSearchRoute)
+          : _changePage(context, MerchantProfileRoute);
       return jsonResponse;
     } else {
       print('Request failed with status: ${response.statusCode}.');
     }
   }
 
-  void _goMapSearch(BuildContext context) {
-    Navigator.pushNamed(context, MapSearchRoute);
-    print("goMapSearch was triggered");
-  }
-
-  void _goMerchantProfile(BuildContext context) {
-    Navigator.pushNamed(context, MerchantProfileRoute);
-    print("goMerchant was triggered");
+  void _changePage(BuildContext context, String route) {
+    Navigator.pushNamed(context, route);
+    print("Going to $route was triggered");
   }
 }
