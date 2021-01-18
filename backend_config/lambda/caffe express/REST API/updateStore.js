@@ -8,7 +8,7 @@ const updateStore = (event, id) => {
       id: id,
     },
     UpdateExpression:
-      "set stripeId = :a, #str = :b, address = :c, description = :d, lat = :e, lng = :f, tel = :g, loginEmail = :h, storeURL = :i, category = :j, vacancyType = :l, updatedAt = :n, imagePaths = :o, hours = :p, vacancy = :q, statistics = :r, contactEmail = :s, zipCode = :z",
+      "set stripeId = :a, #str = :b, address = :c, description = :d, lat = :e, lng = :f, tel = :g, loginEmail = :h, storeURL = :i, category = :j, vacancyType = :l, updatedAt = :n, imageUrl = :o, hours = :p, vacancy = :q, statistics = :r, contactEmail = :s, zipCode = :z",
     ExpressionAttributeNames: {
       "#str": "name",
     },
@@ -25,7 +25,7 @@ const updateStore = (event, id) => {
       ":j": event.body.category,
       ":l": event.body.vacancyType,
       ":n": event.body.updatedAt,
-      ":o": event.body.imagePaths,
+      ":o": event.body.imageUrl,
       ":p": event.body.hours,
       ":q": event.body.vacancy,
       ":r": event.body.statistics,
