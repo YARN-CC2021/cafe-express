@@ -6,7 +6,7 @@ import "package:flutter_login/flutter_login.dart";
 import "../app.dart";
 import "../global.dart" as globals;
 import 'package:amplify_storage_s3/amplify_storage_s3.dart';
-
+import 'package:awesome_dialog/awesome_dialog.dart';
 import "../models/user_status.dart";
 
 class Auth extends StatefulWidget {
@@ -56,9 +56,9 @@ class _AuthState extends State<Auth> {
   }
 
   Future<String> logIn(LoginData data) async {
-    SignInResult result =
-        await Amplify.Auth.signIn(username: data.name, password: data.password);
     try {
+      SignInResult result = await Amplify.Auth.signIn(
+          username: data.name, password: data.password);
       if (result.isSignedIn) {
         print(isSignIn.isSignedIn);
         setState(() {
@@ -71,6 +71,25 @@ class _AuthState extends State<Auth> {
       }
     } catch (e) {
       print(e);
+      AwesomeDialog(
+        context: context,
+        customHeader: null,
+        dialogType: DialogType.NO_HEADER,
+        animType: AnimType.BOTTOMSLIDE,
+        body: Center(
+          child: Text("Log in failed. Pleas try again."),
+        ),
+        btnOkOnPress: () {
+          _returnWrapper(context);
+        },
+        btnOkText: "Return to Log In Screen",
+        btnOkColor: Colors.tealAccent[400],
+        useRootNavigator: false,
+        dismissOnTouchOutside: false,
+        headerAnimationLoop: false,
+        showCloseIcon: false,
+        buttonsBorderRadius: BorderRadius.all(Radius.circular(100)),
+      )..show();
     }
   }
 
