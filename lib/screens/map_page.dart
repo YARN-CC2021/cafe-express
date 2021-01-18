@@ -7,6 +7,8 @@ import 'dart:async';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import '../app.dart';
+import 'package:amplify_storage_s3/amplify_storage_s3.dart';
+import 'package:amplify_core/amplify_core.dart';
 
 class MapPage extends StatefulWidget {
   @override
@@ -140,7 +142,6 @@ class _MapPageState extends State<MapPage> {
             ],
           ),
         ),
-
         Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.end,
@@ -336,10 +337,45 @@ class _MapPageState extends State<MapPage> {
     }
   }
 
+  // Map listOfUrl = {};
+
+  // Future<void> _showPic(shop) async {
+  //   final getUrlOptions = GetUrlOptions(
+  //     accessLevel: StorageAccessLevel.guest,
+  //   );
+  //   if (shop["imageUrl"].length == 0) {
+  //     String key = shop["imageUrl"][0];
+  //     var result =
+  //         await Amplify.Storage.getUrl(key: key, options: getUrlOptions);
+  //     String url = result.url;
+  //     setState(() {
+  //       listOfUrl[shop["id"]] = url;
+  //     });
+  //   }
+  // if (shopData["imageUrl"].length > 0) {
+  //   for (var key in shopData["imageUrl"]) {
+  //     var result =
+  //         await Amplify.Storage.getUrl(key: key, options: getUrlOptions);
+  //     var url = result.url;
+  //     listOfUrl.add(url);
+  //   }
+  // }
+  // print("List of Url: $listOfUrl");
+  // print("done getting getting image Url");
+  // setState(() {
+  //   images = listOfUrl;
+  // });
+  // print("imagesssss: $images");
+  // print("done listing");
+  // }
+
   Widget imageCard(shop) {
+    // _showPic(shop);
+
     return Center(
       child: Image.network(
-        '${shop['imagePaths'][0]}',
+        '${shop['imageUrl']}',
+        // listOfUrl[shop["id"]],
         fit: BoxFit.cover,
         loadingBuilder: (context, child, loadingProgress) {
           if (loadingProgress == null) return child;

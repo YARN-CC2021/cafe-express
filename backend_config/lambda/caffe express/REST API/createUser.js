@@ -52,9 +52,10 @@ const createStore = (body) => {
       loginEmail: loginEmail,
       contactEmail: "",
       storeURL: "",
-      category: "",
+      category: "お店のカテゴリーを選択ください",
       depositAmountPerPerson: 0,
       imagePaths: [],
+      imageUrl: [],
       vacancyType: "strict",
       statistics: {
         rating: 0,
