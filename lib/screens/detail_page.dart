@@ -299,7 +299,7 @@ class _DetailPageState extends State<DetailPage> {
                               if (sheet == null) {
                                 price = 0;
                               } else {
-                                price = newValue * sheet['cancelFee'];
+                                price = sheet['cancelFee'];
                               }
                             })();
                             print('PRICE:$price');
@@ -363,23 +363,23 @@ class _DetailPageState extends State<DetailPage> {
                                   FlatButton(
                                     child: Text("Go Payment"),
                                     onPressed: () => {
-                                      // bookedTime = DateTime.now(),
-                                      // expireTime = bookedTime
-                                      //     .add(new Duration(minutes: 30)),
-                                      // bookData["bookedAt"] = "$bookedTime",
-                                      // bookData["bookingId"] =
-                                      //     "${globals.userId}${bookedTime.millisecondsSinceEpoch}",
-                                      // bookData["bookName"] = globals.userId,
-                                      // bookData["createdAt"] = "$bookedTime",
-                                      // bookData["depositAmount"] = price,
-                                      // bookData["expiredAt"] = "$expireTime",
-                                      // bookData["index"] = sheetindex,
-                                      // bookData["partySize"] = groupNum,
-                                      // bookData["status"] = "payed",
-                                      // bookData["tableType"] = sheet,
-                                      // bookData["updatedAt"] = "$bookedTime",
-                                      // debugPrint(json.encode(bookData)),
-                                      // channel.sink.add(json.encode(bookData)),
+                                      bookedTime = DateTime.now(),
+                                      expireTime = bookedTime
+                                          .add(new Duration(minutes: 30)),
+                                      bookData["bookedAt"] = "$bookedTime",
+                                      bookData["bookingId"] =
+                                          "${globals.userId}${bookedTime.millisecondsSinceEpoch}",
+                                      bookData["bookName"] = globals.userId,
+                                      bookData["createdAt"] = "$bookedTime",
+                                      bookData["depositAmount"] = price,
+                                      bookData["expiredAt"] = "$expireTime",
+                                      bookData["index"] = sheetindex,
+                                      bookData["partySize"] = groupNum,
+                                      bookData["status"] = "paid",
+                                      bookData["tableType"] = sheet,
+                                      bookData["updatedAt"] = "$bookedTime",
+                                      debugPrint(json.encode(bookData)),
+                                      channel.sink.add(json.encode(bookData)),
                                       createPaymentMethod(),
                                       // price == 0
                                       //     ? _goTimerPage(context)
@@ -436,19 +436,20 @@ class _DetailPageState extends State<DetailPage> {
     print("_getShopData RUN!!");
     var response = await http.get(
         'https://pq3mbzzsbg.execute-api.ap-northeast-1.amazonaws.com/CaffeExpressRESTAPI/store/$id');
-    print("RESPONSE ${response.statusCode}");
     if (response.statusCode == 200) {
       final jsonResponse = await json.decode(utf8.decode(response.bodyBytes));
+      shopData = jsonResponse['body'];
+      print("shopdata in _getShopData $shopData");
+      vacancyType = shopData['vacancyType'];
+      await detectSheet(groupNum);
       setState(() {
-        shopData = jsonResponse['body'];
-        price = shopData['depositAmountPerPerson'];
-        vacancyType = shopData['vacancyType'];
+        // price = shopData['depositAmountPerPerson'];
+
         availableSheets = shopData['vacancy']['$vacancyType']
             .where((sheet) => sheet['isVacant'] == true)
             .toList();
-        detectSheet(groupNum);
-        // price = groupNum * sheet['cancelFee'];
-        price = 1000;
+        price = sheet['cancelFee'];
+        // price = 1000;
       });
       bookData["storeInfo"] = {
         "address": shopData['address'],
@@ -467,16 +468,16 @@ class _DetailPageState extends State<DetailPage> {
     }
   }
 
-  void detectSheet(int groupNum) {
-    print("detectsheet called");
-    sheet = shopData['vacancy']['$vacancyType'].firstWhere(
+  Future<void> detectSheet(int groupNum) async {
+    print("shopdata in detectSheet $shopData");
+    sheet = await shopData['vacancy']['$vacancyType'].firstWhere(
         (sheet) =>
             sheet['isVacant'] &&
             sheet['Min'] <= groupNum &&
             sheet['Max'] >= groupNum, orElse: () {
       return null;
     });
-    sheetindex = shopData['vacancy']['$vacancyType'].indexWhere((sheet) =>
+    sheetindex = await shopData['vacancy']['$vacancyType'].indexWhere((sheet) =>
         sheet['isVacant'] == true &&
         sheet['Min'] <= groupNum &&
         sheet['Max'] >= groupNum);
@@ -487,7 +488,7 @@ class _DetailPageState extends State<DetailPage> {
         isSheetAvailable = false;
       }
     });
-    print(sheet);
+    print("Sheet in detectSheet $sheet");
   }
 
   void _goStripePage(BuildContext context, id, price) {
