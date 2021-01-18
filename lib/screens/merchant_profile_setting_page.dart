@@ -57,9 +57,10 @@ class _MerchantProfileSettingPageState
     );
 
     final jsonResponse = await json.decode(utf8.decode(response.bodyBytes));
-    final myUrl = await jsonDecode(jsonResponse["body"])["accountLinkURL"];
-    print(myUrl);
-    await launch("$myUrl");
+    final clientStripeConnectUrl =
+        await jsonDecode(jsonResponse["body"])["accountLinkURL"];
+    print(clientStripeConnectUrl);
+    await launch("$clientStripeConnectUrl");
   }
 
   @override
@@ -148,7 +149,7 @@ class _MerchantProfileSettingPageState
                                       btnOkOnPress: () {
                                         try {
                                           Amplify.Auth.signOut();
-                                          _changePage(context, WrapperRoute);
+                                          _changePage(context, AuthRoute);
                                         } on AuthError catch (e) {
                                           print(e);
                                         }
