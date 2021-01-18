@@ -7,6 +7,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:amplify_core/amplify_core.dart';
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class MerchantProfileSettingPage extends StatefulWidget {
   @override
@@ -17,6 +18,7 @@ class MerchantProfileSettingPage extends StatefulWidget {
 class _MerchantProfileSettingPageState
     extends State<MerchantProfileSettingPage> {
   var shopData;
+  bool stripeRegister = false;
 
   @override
   void initState() {
@@ -45,13 +47,19 @@ class _MerchantProfileSettingPageState
     }
   }
 
+//"https://pq3mbzzsbg.execute-api.ap-northeast-1.amazonaws.com/CaffeExpressRESTAPI/stripeaccount?storeStripeId=acct_1IAYF4QG0EUj44rM&storeId=near_azamino"
   Future<void> _goToStripeLink() async {
     var response = await http.post(
-      "https://pq3mbzzsbg.execute-api.ap-northeast-1.amazonaws.com/CaffeExpressRESTAPI/stripeaccount?storeStripeId=acct_1IAYF4QG0EUj44rM&storeId=near_azamino",
+      "https://pq3mbzzsbg.execute-api.ap-northeast-1.amazonaws.com/CaffeExpressRESTAPI/stripeaccount?storeStripeId=${shopData["stripeId"]}&storeId=${shopData["storeId"]}",
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
     );
+
+    final jsonResponse = await json.decode(utf8.decode(response.bodyBytes));
+    final myUrl = jsonDecode(jsonResponse["body"])["accountLinkURL"];
+    print(myUrl);
+    await launch("$myUrl");
   }
 
   @override
@@ -59,9 +67,11 @@ class _MerchantProfileSettingPageState
     return Scaffold(
       appBar: AppBar(
         leading: Container(),
-        title: Text(
-          "アカウント管理",
-          textAlign: TextAlign.center,
+        title: Center(
+          child: Text(
+            "アカウント管理",
+            textAlign: TextAlign.center,
+          ),
         ),
         backgroundColor: Theme.of(context).primaryColor,
         elevation: 0.0,
@@ -294,22 +304,6 @@ class _MerchantProfileSettingPageState
                               fontWeight: FontWeight.w700,
                             ),
                           ),
-
-                          // trailing: Switch(
-                          //   value: Provider.of<AppProvider>(context).theme == Constants.lightTheme
-                          //       ? false
-                          //       : true,
-                          //   onChanged: (v) async{
-                          //     if (v) {
-                          //       Provider.of<AppProvider>(context, listen: false)
-                          //           .setTheme(Constants.darkTheme, "dark");
-                          //     } else {
-                          //       Provider.of<AppProvider>(context, listen: false)
-                          //           .setTheme(Constants.lightTheme, "light");
-                          //     }
-                          //   },
-                          //   activeColor: Theme.of(context).accentColor,
-                          // ),
                         ),
                 ],
               ),
@@ -336,14 +330,9 @@ class _MerchantProfileSettingPageState
               color: Colors.black,
               onPressed: () => {_changePage(context, MerchantCalendarRoute)},
             ),
-            IconButton(
-              icon: Icon(
-                Icons.search,
-                size: 24.0,
-                color: Theme.of(context).primaryColor,
-              ),
-              color: Colors.black,
-              onPressed: () => {_changePage(context, MerchantCalendarRoute)},
+            Container(
+              width: 24.0,
+              height: 10,
             ),
             IconButton(
               icon: Icon(

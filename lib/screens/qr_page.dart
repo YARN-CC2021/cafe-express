@@ -66,14 +66,9 @@ class _QrPageState extends State<QrPage> {
               color: Colors.black,
               onPressed: () => {_changePage(context, MerchantCalendarRoute)},
             ),
-            IconButton(
-              icon: Icon(
-                Icons.search,
-                size: 24.0,
-                color: Theme.of(context).primaryColor,
-              ),
-              color: Colors.black,
-              onPressed: () => {_changePage(context, MerchantCalendarRoute)},
+            Container(
+              width: 24.0,
+              height: 10,
             ),
             IconButton(
               icon: Icon(
