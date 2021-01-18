@@ -32,7 +32,7 @@ class _UserCategoryPageState extends State<UserCategoryPage> {
           elevation: 0.0,
         ),
         body: Center(
-            child: Column(mainAxisSize: MainAxisSize.min, children: [
+            child: Column(children: [
           Padding(
               padding: EdgeInsets.symmetric(vertical: 10),
               child:
@@ -40,8 +40,10 @@ class _UserCategoryPageState extends State<UserCategoryPage> {
           Padding(
               padding: EdgeInsets.all(10.0),
               child: ButtonTheme(
-                  minWidth: MediaQuery.of(context).size.width / 1.2,
-                  height: MediaQuery.of(context).size.height / 2.8,
+                  // minWidth: MediaQuery.of(context).size.width / 1.5,
+                  // height: MediaQuery.of(context).size.height / 3.2,
+                  minWidth: 300,
+                  height: 300,
                   child: RaisedButton.icon(
                       color: Colors.amberAccent,
                       onPressed: () {
@@ -59,8 +61,10 @@ class _UserCategoryPageState extends State<UserCategoryPage> {
           Padding(
               padding: EdgeInsets.all(10.0),
               child: ButtonTheme(
-                  minWidth: MediaQuery.of(context).size.width / 1.2,
-                  height: MediaQuery.of(context).size.height / 2.8,
+                  // minWidth: MediaQuery.of(context).size.width / 1.5,
+                  // height: MediaQuery.of(context).size.height / 3.2,
+                  minWidth: 300,
+                  height: 300,
                   child: RaisedButton.icon(
                       color: Colors.indigoAccent,
                       onPressed: () {
@@ -99,7 +103,7 @@ class _UserCategoryPageState extends State<UserCategoryPage> {
         "id": userId,
         "isCustomer": isCustomer,
         "loginEmail": useremail,
-        "createdAt": DateTime.now(),
+        "createdAt": DateTime.now().toString(),
       }),
     );
     if (response.statusCode == 200) {
