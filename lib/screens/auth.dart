@@ -24,7 +24,6 @@ class _AuthState extends State<Auth> {
   @override
   initState() {
     super.initState();
-    // if (Amplify.Auth.getCurrentUser() != null) Amplify.Auth.signOut();
     print("Very beginning auth: ${globals.userId}");
     if (!isConfigured) config();
   }
