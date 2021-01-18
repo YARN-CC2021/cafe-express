@@ -317,7 +317,7 @@ class _MapPageState extends State<MapPage> {
           return Marker(
             markerId: MarkerId(shop['id']),
             position: LatLng(shop['lat'].toDouble(), shop['lng'].toDouble()),
-            icon: shop['id'] == selectedShop['id']
+            icon: selectedShop != null && shop['id'] == selectedShop['id']
                 ? BitmapDescriptor.defaultMarker
                 : BitmapDescriptor.defaultMarkerWithHue(120.0),
             onTap: () {
@@ -410,8 +410,9 @@ class _MapPageState extends State<MapPage> {
           .where((shop) => shop['lat'] != null && shop['lng'] != null)
           .toList();
       listShops = shopData;
+      print("listShops [0] ${listShops[0]}");
       _filterShop(distance, category, groupNum);
-      selectedShop = listShops[0];
+      // selectedShop = listShops[0];
     } else {
       print('Request failed with status: ${response.statusCode}.');
     }
