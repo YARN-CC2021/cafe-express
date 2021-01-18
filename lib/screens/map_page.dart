@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:geolocator/geolocator.dart';
@@ -142,7 +141,6 @@ class _MapPageState extends State<MapPage> {
           ),
         ),
 
-        //test
         Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.end,
@@ -302,7 +300,6 @@ class _MapPageState extends State<MapPage> {
       );
     } else {
       return GoogleMap(
-        polylines: Set<Polyline>.of(polylines.values),
         initialCameraPosition: CameraPosition(
           target: LatLng(_yourLocation.latitude, _yourLocation.longitude),
           zoom: 18.0,
@@ -318,8 +315,6 @@ class _MapPageState extends State<MapPage> {
             onTap: () {
               selectedShop = shop;
               _pageController.jumpToPage(listShops.indexOf(shop));
-              _createPolylines(_yourLocation.latitude, _yourLocation.longitude,
-                  shop['lat'], shop['lng']);
             },
             infoWindow: InfoWindow(
               title: '${shop['name']}',
@@ -372,8 +367,8 @@ class _MapPageState extends State<MapPage> {
           .where((shop) => shop['lat'] != null && shop['lng'] != null)
           .toList();
       listShops = shopData;
-      selectedShop = listShops[0];
       _filterShop(distance, category, groupNum);
+      selectedShop = listShops[0];
     } else {
       print('Request failed with status: ${response.statusCode}.');
     }
@@ -481,37 +476,6 @@ class _MapPageState extends State<MapPage> {
         await googleMap.hideMarkerInfoWindow(selectedShopMarker);
       }
     }
-  }
-
-  _createPolylines(double startLatitude, double startLongitude,
-      double destinationLatitude, double destinationLongitude) async {
-    polylinePoints = PolylinePoints();
-    PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
-      env['GOOGLE_MAP_API_KEY'], // Google Maps API Key
-      PointLatLng(startLatitude, startLongitude),
-      PointLatLng(destinationLatitude, destinationLongitude),
-      travelMode: TravelMode.transit,
-    );
-
-    print(env['GOOGLE_MAP_API_KEY']);
-    print('POINTS${result.points}');
-
-    if (result.points.isNotEmpty) {
-      result.points.forEach((PointLatLng point) {
-        polylineCoordinates.add(LatLng(point.latitude, point.longitude));
-      });
-    }
-
-    print(polylineCoordinates);
-
-    PolylineId id = PolylineId('poly');
-    Polyline polyline = Polyline(
-      polylineId: id,
-      color: Colors.red,
-      points: polylineCoordinates,
-      width: 3,
-    );
-    polylines[id] = polyline;
   }
 
   void _onTap(BuildContext context, String shopId) {

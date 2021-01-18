@@ -3,6 +3,11 @@ const amplifyconfig = ''' {
     "Version": "1.0",
     "auth": {
         "plugins": {
+            "awsS3StoragePlugin": {
+                "bucket": "yarntestbucket",
+                "region": "ap-northeast-1",
+                "defaultAccessLevel": "guest"
+            },
             "awsCognitoAuthPlugin": {
                 "UserAgent": "aws-amplify-cli/0.1.0",
                 "Version": "0.1.0",
@@ -29,7 +34,22 @@ const amplifyconfig = ''' {
                     "Default": {
                         "authenticationFlowType": "USER_SRP_AUTH"
                     }
+                },
+                "S3TransferUtility": {
+                    "Default": {
+                        "Bucket": "cafeexpress12369aaeac3f40338abae325ecbc89c6115820-dev",
+                        "Region": "ap-northeast-1"
+                    }
                 }
+            }
+        }
+    },
+    "storage": {
+        "plugins": {
+            "awsS3StoragePlugin": {
+                "bucket": "cafeexpress12369aaeac3f40338abae325ecbc89c6115820-dev",
+                "region": "ap-northeast-1",
+                "defaultAccessLevel": "guest"
             }
         }
     }

@@ -94,7 +94,7 @@ class MyApp extends StatelessWidget {
           screen = MerchantCalendarPage();
           break;
         case TimerRoute:
-          screen = TimerPage();
+          screen = TimerPage(arguments['shopData']);
           break;
         case QrRoute:
           screen = QrPage();
@@ -103,7 +103,7 @@ class MyApp extends StatelessWidget {
           screen = BookingListPage();
           break;
         case StripeRoute:
-          screen = StripePage();
+          screen = StripePage(arguments['id'], arguments['price']);
           break;
         case StoredCardsRoute:
           screen = ExistingCardsPage();
