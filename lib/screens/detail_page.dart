@@ -22,7 +22,6 @@ class _DetailPageState extends State<DetailPage> {
   final _scrollController = ScrollController();
   bool showSpinner = false;
   String text = 'Click the button to start the payment';
-  int amount = 1000;
   String url =
       'https://pq3mbzzsbg.execute-api.ap-northeast-1.amazonaws.com/CaffeExpressRESTAPI/paymentintent';
 
@@ -49,10 +48,10 @@ class _DetailPageState extends State<DetailPage> {
   String vacancyType;
   int groupNum = 1;
   int price = 0;
-  Map sheet;
-  int sheetindex;
-  var availableSheets;
-  bool isSheetAvailable = false;
+  Map seat;
+  int seatIndex;
+  var availableSeats;
+  bool isSeatAvailable = false;
   final _formKey = GlobalKey<FormState>();
 
   final TextEditingController nameController = TextEditingController();
@@ -171,7 +170,8 @@ class _DetailPageState extends State<DetailPage> {
                               changeTime(
                                   shopData['hours']['Mon']['bookingStart']),
                               Text("~"),
-                              changeTime(shopData['hours']['Mon']['bookingEnd']),
+                              changeTime(
+                                  shopData['hours']['Mon']['bookingEnd']),
                             ],
                           ),
                         ),
@@ -182,7 +182,8 @@ class _DetailPageState extends State<DetailPage> {
                               changeTime(
                                   shopData['hours']['Tue']['bookingStart']),
                               Text("~"),
-                              changeTime(shopData['hours']['Tue']['bookingEnd']),
+                              changeTime(
+                                  shopData['hours']['Tue']['bookingEnd']),
                             ],
                           ),
                         ),
@@ -193,7 +194,8 @@ class _DetailPageState extends State<DetailPage> {
                               changeTime(
                                   shopData['hours']['Wed']['bookingStart']),
                               Text("~"),
-                              changeTime(shopData['hours']['Wed']['bookingEnd']),
+                              changeTime(
+                                  shopData['hours']['Wed']['bookingEnd']),
                             ],
                           ),
                         ),
@@ -204,7 +206,8 @@ class _DetailPageState extends State<DetailPage> {
                               changeTime(
                                   shopData['hours']['Thu']['bookingStart']),
                               Text("~"),
-                              changeTime(shopData['hours']['Thu']['bookingEnd']),
+                              changeTime(
+                                  shopData['hours']['Thu']['bookingEnd']),
                             ],
                           ),
                         ),
@@ -215,7 +218,8 @@ class _DetailPageState extends State<DetailPage> {
                               changeTime(
                                   shopData['hours']['Fri']['bookingStart']),
                               Text("~"),
-                              changeTime(shopData['hours']['Fri']['bookingEnd']),
+                              changeTime(
+                                  shopData['hours']['Fri']['bookingEnd']),
                             ],
                           ),
                         ),
@@ -226,7 +230,8 @@ class _DetailPageState extends State<DetailPage> {
                               changeTime(
                                   shopData['hours']['Sat']['bookingStart']),
                               Text("~"),
-                              changeTime(shopData['hours']['Sat']['bookingEnd']),
+                              changeTime(
+                                  shopData['hours']['Sat']['bookingEnd']),
                             ],
                           ),
                         ),
@@ -237,7 +242,8 @@ class _DetailPageState extends State<DetailPage> {
                               changeTime(
                                   shopData['hours']['Sun']['bookingStart']),
                               Text("~"),
-                              changeTime(shopData['hours']['Sun']['bookingEnd']),
+                              changeTime(
+                                  shopData['hours']['Sun']['bookingEnd']),
                             ],
                           ),
                         ),
@@ -266,7 +272,7 @@ class _DetailPageState extends State<DetailPage> {
                         ),
                       ),
                       Wrap(
-                        children: availableSheets.map<Widget>((table) {
+                        children: availableSeats.map<Widget>((table) {
                           return Card(
                             child: Text(
                               '${table['label']}',
@@ -299,12 +305,12 @@ class _DetailPageState extends State<DetailPage> {
                           onChanged: (int newValue) {
                             setState(() {
                               groupNum = newValue;
-                              detectSheet(groupNum);
+                              detectSeat(groupNum);
                               (() {
-                                if (sheet == null) {
+                                if (seat == null) {
                                   price = 0;
                                 } else {
-                                  price = sheet['cancelFee'];
+                                  price = seat['cancelFee'];
                                 }
                               })();
                               print('PRICE:$price');
@@ -344,7 +350,7 @@ class _DetailPageState extends State<DetailPage> {
                           ),
                           Text("Book now!"),
                         ]),
-                    onPressed: isSheetAvailable
+                    onPressed: isSeatAvailable
                         ? () => showDialog(
                               context: context,
                               builder: (_) {
@@ -384,7 +390,7 @@ class _DetailPageState extends State<DetailPage> {
                                         ),
                                       ),
                                       Text(
-                                        '予約するテーブル:${sheet['label']}',
+                                        '予約するテーブル:${seat['label']}',
                                         style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                         ),
@@ -402,36 +408,37 @@ class _DetailPageState extends State<DetailPage> {
                                               if (_formKey.currentState
                                                   .validate())
                                                 {
-                                                  // bookedTime = DateTime.now(),
-                                                  // expireTime = bookedTime.add(
-                                                  //     new Duration(minutes: 30)),
-                                                  // bookData["bookedAt"] =
-                                                  //     "$bookedTime",
-                                                  // bookData["bookingId"] =
-                                                  //     "${globals.userId}${bookedTime.millisecondsSinceEpoch}",
-                                                  // bookData["bookName"] =
-                                                  //     nameController.text,
-                                                  // bookData["createdAt"] =
-                                                  //     "$bookedTime",
-                                                  // bookData["depositAmount"] =
-                                                  //     price,
-                                                  // bookData["expiredAt"] =
-                                                  //     "$expireTime",
-                                                  // bookData["index"] = sheetindex,
-                                                  // bookData["partySize"] =
-                                                  //     groupNum,
-                                                  // bookData["status"] = "payed",
-                                                  // bookData["tableType"] = sheet,
-                                                  // bookData["updatedAt"] =
-                                                  //     "$bookedTime",
-                                                  // channel.sink
-                                                  //     .add(json.encode(bookData)),
-                                                  
+                                                  bookedTime = DateTime.now(),
+                                                  expireTime = bookedTime.add(
+                                                      new Duration(
+                                                          minutes: 30)),
+                                                  bookData["bookedAt"] =
+                                                      "$bookedTime",
+                                                  bookData["bookingId"] =
+                                                      "${globals.userId}${bookedTime.millisecondsSinceEpoch}",
+                                                  bookData["bookName"] =
+                                                      nameController.text,
+                                                  bookData["createdAt"] =
+                                                      "$bookedTime",
+                                                  bookData["depositAmount"] =
+                                                      price,
+                                                  bookData["expiredAt"] =
+                                                      "$expireTime",
+                                                  bookData["index"] = seatIndex,
+                                                  bookData["partySize"] =
+                                                      groupNum,
+                                                  bookData["status"] = "paid",
+                                                  bookData["tableType"] = seat,
+                                                  bookData["updatedAt"] =
+                                                      "$bookedTime",
+                                                  channel.sink.add(
+                                                      json.encode(bookData)),
                                                   price == 0
-                                                  ? _goTimerPage(context, shopData)
-                                                  : createPaymentMethod(),
-                                                   _goStripePage(
-                                                      context, widget.id, price),
+                                                      ? _goTimerPage(
+                                                          context, shopData)
+                                                      : createPaymentMethod(),
+                                                  //  _goStripePage(
+                                                  //     context, widget.id, price),
                                                 },
                                             }),
                                   ],
@@ -485,15 +492,14 @@ class _DetailPageState extends State<DetailPage> {
         'https://pq3mbzzsbg.execute-api.ap-northeast-1.amazonaws.com/CaffeExpressRESTAPI/store/$id');
     if (response.statusCode == 200) {
       final jsonResponse = await json.decode(utf8.decode(response.bodyBytes));
-      setState(() {
-        shopData = jsonResponse['body'];
-        vacancyType = shopData['vacancyType'];
-        availableSheets = shopData['vacancy']['$vacancyType']
-            .where((sheet) => sheet['isVacant'] == true)
-            .toList();
-        detectSheet(groupNum);
-        price = sheet['cancelFee'];
-      });
+      shopData = jsonResponse['body'];
+      print("shopdata in _getShopData $shopData");
+      vacancyType = shopData['vacancyType'];
+      availableSeats = shopData['vacancy']['$vacancyType']
+          .where((seat) => seat['isVacant'] == true)
+          .toList();
+      await detectSeat(groupNum);
+
       bookData["storeInfo"] = {
         "address": shopData['address'],
         "category": shopData['category'],
@@ -511,26 +517,22 @@ class _DetailPageState extends State<DetailPage> {
     }
   }
 
-  void detectSheet(int groupNum) {
-    sheet = shopData['vacancy']['$vacancyType'].firstWhere(
-        (sheet) =>
-            sheet['isVacant'] &&
-            sheet['Min'] <= groupNum &&
-            sheet['Max'] >= groupNum, orElse: () {
-      return null;
-    });
-    sheetindex = shopData['vacancy']['$vacancyType'].indexWhere((sheet) =>
-        sheet['isVacant'] == true &&
-        sheet['Min'] <= groupNum &&
-        sheet['Max'] >= groupNum);
+  Future<void> detectSeat(int groupNum) async {
+    seatIndex = await shopData['vacancy']['$vacancyType'].indexWhere((table) =>
+        table['isVacant'] == true &&
+        table['Min'] <= groupNum &&
+        table['Max'] >= groupNum);
+    seat =
+        seatIndex != -1 ? shopData['vacancy']['$vacancyType'][seatIndex] : null;
     setState(() {
-      if (sheet != null && sheetindex != -1) {
-        isSheetAvailable = true;
+      if (seat != null && seatIndex != -1) {
+        isSeatAvailable = true;
       } else {
-        isSheetAvailable = false;
+        isSeatAvailable = false;
       }
     });
-    print(sheet);
+    price = seat != null ? seat['cancelFee'] : 0;
+    print("Seat in detectSeat $seat");
   }
 
   void _goStripePage(BuildContext context, String id, int price) {
@@ -564,7 +566,7 @@ class _DetailPageState extends State<DetailPage> {
                 content:
                     'It is not possible to pay with this card. Please try again with a different card',
                 buttonText: 'CLOSE'));
-    // _goTimerPage(context);
+    _goTimerPage(context, shopData);
   }
 
   Future<void> processPaymentAsDirectCharge(PaymentMethod paymentMethod) async {
@@ -573,9 +575,11 @@ class _DetailPageState extends State<DetailPage> {
     });
     //step 2: request to create PaymentIntent, attempt to confirm the payment & return PaymentIntent
     final http.Response response = await http.post(
-        '$url?amount=$amount&payMethod=${paymentMethod.id}&storeStripeId=${shopData["stripeId"]}'); // acct_1IAYF4QG0EUj44rM
+        '$url?amount=$price&payMethod=${paymentMethod.id}&storeStripeId=${shopData["stripeId"]}'); // acct_1IAYF4QG0EUj44rM
     if (response.body != null && response.body != 'error') {
-      final paymentIntentX = jsonDecode(response.body);
+      final decordedBody = jsonDecode(response.body);
+      print("decode paymentIntentX: ${jsonDecode(decordedBody["body"])}");
+      final paymentIntentX = jsonDecode(decordedBody["body"]);
       final status = paymentIntentX['paymentIntent']['status'];
       final strAccount = paymentIntentX['stripeAccount'];
       //step 3: check if payment was succesfully confirmed
