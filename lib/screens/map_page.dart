@@ -46,6 +46,7 @@ class _MapPageState extends State<MapPage> {
 
     // 現在位置の取得
     _getLocation();
+    _getAllShopData();
 
     _pageController = PageController(
       viewportFraction: 0.95,
@@ -53,12 +54,12 @@ class _MapPageState extends State<MapPage> {
     _isPageViewAnimating = false;
 
     // 現在位置の変化を監視 backgroundでも動くのかどうか
-    // _locationChangedListen =
-    //     _locationService.onLocationChanged.listen((LocationData result) async {
-    //   setState(() {
-    //     _yourLocation = result;
-    //   });
-    // });
+    _locationChangedListen =
+        _locationService.onLocationChanged.listen((LocationData result) async {
+      setState(() {
+        _yourLocation = result;
+      });
+    });
   }
 
   @override
@@ -83,210 +84,236 @@ class _MapPageState extends State<MapPage> {
                   _logOut();
                 })
           ]),
-      body: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
-        Expanded(
-          child: Stack(
-            fit: StackFit.loose,
-            overflow: Overflow.visible,
-            children: [
-              _makeGoogleMap(),
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: Container(
-                  height: 150,
-                  child: PageView(
-                    controller: _pageController,
-                    children: listShops.map<Widget>((shop) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                        child: GestureDetector(
-                          onTap: () {
-                            _onTap(context, shop['id']);
-                          },
-                          child: Card(
-                            clipBehavior: Clip.antiAlias,
-                            margin: EdgeInsets.zero,
-                            shape: const RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(16.0)),
-                            ),
-                            child: Stack(
-                              children: <Widget>[
-                                Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      // FutureBuilder(
-                                      //     future: _showPic(shop),
-                                      //     builder: (BuildContext context,
-                                      //         AsyncSnapshot<String> snapshot) {
-                                      //       if (snapshot.connectionState !=
-                                      //           ConnectionState.done) {
-                                      //         return CircularProgressIndicator();
-                                      //       }
-                                      //       if (snapshot.hasError) {
-                                      //         return Text(
-                                      //             snapshot.error.toString());
-                                      //       }
-                                      //       if (snapshot.hasData) {
-                                      //         return Center(
-                                      //           child: Image.network(
-                                      //             '${snapshot.data}',
-                                      //             // '${shop['imageUrl']}',
-                                      //             // listOfUrl[shop["id"]],
-                                      //             fit: BoxFit.cover,
-                                      //             loadingBuilder: (context,
-                                      //                 child, loadingProgress) {
-                                      //               if (loadingProgress == null)
-                                      //                 return child;
-                                      //               return CircularProgressIndicator();
-                                      //             },
-                                      //             errorBuilder: (BuildContext
-                                      //                     context,
-                                      //                 Object exception,
-                                      //                 StackTrace stackTrace) {
-                                      //               return Text('写真がありません');
-                                      //             },
-                                      //           ),
-                                      //         );
-                                      //       } else {
-                                      //         return Center(
-                                      //             child: Text('写真がありません'));
-                                      //       }
-                                      //     }),
-                                      // imageCard(shop),
-                                    ]),
-                                Positioned(
-                                  left: 0,
-                                  right: 0,
-                                  bottom: 0,
-                                  child: Container(
-                                    child: Text(shop['name'],
-                                        style: TextStyle(color: Colors.white)),
-                                    decoration: const BoxDecoration(
-                                        color: Color.fromARGB(0x99, 0, 0, 0)),
-                                    padding: const EdgeInsets.all(8),
+      body: _yourLocation == null && listOfUrl == null
+          ? CircularProgressIndicator()
+          : Column(mainAxisAlignment: MainAxisAlignment.start, children: [
+              Expanded(
+                child: Stack(
+                  fit: StackFit.loose,
+                  overflow: Overflow.visible,
+                  children: [
+                    _makeGoogleMap(),
+                    Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Container(
+                        height: 150,
+                        child: PageView(
+                          controller: _pageController,
+                          children: listShops.map<Widget>((shop) {
+                            return Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 10.0),
+                              child: GestureDetector(
+                                onTap: () {
+                                  _onTap(context, shop['id']);
+                                },
+                                child: Card(
+                                  clipBehavior: Clip.antiAlias,
+                                  margin: EdgeInsets.zero,
+                                  shape: const RoundedRectangleBorder(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(16.0)),
                                   ),
-                                )
-                              ],
-                            ),
-                          ),
+                                  child: Stack(
+                                    children: <Widget>[
+                                      Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
+                                          children: [
+                                            shop["imageUrl"].length == 0
+                                                ? Center(
+                                                    child: Text("写真がありません"))
+                                                : listOfUrl == null
+                                                    ? Center(
+                                                        child:
+                                                            CircularProgressIndicator())
+                                                    : Center(
+                                                        child: Image.network(
+                                                          listOfUrl[shop["id"]],
+                                                          // listOfUrl[shop["id"]],
+                                                          fit: BoxFit.cover,
+                                                          loadingBuilder: (context,
+                                                              child,
+                                                              loadingProgress) {
+                                                            if (loadingProgress ==
+                                                                null)
+                                                              return child;
+                                                            return CircularProgressIndicator();
+                                                          },
+                                                        ),
+                                                      )
+                                            // FutureBuilder(
+                                            //     future: _showPic(shop),
+                                            //     builder: (BuildContext context,
+                                            //         AsyncSnapshot<String> snapshot) {
+                                            //       if (snapshot.connectionState !=
+                                            //           ConnectionState.done) {
+                                            //         return CircularProgressIndicator();
+                                            //       }
+                                            //       if (snapshot.hasError) {
+                                            //         return Text(
+                                            //             snapshot.error.toString());
+                                            //       }
+                                            //       if (snapshot.hasData) {
+                                            //         return Center(
+                                            //           child: Image.network(
+                                            //             '${snapshot.data}',
+                                            //             // '${shop['imageUrl']}',
+                                            //             // listOfUrl[shop["id"]],
+                                            //             fit: BoxFit.cover,
+                                            //             loadingBuilder: (context,
+                                            //                 child, loadingProgress) {
+                                            //               if (loadingProgress == null)
+                                            //                 return child;
+                                            //               return CircularProgressIndicator();
+                                            //             },
+                                            //             errorBuilder: (BuildContext
+                                            //                     context,
+                                            //                 Object exception,
+                                            //                 StackTrace stackTrace) {
+                                            //               return Text('写真がありません');
+                                            //             },
+                                            //           ),
+                                            //         );
+                                            //       } else {
+                                            //         return Text('写真がありません');
+                                            //       }
+                                            //     }),
+                                            // imageCard(shop),
+                                          ]),
+                                      Positioned(
+                                        left: 0,
+                                        right: 0,
+                                        bottom: 0,
+                                        child: Container(
+                                          child: Text(shop['name'],
+                                              style: TextStyle(
+                                                  color: Colors.white)),
+                                          decoration: const BoxDecoration(
+                                              color: Color.fromARGB(
+                                                  0x99, 0, 0, 0)),
+                                          padding: const EdgeInsets.all(8),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            );
+                          }).toList(),
+                          onPageChanged: (int page) {
+                            if (_isPageViewAnimating) {
+                              return;
+                            }
+                            _updateSelectedShopForPage(page);
+                          },
                         ),
-                      );
-                    }).toList(),
-                    onPageChanged: (int page) {
-                      if (_isPageViewAnimating) {
-                        return;
-                      }
-                      _updateSelectedShopForPage(page);
-                    },
-                  ),
-                  decoration: BoxDecoration(color: Colors.transparent),
+                        decoration: BoxDecoration(color: Colors.transparent),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            ],
-          ),
-        ),
-        Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Column(children: [
-                Text("距離"),
-                DropdownButton<String>(
-                  value: distance,
-                  icon: Icon(Icons.arrow_drop_down),
-                  iconSize: 24,
-                  elevation: 16,
-                  style: TextStyle(color: Colors.deepPurple),
-                  underline: Container(
-                    height: 2,
-                    color: Colors.deepPurpleAccent,
-                  ),
-                  onChanged: (String newValue) {
-                    setState(() {
-                      distance = newValue;
-                      _filterShop(distance, category, groupNum);
-                    });
-                  },
-                  items: <String>['100m', '500m', '1km', '2km']
-                      .map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
-                ),
-              ]),
-              Column(children: [
-                Text("カテゴリー"),
-                DropdownButton<String>(
-                  value: category,
-                  icon: Icon(Icons.arrow_drop_down),
-                  iconSize: 24,
-                  elevation: 16,
-                  style: TextStyle(color: Colors.deepPurple),
-                  underline: Container(
-                    height: 2,
-                    color: Colors.deepPurpleAccent,
-                  ),
-                  onChanged: (String newValue) {
-                    setState(() {
-                      category = newValue;
-                      _filterShop(distance, category, groupNum);
-                    });
-                  },
-                  items: <String>['All', 'カフェ', 'レストラン', 'バー']
-                      .map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
-                ),
-              ]),
-              Column(children: [
-                Text("人数"),
-                DropdownButton<String>(
-                  value: groupNum,
-                  icon: Icon(Icons.arrow_drop_down),
-                  iconSize: 24,
-                  elevation: 16,
-                  style: TextStyle(color: Colors.deepPurple),
-                  underline: Container(
-                    height: 2,
-                    color: Colors.deepPurpleAccent,
-                  ),
-                  onChanged: (String newValue) {
-                    setState(() {
-                      groupNum = newValue;
-                      _filterShop(distance, category, groupNum);
-                    });
-                  },
-                  items: <String>[
-                    'All',
-                    '1',
-                    '2',
-                    '3',
-                    '4',
-                    '5',
-                    '6',
-                    '7',
-                    '8',
-                    '9',
-                    '10',
-                    '11',
-                    '12'
-                  ].map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
-                ),
-              ]),
+              Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Column(children: [
+                      Text("距離"),
+                      DropdownButton<String>(
+                        value: distance,
+                        icon: Icon(Icons.arrow_drop_down),
+                        iconSize: 24,
+                        elevation: 16,
+                        style: TextStyle(color: Colors.deepPurple),
+                        underline: Container(
+                          height: 2,
+                          color: Colors.deepPurpleAccent,
+                        ),
+                        onChanged: (String newValue) {
+                          setState(() {
+                            distance = newValue;
+                            _filterShop(distance, category, groupNum);
+                          });
+                        },
+                        items: <String>['100m', '500m', '1km', '2km']
+                            .map<DropdownMenuItem<String>>((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
+                      ),
+                    ]),
+                    Column(children: [
+                      Text("カテゴリー"),
+                      DropdownButton<String>(
+                        value: category,
+                        icon: Icon(Icons.arrow_drop_down),
+                        iconSize: 24,
+                        elevation: 16,
+                        style: TextStyle(color: Colors.deepPurple),
+                        underline: Container(
+                          height: 2,
+                          color: Colors.deepPurpleAccent,
+                        ),
+                        onChanged: (String newValue) {
+                          setState(() {
+                            category = newValue;
+                            _filterShop(distance, category, groupNum);
+                          });
+                        },
+                        items: <String>['All', 'カフェ', 'レストラン', 'バー']
+                            .map<DropdownMenuItem<String>>((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
+                      ),
+                    ]),
+                    Column(children: [
+                      Text("人数"),
+                      DropdownButton<String>(
+                        value: groupNum,
+                        icon: Icon(Icons.arrow_drop_down),
+                        iconSize: 24,
+                        elevation: 16,
+                        style: TextStyle(color: Colors.deepPurple),
+                        underline: Container(
+                          height: 2,
+                          color: Colors.deepPurpleAccent,
+                        ),
+                        onChanged: (String newValue) {
+                          setState(() {
+                            groupNum = newValue;
+                            _filterShop(distance, category, groupNum);
+                          });
+                        },
+                        items: <String>[
+                          'All',
+                          '1',
+                          '2',
+                          '3',
+                          '4',
+                          '5',
+                          '6',
+                          '7',
+                          '8',
+                          '9',
+                          '10',
+                          '11',
+                          '12'
+                        ].map<DropdownMenuItem<String>>((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
+                      ),
+                    ]),
+                  ]),
             ]),
-      ]),
       // bottomNavigationBar: BottomAppBar(
       //   child: new Row(
       //     mainAxisSize: MainAxisSize.max,
@@ -372,7 +399,7 @@ class _MapPageState extends State<MapPage> {
           );
         }).toSet(),
         onMapCreated: (GoogleMapController controller) {
-          _getAllShopData();
+          // _getAllShopData();
           _controller.complete(controller);
         },
         myLocationEnabled: true,
@@ -382,59 +409,65 @@ class _MapPageState extends State<MapPage> {
     }
   }
 
-  // Map listOfUrl = {};
+  Map listOfUrl;
 
-  Future<String> _showPic(shop) async {
-    print('${shop['name']}');
+  Future<void> _showPic() async {
+    print("inside Show Pic: $listOfUrl");
     final getUrlOptions = GetUrlOptions(
       accessLevel: StorageAccessLevel.guest,
     );
-    if (shop["imageUrl"] != null && shop["imageUrl"].length > 0) {
-      String key = shop["imageUrl"][0];
-      var result =
-          await Amplify.Storage.getUrl(key: key, options: getUrlOptions);
-      return result.url;
-    } else {
-      return null;
+
+    Map urlMap = {};
+
+    for (var shop in shopData) {
+      if (shop["imageUrl"] != null && shop["imageUrl"].length > 0) {
+        String key = shop["imageUrl"][0];
+        var result =
+            await Amplify.Storage.getUrl(key: key, options: getUrlOptions);
+        urlMap[shop["id"]] = result.url;
+      } else {
+        urlMap[shop["id"]] = null;
+      }
     }
-    // if (shopData["imageUrl"].length > 0) {
-    //   for (var key in shopData["imageUrl"]) {
-    //     var result =
-    //         await Amplify.Storage.getUrl(key: key, options: getUrlOptions);
-    //     var url = result.url;
-    //     listOfUrl.add(url);
-    //   }
-    // }
-    // print("List of Url: $listOfUrl");
-    // print("done getting getting image Url");
-    // setState(() {
-    //   images = listOfUrl;
-    // });
-    // print("imagesssss: $images");
-    // print("done listing");
+
+    listOfUrl = urlMap;
+    print("listOfUrl: $listOfUrl");
   }
+  // if (shopData["imageUrl"].length > 0) {
+  //   for (var key in shopData["imageUrl"]) {
+  //     var result =
+  //         await Amplify.Storage.getUrl(key: key, options: getUrlOptions);
+  //     var url = result.url;
+  //     listOfUrl.add(url);
+  //   }
+  // }
+  // print("List of Url: $listOfUrl");
+  // print("done getting getting image Url");
+  // setState(() {
+  //   images = listOfUrl;
+  // });
+  // print("imagesssss: $images");
+  // print("done listing");
 
   Widget imageCard(shop) {
     // _showPic(shop);
+    print("inside image Card");
+    print("inside image Card: $listOfUrl");
 
     return Center(
       child: Image.network(
-        '${shop['imageUrl']}',
+        listOfUrl[shop["id"]],
         // listOfUrl[shop["id"]],
         fit: BoxFit.cover,
         loadingBuilder: (context, child, loadingProgress) {
           if (loadingProgress == null) return child;
           return CircularProgressIndicator();
         },
-        errorBuilder:
-            (BuildContext context, Object exception, StackTrace stackTrace) {
-          return Text('写真がありません');
-        },
       ),
     );
   }
 
-  void _getLocation() async {
+  Future<void> _getLocation() async {
     _yourLocation = await _locationService.getLocation();
   }
 
@@ -443,13 +476,20 @@ class _MapPageState extends State<MapPage> {
     var response = await http.get(
         'https://pq3mbzzsbg.execute-api.ap-northeast-1.amazonaws.com/CaffeExpressRESTAPI/store');
     if (response.statusCode == 200) {
-      final jsonResponse = json.decode(utf8.decode(response.bodyBytes));
-      shopData = await jsonResponse['body']
+      final jsonResponse = await json.decode(utf8.decode(response.bodyBytes));
+      var filteredShops = await jsonResponse['body']
           .where((shop) => shop['lat'] != null && shop['lng'] != null)
           .toList();
-      listShops = shopData;
+      print('filteredShopData $filteredShops');
+      setState(() {
+        shopData = filteredShops;
+        listShops = shopData;
+      });
+      await _showPic();
+      print('shopData : $shopData');
       print("listShops [0] ${listShops[0]}");
       _filterShop(distance, category, groupNum);
+      // selectedShop = listShops[0];
     } else {
       print('Request failed with status: ${response.statusCode}.');
     }
