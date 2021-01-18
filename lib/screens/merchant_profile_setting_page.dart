@@ -55,6 +55,7 @@ class _MerchantProfileSettingPageState
         'Content-Type': 'application/json; charset=UTF-8',
       },
     );
+
     final jsonResponse = await json.decode(utf8.decode(response.bodyBytes));
     final myUrl = jsonDecode(jsonResponse["body"])["accountLinkURL"];
     print(myUrl);
