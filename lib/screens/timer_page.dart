@@ -28,6 +28,7 @@ class _TimerPageState extends State<TimerPage> {
     //if (totalTime == 1800) { //初期値の時だけタイマースタート？
     start();
     //}
+    
     super.initState();
   }
 
@@ -89,48 +90,48 @@ class _TimerPageState extends State<TimerPage> {
                               padding: EdgeInsets.symmetric(
                                   vertical: 10.0, horizontal: 80.0),
                               child: Text(lockedTime)),
-                          RaisedButton(
-                              child: const Text(
-                                'I Got Here!',
-                                style: TextStyle(
-                                  fontSize: 20.0,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              color: Colors.lightBlue[200],
-                              shape: const OutlineInputBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10)),
-                              ),
-                          onPressed: () {
-                            //dialog that user reach the shop
-                            showDialog(
-                              context: context,
-                              builder: (_) {
-                                return AlertDialog(
-                                  title: Text(''),
-                                  content: Text(
-                                    'Are You Here?',
-                                    style: TextStyle(
-                                      fontSize: 18.0,
-                                    ),
-                                  ),
-                                  actions: <Widget>[
-                                    FlatButton(
-                                      child: Text("No"),
-                                      onPressed: () => Navigator.pop(context),
-                                    ),
-                                    FlatButton(
-                                      child: Text("Yes"),
-                                      onPressed: () => {
-                                        // go back to map page? or success pages
-                                      },
-                                    ),
-                                  ],
-                                );
-                              },
-                            );
-                          }),
+                          // RaisedButton(
+                          //     child: const Text(
+                          //       'I Got Here!',
+                          //       style: TextStyle(
+                          //         fontSize: 20.0,
+                          //         fontWeight: FontWeight.bold,
+                          //       ),
+                          //     ),
+                          //     color: Colors.lightBlue[200],
+                          //     shape: const OutlineInputBorder(
+                          //       borderRadius:
+                          //           BorderRadius.all(Radius.circular(10)),
+                          //     ),
+                          // onPressed: () {
+                          //   //dialog that user reach the shop
+                          //   showDialog(
+                          //     context: context,
+                          //     builder: (_) {
+                          //       return AlertDialog(
+                          //         title: Text(''),
+                          //         content: Text(
+                          //           'Are You Here?',
+                          //           style: TextStyle(
+                          //             fontSize: 18.0,
+                          //           ),
+                          //         ),
+                          //         actions: <Widget>[
+                          //           FlatButton(
+                          //             child: Text("No"),
+                          //             onPressed: () => Navigator.pop(context),
+                          //           ),
+                          //           FlatButton(
+                          //             child: Text("Yes"),
+                          //             onPressed: () => {
+                          //               // go back to map page? or success pages
+                          //             },
+                          //           ),
+                          //         ],
+                          //       );
+                          //     },
+                          //   );
+                          // }),
                       Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [

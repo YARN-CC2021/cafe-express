@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'dart:async';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -26,6 +28,10 @@ class _MapPageState extends State<MapPage> {
   final Completer<GoogleMapController> _controller =
       Completer<GoogleMapController>();
   Location _locationService = Location();
+
+  PolylinePoints polylinePoints;
+  Map<PolylineId, Polyline> polylines = {};
+  List<LatLng> polylineCoordinates = [];
 
   // 現在位置
   LocationData _yourLocation;
@@ -69,166 +75,224 @@ class _MapPageState extends State<MapPage> {
         backgroundColor: Theme.of(context).primaryColor,
         elevation: 0.0,
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Expanded(      
-            child: Stack(
+      body: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
+        Expanded(
+          child: Stack(
             fit: StackFit.loose,
             overflow: Overflow.visible,
             children: [
               _makeGoogleMap(),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Container(
-              height: 150,
-              child: 
-              PageView(
-                controller: _pageController,
-                children: listShops.map<Widget>((shop) {
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                    child: GestureDetector(
-                        onTap: () {
-                          _onTap(context, shop['id']);
-                        },
-                        child: Card(
-                        clipBehavior: Clip.antiAlias,
-                        margin: EdgeInsets.zero,
-                        shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(16.0)),
-                        ),
-                        child: Stack(
-                          children: <Widget>[
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children:[
-                                imageCard(shop),
-                              ]
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Container(
+                  height: 150,
+                  child: PageView(
+                    controller: _pageController,
+                    children: listShops.map<Widget>((shop) {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                        child: GestureDetector(
+                          onTap: () {
+                            _onTap(context, shop['id']);
+                          },
+                          child: Card(
+                            clipBehavior: Clip.antiAlias,
+                            margin: EdgeInsets.zero,
+                            shape: const RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(16.0)),
                             ),
-                            Positioned(
-                              left: 0,
-                              right: 0,
-                              bottom: 0,
-                              child: Container(
-                                child: Text(
-                                  shop['name'],
-                                  style: TextStyle(color: Colors.white)
-                                ),
-                                decoration: const BoxDecoration(
-                                    color: Color.fromARGB(0x99, 0, 0, 0)),
-                                padding: const EdgeInsets.all(8),
-                              ),
-                            )
-                          ],
+                            child: Stack(
+                              children: <Widget>[
+                                Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      imageCard(shop),
+                                    ]),
+                                Positioned(
+                                  left: 0,
+                                  right: 0,
+                                  bottom: 0,
+                                  child: Container(
+                                    child: Text(shop['name'],
+                                        style: TextStyle(color: Colors.white)),
+                                    decoration: const BoxDecoration(
+                                        color: Color.fromARGB(0x99, 0, 0, 0)),
+                                    padding: const EdgeInsets.all(8),
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                  );
-                }).toList(),
-                onPageChanged: (int page) {
-                  if (_isPageViewAnimating) {
-                    return;
-                  }
-                  _updateSelectedShopForPage(page);
-                },
+                      );
+                    }).toList(),
+                    onPageChanged: (int page) {
+                      if (_isPageViewAnimating) {
+                        return;
+                      }
+                      _updateSelectedShopForPage(page);
+                    },
+                  ),
+                  decoration: BoxDecoration(color: Colors.transparent),
+                ),
               ),
-              decoration: BoxDecoration(color: Colors.transparent),
-            ),
-          ),
-          ],
+            ],
           ),
         ),
 
         //test
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-          Column(children: [
-            Text("距離"),
-            DropdownButton<String>(
-              value: distance,
-              icon: Icon(Icons.arrow_drop_down),
-              iconSize: 24,
-              elevation: 16,
-              style: TextStyle(color: Colors.deepPurple),
-              underline: Container(
-                height: 2,
-                color: Colors.deepPurpleAccent,
-              ),
-              onChanged: (String newValue) {
-                setState(() {
-                  distance = newValue;
-                  _filterShop(distance, category, groupNum);
-                });
-              },
-              items: <String>['100m', '500m', '1km', '2km']
-                  .map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
-            ),
-          ]),
-          Column(children: [
-            Text("カテゴリー"),
-            DropdownButton<String>(
-              value: category,
-              icon: Icon(Icons.arrow_drop_down),
-              iconSize: 24,
-              elevation: 16,
-              style: TextStyle(color: Colors.deepPurple),
-              underline: Container(
-                height: 2,
-                color: Colors.deepPurpleAccent,
-              ),
-              onChanged: (String newValue) {
-                setState(() {
-                  category = newValue;
-                  _filterShop(distance, category, groupNum);
-                });
-              },
-              items: <String>['All', 'Cafe', 'Restaurant', 'Bar']
-                  .map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
-            ),
-          ]),
-          Column(children: [
-            Text("人数"),
-            DropdownButton<String>(
-              value: groupNum,
-              icon: Icon(Icons.arrow_drop_down),
-              iconSize: 24,
-              elevation: 16,
-              style: TextStyle(color: Colors.deepPurple),
-              underline: Container(
-                height: 2,
-                color: Colors.deepPurpleAccent,
-              ),
-              onChanged: (String newValue) {
-                setState(() {
-                  groupNum = newValue;
-                  _filterShop(distance, category, groupNum);
-                });
-              },
-              items: <String>['All','1','2','3','4','5','6','7','8','9','10','11','12'
-              ].map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
-            ),
-          ]),
-        ]),
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Column(children: [
+                Text("距離"),
+                DropdownButton<String>(
+                  value: distance,
+                  icon: Icon(Icons.arrow_drop_down),
+                  iconSize: 24,
+                  elevation: 16,
+                  style: TextStyle(color: Colors.deepPurple),
+                  underline: Container(
+                    height: 2,
+                    color: Colors.deepPurpleAccent,
+                  ),
+                  onChanged: (String newValue) {
+                    setState(() {
+                      distance = newValue;
+                      _filterShop(distance, category, groupNum);
+                    });
+                  },
+                  items: <String>['100m', '500m', '1km', '2km']
+                      .map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+                ),
+              ]),
+              Column(children: [
+                Text("カテゴリー"),
+                DropdownButton<String>(
+                  value: category,
+                  icon: Icon(Icons.arrow_drop_down),
+                  iconSize: 24,
+                  elevation: 16,
+                  style: TextStyle(color: Colors.deepPurple),
+                  underline: Container(
+                    height: 2,
+                    color: Colors.deepPurpleAccent,
+                  ),
+                  onChanged: (String newValue) {
+                    setState(() {
+                      category = newValue;
+                      _filterShop(distance, category, groupNum);
+                    });
+                  },
+                  items: <String>['All', 'カフェ', 'レストラン', 'バー']
+                      .map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+                ),
+              ]),
+              Column(children: [
+                Text("人数"),
+                DropdownButton<String>(
+                  value: groupNum,
+                  icon: Icon(Icons.arrow_drop_down),
+                  iconSize: 24,
+                  elevation: 16,
+                  style: TextStyle(color: Colors.deepPurple),
+                  underline: Container(
+                    height: 2,
+                    color: Colors.deepPurpleAccent,
+                  ),
+                  onChanged: (String newValue) {
+                    setState(() {
+                      groupNum = newValue;
+                      _filterShop(distance, category, groupNum);
+                    });
+                  },
+                  items: <String>[
+                    'All',
+                    '1',
+                    '2',
+                    '3',
+                    '4',
+                    '5',
+                    '6',
+                    '7',
+                    '8',
+                    '9',
+                    '10',
+                    '11',
+                    '12'
+                  ].map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+                ),
+              ]),
+            ]),
       ]),
+      bottomNavigationBar: BottomAppBar(
+        child: new Row(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            SizedBox(width: 7),
+            IconButton(
+              ///Timer
+              icon: Icon(
+                Icons.qr_code_rounded,
+                size: 24.0,
+              ),
+              color: Colors.black,
+              onPressed: () => {_changePage(context, QrRoute)},
+            ),
+            Container(
+              width: 56.0,
+              height: 10,
+            ),
+            IconButton(
+              /// booking history
+              icon: Icon(
+                Icons.assignment,
+                size: 24.0,
+              ),
+              color: Colors.black,
+              onPressed: () => {_changePage(context, BookingHistoryRoute)},
+            ),
+            SizedBox(width: 7),
+          ],
+        ),
+        color: Theme.of(context).primaryColor,
+        shape: CircularNotchedRectangle(),
+      ),
+      floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: FloatingActionButton(
+        elevation: 4.0,
+        child: Icon(
+          ///map search
+          Icons.map,
+        ),
+        onPressed: () => {_changePage(context, MapSearchRoute)},
+      ),
     );
+  }
+
+  void _changePage(BuildContext context, String route) {
+    Navigator.pushNamed(context, route);
+    print("Going to $route was triggered");
   }
 
   Widget _makeGoogleMap() {
@@ -238,6 +302,7 @@ class _MapPageState extends State<MapPage> {
       );
     } else {
       return GoogleMap(
+        polylines: Set<Polyline>.of(polylines.values),
         initialCameraPosition: CameraPosition(
           target: LatLng(_yourLocation.latitude, _yourLocation.longitude),
           zoom: 18.0,
@@ -253,6 +318,8 @@ class _MapPageState extends State<MapPage> {
             onTap: () {
               selectedShop = shop;
               _pageController.jumpToPage(listShops.indexOf(shop));
+              _createPolylines(_yourLocation.latitude, _yourLocation.longitude,
+                  shop['lat'], shop['lng']);
             },
             infoWindow: InfoWindow(
               title: '${shop['name']}',
@@ -277,16 +344,16 @@ class _MapPageState extends State<MapPage> {
   Widget imageCard(shop) {
     return Center(
       child: Image.network(
-          '${shop['imagePaths'][0]}',
-          fit: BoxFit.cover,
-          loadingBuilder: (context, child, loadingProgress) {
-            if (loadingProgress == null) return child;
-            return CircularProgressIndicator();
-          },
-          errorBuilder:
-              (BuildContext context, Object exception, StackTrace stackTrace) {
-            return Text('写真がありません');
-          },
+        '${shop['imagePaths'][0]}',
+        fit: BoxFit.cover,
+        loadingBuilder: (context, child, loadingProgress) {
+          if (loadingProgress == null) return child;
+          return CircularProgressIndicator();
+        },
+        errorBuilder:
+            (BuildContext context, Object exception, StackTrace stackTrace) {
+          return Text('写真がありません');
+        },
       ),
     );
   }
@@ -387,7 +454,8 @@ class _MapPageState extends State<MapPage> {
 
   Future<void> _gotoLocation(shop) async {
     final GoogleMapController googlemap = await _controller.future;
-    googlemap.animateCamera(CameraUpdate.newLatLng(LatLng(shop['lat'], shop['lng'])));
+    googlemap.animateCamera(
+        CameraUpdate.newLatLng(LatLng(shop['lat'], shop['lng'])));
   }
 
   Future<void> _showInfoWindowForSelectedShop() async {
@@ -406,7 +474,6 @@ class _MapPageState extends State<MapPage> {
   Future<void> _hideInfoWindowForSelectedShop() async {
     if (selectedShop != null && _controller.isCompleted) {
       final GoogleMapController googleMap = await _controller.future;
-
       final MarkerId selectedShopMarker = MarkerId(selectedShop['id']);
       final bool isSelectedShopMarkerShown =
           await googleMap.isMarkerInfoWindowShown(selectedShopMarker);
@@ -416,8 +483,38 @@ class _MapPageState extends State<MapPage> {
     }
   }
 
+  _createPolylines(double startLatitude, double startLongitude,
+      double destinationLatitude, double destinationLongitude) async {
+    polylinePoints = PolylinePoints();
+    PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
+      env['GOOGLE_MAP_API_KEY'], // Google Maps API Key
+      PointLatLng(startLatitude, startLongitude),
+      PointLatLng(destinationLatitude, destinationLongitude),
+      travelMode: TravelMode.transit,
+    );
+
+    print(env['GOOGLE_MAP_API_KEY']);
+    print('POINTS${result.points}');
+
+    if (result.points.isNotEmpty) {
+      result.points.forEach((PointLatLng point) {
+        polylineCoordinates.add(LatLng(point.latitude, point.longitude));
+      });
+    }
+
+    print(polylineCoordinates);
+
+    PolylineId id = PolylineId('poly');
+    Polyline polyline = Polyline(
+      polylineId: id,
+      color: Colors.red,
+      points: polylineCoordinates,
+      width: 3,
+    );
+    polylines[id] = polyline;
+  }
+
   void _onTap(BuildContext context, String shopId) {
     Navigator.pushNamed(context, DetailRoute, arguments: {"id": shopId});
   }
-
 }
