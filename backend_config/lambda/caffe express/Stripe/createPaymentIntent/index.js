@@ -9,7 +9,7 @@ exports.handler = async (event) => {
   let message = "";
 
   const { storeStripeId, amount, payMethod } = event.query;
-  const fee = amount / 100 || 0;
+  const fee = (amount / 100) * 3 || 0;
   let paymentMethod;
 
   try {
