@@ -9,6 +9,7 @@ import 'dart:convert';
 import '../app.dart';
 import 'package:amplify_storage_s3/amplify_storage_s3.dart';
 import 'package:amplify_core/amplify_core.dart';
+import "package:awesome_dialog/awesome_dialog.dart";
 
 class MapPage extends StatefulWidget {
   @override
@@ -79,8 +80,35 @@ class _MapPageState extends State<MapPage> {
             FlatButton.icon(
                 icon: Icon(Icons.person),
                 label: Text("logout"),
-                onPressed: () async {
-                  _logOut();
+                onPressed: () {
+                  //_logOut();
+                  AwesomeDialog(
+                    context: context,
+                    customHeader: null,
+                    dialogType: DialogType.NO_HEADER,
+                    animType: AnimType.BOTTOMSLIDE,
+                    body: Center(
+                      child: Text('本当にログアウトしますか？'),
+                    ),
+                    btnOkOnPress: () {
+                      try {
+                        Amplify.Auth.signOut();
+                        _changePage(context, AuthRoute);
+                      } on Error catch (e) {
+                        print(e);
+                      }
+                    },
+                    useRootNavigator: false,
+                    btnOkColor: Colors.tealAccent[400],
+                    btnCancelOnPress: () {},
+                    btnOkText: 'ログアウト',
+                    btnCancelText: 'キャンセル',
+                    btnCancelColor: Colors.blueGrey[400],
+                    dismissOnTouchOutside: false,
+                    headerAnimationLoop: false,
+                    showCloseIcon: false,
+                    buttonsBorderRadius: BorderRadius.all(Radius.circular(100)),
+                  )..show();
                 })
           ]),
       body: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
