@@ -8,6 +8,7 @@ import 'package:amplify_core/amplify_core.dart';
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:amplify_storage_s3/amplify_storage_s3.dart';
 
 class MerchantProfileSettingPage extends StatefulWidget {
   @override
@@ -19,6 +20,7 @@ class _MerchantProfileSettingPageState
     extends State<MerchantProfileSettingPage> {
   var shopData;
   bool stripeRegister = false;
+  var images;
 
   @override
   void initState() {
@@ -41,13 +43,13 @@ class _MerchantProfileSettingPageState
       setState(() {
         shopData = jsonResponse['body'];
       });
+      await _showPic();
       print("This is ShopData: $shopData");
     } else {
       print('Request failed with status: ${response.statusCode}.');
     }
   }
 
-//"https://pq3mbzzsbg.execute-api.ap-northeast-1.amazonaws.com/CaffeExpressRESTAPI/stripeaccount?storeStripeId=acct_1IAYF4QG0EUj44rM&storeId=near_azamino"
   Future<void> _goToStripeLink() async {
     var response = await http.post(
       "https://pq3mbzzsbg.execute-api.ap-northeast-1.amazonaws.com/CaffeExpressRESTAPI/stripeaccount?storeStripeId=${shopData["stripeId"]}&storeId=${shopData["storeId"]}",
@@ -57,9 +59,32 @@ class _MerchantProfileSettingPageState
     );
 
     final jsonResponse = await json.decode(utf8.decode(response.bodyBytes));
-    final myUrl = jsonDecode(jsonResponse["body"])["accountLinkURL"];
-    print(myUrl);
-    await launch("$myUrl");
+    final clientStripeConnectUrl =
+        await jsonDecode(jsonResponse["body"])["accountLinkURL"];
+    print(clientStripeConnectUrl);
+    await launch("$clientStripeConnectUrl");
+  }
+
+  Future<void> _showPic() async {
+    print("inside showpic");
+    final getUrlOptions = GetUrlOptions(
+      accessLevel: StorageAccessLevel.guest,
+    );
+    var listOfUrl = [];
+    print("shopData: ${shopData["imageUrl"]}");
+    if (shopData["imageUrl"].length > 0) {
+      var result = await Amplify.Storage.getUrl(
+          key: shopData["imageUrl"][0], options: getUrlOptions);
+      var url = result.url;
+      listOfUrl.add(url);
+    }
+    print("List of Url: $listOfUrl");
+    print("done getting getting image Url");
+    setState(() {
+      images = listOfUrl;
+    });
+    print("imagesssss: $images");
+    print("done listing");
   }
 
   @override
@@ -67,14 +92,16 @@ class _MerchantProfileSettingPageState
     return Scaffold(
       appBar: AppBar(
         leading: Container(),
-        title: Text(
-          "アカウント管理",
-          textAlign: TextAlign.center,
-        ),
+        title: Text("アカウント管理",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+            )),
+        centerTitle: true,
         backgroundColor: Theme.of(context).primaryColor,
         elevation: 0.0,
       ),
-      body: shopData == null
+      body: shopData == null && images == null
           ? Center(child: CircularProgressIndicator())
           : Padding(
               padding: EdgeInsets.only(
@@ -82,25 +109,64 @@ class _MerchantProfileSettingPageState
               child: ListView(
                 children: <Widget>[
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
-                      Padding(
-                          padding: EdgeInsets.only(left: 5.0, right: 10.0),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(8.0),
-                            child: Image.network(
-                              "https://www.sho-pat.com/e/img/attorneys/ph_takano.jpg",
-                              fit: BoxFit.cover,
-                              width: 100.0,
-                              height: 100.0,
+                      images != null && images.length > 0
+                          ? Padding(
+                              padding: EdgeInsets.only(
+                                  left: 3.0, right: 3.0, bottom: 10),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(8.0),
+                                child: Image.network(
+                                  images[0],
+                                  width: 100,
+                                  height: 100,
+                                  fit: BoxFit.cover,
+                                  loadingBuilder: (BuildContext context,
+                                      Widget child,
+                                      ImageChunkEvent loadingProgress) {
+                                    if (loadingProgress == null) return child;
+                                    return Center(
+                                        child: SizedBox(
+                                      width: 100,
+                                      height: 100,
+                                      child: CircularProgressIndicator(
+                                        value: loadingProgress
+                                                    .expectedTotalBytes !=
+                                                null
+                                            ? loadingProgress
+                                                    .cumulativeBytesLoaded /
+                                                loadingProgress
+                                                    .expectedTotalBytes
+                                            : null,
+                                      ),
+                                    ));
+                                  },
+                                ),
+                              ))
+                          : Padding(
+                              padding: EdgeInsets.only(
+                                  left: 3.0, right: 3.0, bottom: 10),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(8.0),
+                                child: Container(
+                                    width: 100,
+                                    height: 100,
+                                    color: Colors.grey[300],
+                                    child: IconButton(
+                                      // Use the FaIcon Widget + FontAwesomeIcons class for the IconData
+                                      iconSize: 35,
+                                      color: Colors.grey,
+                                      icon: FaIcon(FontAwesomeIcons.camera),
+                                      onPressed: () {},
+                                    )),
+                              ),
                             ),
-                          )),
-                      Expanded(
+                      Padding(
+                        padding: EdgeInsets.only(left: 5, bottom: 10),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: <Widget>[
                                 Text(
                                   "ユーザー名",
@@ -114,7 +180,7 @@ class _MerchantProfileSettingPageState
                                       shopData["vacancyType"] == "strict"
                                           ? "テーブル設定：固定モード"
                                           : "テーブル設定：範囲モード",
-                                      style: TextStyle(fontSize: 10)),
+                                      style: TextStyle(fontSize: 11)),
                                   onPressed: null,
                                 )
                               ],
@@ -148,7 +214,7 @@ class _MerchantProfileSettingPageState
                                       btnOkOnPress: () {
                                         try {
                                           Amplify.Auth.signOut();
-                                          _changePage(context, WrapperRoute);
+                                          _changePage(context, AuthRoute);
                                         } on AuthError catch (e) {
                                           print(e);
                                         }
@@ -180,7 +246,6 @@ class _MerchantProfileSettingPageState
                             ),
                           ],
                         ),
-                        flex: 3,
                       ),
                     ],
                   ),
@@ -204,121 +269,133 @@ class _MerchantProfileSettingPageState
                           tooltip: "掲載情報の編集",
                         )
                       ])),
-                  ListTile(
-                    title: Text(
-                      "店名",
-                      style: TextStyle(
-                        fontSize: 17,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                    subtitle: Text(
-                      "${shopData["name"]}",
-                    ),
-                  ),
-                  ListTile(
-                    title: Text(
-                      "カテゴリー",
-                      style: TextStyle(
-                        fontSize: 17,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                    subtitle: Text(
-                      "${shopData["category"]}",
-                    ),
-                  ),
-                  ListTile(
-                    title: Text(
-                      "URL",
-                      style: TextStyle(
-                        fontSize: 17,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                    subtitle: Text(
-                      "${shopData["storeURL"]}",
-                    ),
-                  ),
-                  ListTile(
-                    title: Text(
-                      "公開Eメール",
-                      style: TextStyle(
-                        fontSize: 17,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                    subtitle: Text(
-                      "${shopData["contactEmail"]}",
-                    ),
-                  ),
-                  ListTile(
-                    title: Text(
-                      "電話番号",
-                      style: TextStyle(
-                        fontSize: 17,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                    subtitle: Text(
-                      "${shopData["tel"]}",
-                    ),
-                  ),
-                  ListTile(
-                    title: Text(
-                      "住所",
-                      style: TextStyle(
-                        fontSize: 17,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                    subtitle: Text(
-                      "${shopData["address"]}",
-                    ),
-                  ),
-                  ListTile(
-                    title: Text(
-                      "詳細",
-                      style: TextStyle(
-                        fontSize: 17,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                    subtitle: Text(
-                      "${shopData["description"]}",
-                    ),
-                  ),
-                  MaterialButton(
-                    child: Text("Stripeへ行く", style: TextStyle(fontSize: 10)),
-                    onPressed: _goToStripeLink,
-                  ),
-                  MediaQuery.of(context).platformBrightness == Brightness.dark
-                      ? SizedBox()
-                      : ListTile(
-                          title: Text(
-                            "Dark Theme",
-                            style: TextStyle(
-                              fontSize: 17,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-
-                          // trailing: Switch(
-                          //   value: Provider.of<AppProvider>(context).theme == Constants.lightTheme
-                          //       ? false
-                          //       : true,
-                          //   onChanged: (v) async{
-                          //     if (v) {
-                          //       Provider.of<AppProvider>(context, listen: false)
-                          //           .setTheme(Constants.darkTheme, "dark");
-                          //     } else {
-                          //       Provider.of<AppProvider>(context, listen: false)
-                          //           .setTheme(Constants.lightTheme, "light");
-                          //     }
-                          //   },
-                          //   activeColor: Theme.of(context).accentColor,
-                          // ),
+                  Container(
+                    height: 55,
+                    child: ListTile(
+                      title: Text(
+                        "店名",
+                        style: TextStyle(
+                          fontSize: 17,
+                          fontWeight: FontWeight.w700,
                         ),
+                      ),
+                      subtitle: Text(
+                        "${shopData["name"]}",
+                      ),
+                    ),
+                  ),
+                  Container(
+                    height: 55,
+                    child: ListTile(
+                      title: Text(
+                        "カテゴリー",
+                        style: TextStyle(
+                          fontSize: 17,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      subtitle: Text(
+                        "${shopData["category"]}",
+                      ),
+                    ),
+                  ),
+                  Container(
+                    height: 55,
+                    child: ListTile(
+                      title: Text(
+                        "URL",
+                        style: TextStyle(
+                          fontSize: 17,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      subtitle: Text(
+                        "${shopData["storeURL"]}",
+                      ),
+                    ),
+                  ),
+                  Container(
+                    height: 55,
+                    child: ListTile(
+                      title: Text(
+                        "公開Eメール",
+                        style: TextStyle(
+                          fontSize: 17,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      subtitle: Text(
+                        "${shopData["contactEmail"]}",
+                      ),
+                    ),
+                  ),
+                  Container(
+                    height: 55,
+                    child: ListTile(
+                      title: Text(
+                        "電話番号",
+                        style: TextStyle(
+                          fontSize: 17,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      subtitle: Text(
+                        "${shopData["tel"]}",
+                      ),
+                    ),
+                  ),
+                  Container(
+                    height: 55,
+                    child: ListTile(
+                      title: Text(
+                        "住所",
+                        style: TextStyle(
+                          fontSize: 17,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      subtitle: Text(
+                        "${shopData["address"]}",
+                      ),
+                    ),
+                  ),
+                  Container(
+                    height: 55,
+                    child: ListTile(
+                      title: Text(
+                        "詳細",
+                        style: TextStyle(
+                          fontSize: 17,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      subtitle: Text(
+                        "${shopData["description"]}",
+                      ),
+                    ),
+                  ),
+                  Center(
+                      child: Row(
+                    children: [
+                      SizedBox(width: 125),
+                      Expanded(
+                        child: ButtonTheme(
+                          minWidth: 50,
+                          child: RaisedButton(
+                            color: Colors.lightBlue,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5.0),
+                                side: BorderSide(color: Colors.lightBlue)),
+                            child: Text("Stripeへ行く",
+                                style: TextStyle(
+                                    fontSize: 13, color: Colors.white)),
+                            onPressed: _goToStripeLink,
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: 125),
+                    ],
+                  )),
                 ],
               ),
             ),
@@ -344,14 +421,9 @@ class _MerchantProfileSettingPageState
               color: Colors.black,
               onPressed: () => {_changePage(context, MerchantCalendarRoute)},
             ),
-            IconButton(
-              icon: Icon(
-                Icons.search,
-                size: 24.0,
-                color: Theme.of(context).primaryColor,
-              ),
-              color: Colors.black,
-              onPressed: () => {_changePage(context, MerchantCalendarRoute)},
+            Container(
+              width: 24.0,
+              height: 10,
             ),
             IconButton(
               icon: Icon(
