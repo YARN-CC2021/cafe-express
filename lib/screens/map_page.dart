@@ -116,6 +116,37 @@ class _MapPageState extends State<MapPage> {
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceEvenly,
                                     children: [
+                                      FutureBuilder(
+                                        future: _showPic(shop),
+                                        builder:(BuildContext context, AsyncSnapshot<String> snapshot) {
+                                          if (snapshot.connectionState != ConnectionState.done) {
+                                            return CircularProgressIndicator();
+                                          }
+                                          if (snapshot.hasError) {
+                                            return Text(snapshot.error.toString());
+                                          }
+                                          if(snapshot.hasData) {
+                                            return Center(
+                                              child: Image.network(
+                                                '${snapshot.data}',
+                                                // '${shop['imageUrl']}',
+                                                // listOfUrl[shop["id"]],
+                                                fit: BoxFit.cover,
+                                                loadingBuilder: (context, child, loadingProgress) {
+                                                  if (loadingProgress == null) return child;
+                                                  return CircularProgressIndicator();
+                                                },
+                                                errorBuilder:
+                                                    (BuildContext context, Object exception, StackTrace stackTrace) {
+                                                  return Text('写真がありません');
+                                                },
+                                              ),
+                                            );
+                                          } else {
+                                            return Text('写真がありません');
+                                          }
+                                        }
+                                      ),
                                       imageCard(shop),
                                     ]),
                                 Positioned(
@@ -346,35 +377,32 @@ class _MapPageState extends State<MapPage> {
 
   // Map listOfUrl = {};
 
-  // Future<void> _showPic(shop) async {
-  //   final getUrlOptions = GetUrlOptions(
-  //     accessLevel: StorageAccessLevel.guest,
-  //   );
-  //   if (shop["imageUrl"].length == 0) {
-  //     String key = shop["imageUrl"][0];
-  //     var result =
-  //         await Amplify.Storage.getUrl(key: key, options: getUrlOptions);
-  //     String url = result.url;
-  //     setState(() {
-  //       listOfUrl[shop["id"]] = url;
-  //     });
-  //   }
-  // if (shopData["imageUrl"].length > 0) {
-  //   for (var key in shopData["imageUrl"]) {
-  //     var result =
-  //         await Amplify.Storage.getUrl(key: key, options: getUrlOptions);
-  //     var url = result.url;
-  //     listOfUrl.add(url);
-  //   }
-  // }
-  // print("List of Url: $listOfUrl");
-  // print("done getting getting image Url");
-  // setState(() {
-  //   images = listOfUrl;
-  // });
-  // print("imagesssss: $images");
-  // print("done listing");
-  // }
+  Future<String> _showPic(shop) async {
+    final getUrlOptions = GetUrlOptions(
+      accessLevel: StorageAccessLevel.guest,
+    );
+    if (shop["imageUrl"].length > 0) {
+      String key = shop["imageUrl"][0];
+      var result =
+          await Amplify.Storage.getUrl(key: key, options: getUrlOptions);
+      return result.url;
+    }
+    // if (shopData["imageUrl"].length > 0) {
+    //   for (var key in shopData["imageUrl"]) {
+    //     var result =
+    //         await Amplify.Storage.getUrl(key: key, options: getUrlOptions);
+    //     var url = result.url;
+    //     listOfUrl.add(url);
+    //   }
+    // }
+    // print("List of Url: $listOfUrl");
+    // print("done getting getting image Url");
+    // setState(() {
+    //   images = listOfUrl;
+    // });
+    // print("imagesssss: $images");
+    // print("done listing");
+  }
 
   Widget imageCard(shop) {
     // _showPic(shop);
@@ -411,7 +439,6 @@ class _MapPageState extends State<MapPage> {
           .toList();
       listShops = shopData;
       _filterShop(distance, category, groupNum);
-      selectedShop = listShops[0];
     } else {
       print('Request failed with status: ${response.statusCode}.');
     }
