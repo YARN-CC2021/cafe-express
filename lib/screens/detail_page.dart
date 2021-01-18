@@ -402,36 +402,36 @@ class _DetailPageState extends State<DetailPage> {
                                               if (_formKey.currentState
                                                   .validate())
                                                 {
-                                                  // bookedTime = DateTime.now(),
-                                                  // expireTime = bookedTime.add(
-                                                  //     new Duration(minutes: 30)),
-                                                  // bookData["bookedAt"] =
-                                                  //     "$bookedTime",
-                                                  // bookData["bookingId"] =
-                                                  //     "${globals.userId}${bookedTime.millisecondsSinceEpoch}",
-                                                  // bookData["bookName"] =
-                                                  //     nameController.text,
-                                                  // bookData["createdAt"] =
-                                                  //     "$bookedTime",
-                                                  // bookData["depositAmount"] =
-                                                  //     price,
-                                                  // bookData["expiredAt"] =
-                                                  //     "$expireTime",
-                                                  // bookData["index"] = sheetindex,
-                                                  // bookData["partySize"] =
-                                                  //     groupNum,
-                                                  // bookData["status"] = "payed",
-                                                  // bookData["tableType"] = sheet,
-                                                  // bookData["updatedAt"] =
-                                                  //     "$bookedTime",
-                                                  // channel.sink
-                                                  //     .add(json.encode(bookData)),
+                                                  bookedTime = DateTime.now(),
+                                                  expireTime = bookedTime.add(
+                                                      new Duration(minutes: 30)),
+                                                  bookData["bookedAt"] =
+                                                      "$bookedTime",
+                                                  bookData["bookingId"] =
+                                                      "${globals.userId}${bookedTime.millisecondsSinceEpoch}",
+                                                  bookData["bookName"] =
+                                                      nameController.text,
+                                                  bookData["createdAt"] =
+                                                      "$bookedTime",
+                                                  bookData["depositAmount"] =
+                                                      price,
+                                                  bookData["expiredAt"] =
+                                                      "$expireTime",
+                                                  bookData["index"] = sheetindex,
+                                                  bookData["partySize"] =
+                                                      groupNum,
+                                                  bookData["status"] = "payed",
+                                                  bookData["tableType"] = sheet,
+                                                  bookData["updatedAt"] =
+                                                      "$bookedTime",
+                                                  channel.sink
+                                                      .add(json.encode(bookData)),
                                                   
                                                   price == 0
                                                   ? _goTimerPage(context, shopData)
                                                   : createPaymentMethod(),
-                                                   _goStripePage(
-                                                      context, widget.id, price),
+                                                //    _goStripePage(
+                                                //       context, widget.id, price),
                                                 },
                                             }),
                                   ],
@@ -564,7 +564,7 @@ class _DetailPageState extends State<DetailPage> {
                 content:
                     'It is not possible to pay with this card. Please try again with a different card',
                 buttonText: 'CLOSE'));
-    // _goTimerPage(context);
+    // _goTimerPage(context, shopData)
   }
 
   Future<void> processPaymentAsDirectCharge(PaymentMethod paymentMethod) async {
