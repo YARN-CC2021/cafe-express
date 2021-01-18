@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'dart:async';
-import 'dart:math' as math;
-import './detail_page.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import '../app.dart';
+import 'package:amplify_storage_s3/amplify_storage_s3.dart';
 import 'package:amplify_core/amplify_core.dart';
 
 class MapPage extends StatefulWidget {
@@ -29,6 +29,10 @@ class _MapPageState extends State<MapPage> {
   final Completer<GoogleMapController> _controller =
       Completer<GoogleMapController>();
   Location _locationService = Location();
+
+  PolylinePoints polylinePoints;
+  Map<PolylineId, Polyline> polylines = {};
+  List<LatLng> polylineCoordinates = [];
 
   // 現在位置
   LocationData _yourLocation;
@@ -119,14 +123,8 @@ class _MapPageState extends State<MapPage> {
                                   right: 0,
                                   bottom: 0,
                                   child: Container(
-                                    child: Text(
-                                      shop['name'],
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .subhead
-                                          .merge(
-                                              TextStyle(color: Colors.white)),
-                                    ),
+                                    child: Text(shop['name'],
+                                        style: TextStyle(color: Colors.white)),
                                     decoration: const BoxDecoration(
                                         color: Color.fromARGB(0x99, 0, 0, 0)),
                                     padding: const EdgeInsets.all(8),
@@ -151,8 +149,6 @@ class _MapPageState extends State<MapPage> {
             ],
           ),
         ),
-
-        //test
         Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.end,
@@ -202,7 +198,7 @@ class _MapPageState extends State<MapPage> {
                       _filterShop(distance, category, groupNum);
                     });
                   },
-                  items: <String>['All', 'Cafe', 'Restaurant', 'Bar']
+                  items: <String>['All', 'カフェ', 'レストラン', 'バー']
                       .map<DropdownMenuItem<String>>((String value) {
                     return DropdownMenuItem<String>(
                       value: value,
@@ -348,10 +344,45 @@ class _MapPageState extends State<MapPage> {
     }
   }
 
+  // Map listOfUrl = {};
+
+  // Future<void> _showPic(shop) async {
+  //   final getUrlOptions = GetUrlOptions(
+  //     accessLevel: StorageAccessLevel.guest,
+  //   );
+  //   if (shop["imageUrl"].length == 0) {
+  //     String key = shop["imageUrl"][0];
+  //     var result =
+  //         await Amplify.Storage.getUrl(key: key, options: getUrlOptions);
+  //     String url = result.url;
+  //     setState(() {
+  //       listOfUrl[shop["id"]] = url;
+  //     });
+  //   }
+  // if (shopData["imageUrl"].length > 0) {
+  //   for (var key in shopData["imageUrl"]) {
+  //     var result =
+  //         await Amplify.Storage.getUrl(key: key, options: getUrlOptions);
+  //     var url = result.url;
+  //     listOfUrl.add(url);
+  //   }
+  // }
+  // print("List of Url: $listOfUrl");
+  // print("done getting getting image Url");
+  // setState(() {
+  //   images = listOfUrl;
+  // });
+  // print("imagesssss: $images");
+  // print("done listing");
+  // }
+
   Widget imageCard(shop) {
+    // _showPic(shop);
+
     return Center(
       child: Image.network(
-        '${shop['imagePaths'][0]}',
+        '${shop['imageUrl']}',
+        // listOfUrl[shop["id"]],
         fit: BoxFit.cover,
         loadingBuilder: (context, child, loadingProgress) {
           if (loadingProgress == null) return child;
@@ -379,8 +410,8 @@ class _MapPageState extends State<MapPage> {
           .where((shop) => shop['lat'] != null && shop['lng'] != null)
           .toList();
       listShops = shopData;
-      selectedShop = listShops[0];
       _filterShop(distance, category, groupNum);
+      selectedShop = listShops[0];
     } else {
       print('Request failed with status: ${response.statusCode}.');
     }
@@ -481,7 +512,6 @@ class _MapPageState extends State<MapPage> {
   Future<void> _hideInfoWindowForSelectedShop() async {
     if (selectedShop != null && _controller.isCompleted) {
       final GoogleMapController googleMap = await _controller.future;
-
       final MarkerId selectedShopMarker = MarkerId(selectedShop['id']);
       final bool isSelectedShopMarkerShown =
           await googleMap.isMarkerInfoWindowShown(selectedShopMarker);
