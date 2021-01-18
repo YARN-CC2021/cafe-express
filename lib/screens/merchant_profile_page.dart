@@ -69,20 +69,22 @@ class _MerchantProfilePageState extends State<MerchantProfilePage> {
     }
   }
 
-  Future<void> _filepick() async {
+  Future<void> _uploadPhoto() async {
     print("Im in Filepick");
     try {
       // use a file selection mechanism of your choice
-      print("Im in Filepick TRRYYYY");
       File file = await FilePicker.getFile(type: FileType.image);
-      String key = new DateTime.now().millisecondsSinceEpoch.toString();
-      key = "image/store/${globals.userId}/" + "1";
-
+      String fileName = new DateTime.now().millisecondsSinceEpoch.toString();
+      fileName = "image/store/${globals.userId}/" + fileName;
       S3UploadFileOptions options =
           S3UploadFileOptions(accessLevel: StorageAccessLevel.guest);
       UploadFileResult result = await Amplify.Storage.uploadFile(
-          key: key, local: file, options: options);
-      print("Im in Filepick UPLOADDEDD $result");
+          key: fileName, local: file, options: options);
+      setState(() {
+        shopData["imagePaths"].add(result.key);
+      });
+      await _updatePhoto();
+      print("Upload Completed!");
     } catch (e) {
       print(e.toString());
     }
@@ -150,138 +152,234 @@ class _MerchantProfilePageState extends State<MerchantProfilePage> {
                           // Add TextFormFields and ElevatedButton here.
                           Row(
                             children: [
-                              Padding(
-                                  padding: EdgeInsets.only(
-                                      left: 3.0, right: 3.0, bottom: 10),
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(8.0),
-                                    child: Image.network(
-                                      result,
-                                      width: 83,
-                                      height: 83,
-                                      fit: BoxFit.cover,
-                                      loadingBuilder: (BuildContext context,
-                                          Widget child,
-                                          ImageChunkEvent loadingProgress) {
-                                        if (loadingProgress == null)
-                                          return child;
-                                        return Center(
-                                            child: SizedBox(
-                                          width: 15,
-                                          height: 15,
-                                          child: CircularProgressIndicator(
-                                            value: loadingProgress
-                                                        .expectedTotalBytes !=
-                                                    null
-                                                ? loadingProgress
-                                                        .cumulativeBytesLoaded /
-                                                    loadingProgress
-                                                        .expectedTotalBytes
-                                                : null,
-                                          ),
-                                        ));
-                                      },
+                              shopData["imagePaths"].length != 0
+                                  ? Padding(
+                                      padding: EdgeInsets.only(
+                                          left: 3.0, right: 3.0, bottom: 10),
+                                      child: ClipRRect(
+                                        borderRadius:
+                                            BorderRadius.circular(8.0),
+                                        child: Image.network(
+                                          result,
+                                          width: 83,
+                                          height: 83,
+                                          fit: BoxFit.cover,
+                                          loadingBuilder: (BuildContext context,
+                                              Widget child,
+                                              ImageChunkEvent loadingProgress) {
+                                            if (loadingProgress == null)
+                                              return child;
+                                            return Center(
+                                                child: SizedBox(
+                                              width: 15,
+                                              height: 15,
+                                              child: CircularProgressIndicator(
+                                                value: loadingProgress
+                                                            .expectedTotalBytes !=
+                                                        null
+                                                    ? loadingProgress
+                                                            .cumulativeBytesLoaded /
+                                                        loadingProgress
+                                                            .expectedTotalBytes
+                                                    : null,
+                                              ),
+                                            ));
+                                          },
+                                        ),
+                                      ))
+                                  : Padding(
+                                      padding: EdgeInsets.only(
+                                          left: 3.0, right: 3.0, bottom: 10),
+                                      child: ClipRRect(
+                                        borderRadius:
+                                            BorderRadius.circular(8.0),
+                                        child: Container(
+                                            width: 83,
+                                            height: 83,
+                                            color: Colors.grey[300],
+                                            child: IconButton(
+                                              // Use the FaIcon Widget + FontAwesomeIcons class for the IconData
+                                              iconSize: 35,
+                                              color: Colors.grey,
+                                              icon: FaIcon(
+                                                  FontAwesomeIcons.camera),
+                                              onPressed: () {
+                                                _uploadPhoto();
+                                              },
+                                            )),
+                                      ),
                                     ),
-                                  )),
-                              Padding(
-                                  padding: EdgeInsets.only(
-                                      left: 3.0, right: 3.0, bottom: 10),
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(8.0),
-                                    child: Image.network(
-                                      result,
-                                      width: 83,
-                                      height: 83,
-                                      fit: BoxFit.cover,
-                                      loadingBuilder: (BuildContext context,
-                                          Widget child,
-                                          ImageChunkEvent loadingProgress) {
-                                        if (loadingProgress == null)
-                                          return child;
-                                        return Center(
-                                            child: SizedBox(
-                                          width: 15,
-                                          height: 15,
-                                          child: CircularProgressIndicator(
-                                            value: loadingProgress
-                                                        .expectedTotalBytes !=
-                                                    null
-                                                ? loadingProgress
-                                                        .cumulativeBytesLoaded /
-                                                    loadingProgress
-                                                        .expectedTotalBytes
-                                                : null,
-                                          ),
-                                        ));
-                                      },
+                              shopData["imagePaths"].length >= 1
+                                  ? Padding(
+                                      padding: EdgeInsets.only(
+                                          left: 3.0, right: 3.0, bottom: 10),
+                                      child: ClipRRect(
+                                        borderRadius:
+                                            BorderRadius.circular(8.0),
+                                        child: Image.network(
+                                          result,
+                                          width: 83,
+                                          height: 83,
+                                          fit: BoxFit.cover,
+                                          loadingBuilder: (BuildContext context,
+                                              Widget child,
+                                              ImageChunkEvent loadingProgress) {
+                                            if (loadingProgress == null)
+                                              return child;
+                                            return Center(
+                                                child: SizedBox(
+                                              width: 15,
+                                              height: 15,
+                                              child: CircularProgressIndicator(
+                                                value: loadingProgress
+                                                            .expectedTotalBytes !=
+                                                        null
+                                                    ? loadingProgress
+                                                            .cumulativeBytesLoaded /
+                                                        loadingProgress
+                                                            .expectedTotalBytes
+                                                    : null,
+                                              ),
+                                            ));
+                                          },
+                                        ),
+                                      ))
+                                  : Padding(
+                                      padding: EdgeInsets.only(
+                                          left: 3.0, right: 3.0, bottom: 10),
+                                      child: ClipRRect(
+                                        borderRadius:
+                                            BorderRadius.circular(8.0),
+                                        child: Container(
+                                            width: 83,
+                                            height: 83,
+                                            color: Colors.grey[300],
+                                            child: IconButton(
+                                              // Use the FaIcon Widget + FontAwesomeIcons class for the IconData
+                                              iconSize: 35,
+                                              color: Colors.grey,
+                                              icon: FaIcon(
+                                                  FontAwesomeIcons.camera),
+                                              onPressed: () {
+                                                _uploadPhoto();
+                                              },
+                                            )),
+                                      ),
                                     ),
-                                  )),
-                              Padding(
-                                  padding: EdgeInsets.only(
-                                      left: 3.0, right: 3.0, bottom: 10),
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(8.0),
-                                    child: Image.network(
-                                      result,
-                                      width: 83,
-                                      height: 83,
-                                      fit: BoxFit.cover,
-                                      loadingBuilder: (BuildContext context,
-                                          Widget child,
-                                          ImageChunkEvent loadingProgress) {
-                                        if (loadingProgress == null)
-                                          return child;
-                                        return Center(
-                                            child: SizedBox(
-                                          width: 15,
-                                          height: 15,
-                                          child: CircularProgressIndicator(
-                                            value: loadingProgress
-                                                        .expectedTotalBytes !=
-                                                    null
-                                                ? loadingProgress
-                                                        .cumulativeBytesLoaded /
-                                                    loadingProgress
-                                                        .expectedTotalBytes
-                                                : null,
-                                          ),
-                                        ));
-                                      },
+                              shopData["imagePaths"].length >= 2
+                                  ? Padding(
+                                      padding: EdgeInsets.only(
+                                          left: 3.0, right: 3.0, bottom: 10),
+                                      child: ClipRRect(
+                                        borderRadius:
+                                            BorderRadius.circular(8.0),
+                                        child: Image.network(
+                                          result,
+                                          width: 83,
+                                          height: 83,
+                                          fit: BoxFit.cover,
+                                          loadingBuilder: (BuildContext context,
+                                              Widget child,
+                                              ImageChunkEvent loadingProgress) {
+                                            if (loadingProgress == null)
+                                              return child;
+                                            return Center(
+                                                child: SizedBox(
+                                              width: 15,
+                                              height: 15,
+                                              child: CircularProgressIndicator(
+                                                value: loadingProgress
+                                                            .expectedTotalBytes !=
+                                                        null
+                                                    ? loadingProgress
+                                                            .cumulativeBytesLoaded /
+                                                        loadingProgress
+                                                            .expectedTotalBytes
+                                                    : null,
+                                              ),
+                                            ));
+                                          },
+                                        ),
+                                      ))
+                                  : Padding(
+                                      padding: EdgeInsets.only(
+                                          left: 3.0, right: 3.0, bottom: 10),
+                                      child: ClipRRect(
+                                        borderRadius:
+                                            BorderRadius.circular(8.0),
+                                        child: Container(
+                                            width: 83,
+                                            height: 83,
+                                            color: Colors.grey[300],
+                                            child: IconButton(
+                                              // Use the FaIcon Widget + FontAwesomeIcons class for the IconData
+                                              iconSize: 35,
+                                              color: Colors.grey,
+                                              icon: FaIcon(
+                                                  FontAwesomeIcons.camera),
+                                              onPressed: () {
+                                                _uploadPhoto();
+                                              },
+                                            )),
+                                      ),
                                     ),
-                                  )),
-                              Padding(
-                                  padding: EdgeInsets.only(
-                                      left: 3.0, right: 3.0, bottom: 10),
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(8.0),
-                                    child: Image.network(
-                                      result,
-                                      width: 83,
-                                      height: 83,
-                                      fit: BoxFit.cover,
-                                      loadingBuilder: (BuildContext context,
-                                          Widget child,
-                                          ImageChunkEvent loadingProgress) {
-                                        if (loadingProgress == null)
-                                          return child;
-                                        return Center(
-                                            child: SizedBox(
-                                          width: 15,
-                                          height: 15,
-                                          child: CircularProgressIndicator(
-                                            value: loadingProgress
-                                                        .expectedTotalBytes !=
-                                                    null
-                                                ? loadingProgress
-                                                        .cumulativeBytesLoaded /
-                                                    loadingProgress
-                                                        .expectedTotalBytes
-                                                : null,
-                                          ),
-                                        ));
-                                      },
+                              shopData["imagePaths"].length >= 3
+                                  ? Padding(
+                                      padding: EdgeInsets.only(
+                                          left: 3.0, right: 3.0, bottom: 10),
+                                      child: ClipRRect(
+                                        borderRadius:
+                                            BorderRadius.circular(8.0),
+                                        child: Image.network(
+                                          result,
+                                          width: 83,
+                                          height: 83,
+                                          fit: BoxFit.cover,
+                                          loadingBuilder: (BuildContext context,
+                                              Widget child,
+                                              ImageChunkEvent loadingProgress) {
+                                            if (loadingProgress == null)
+                                              return child;
+                                            return Center(
+                                                child: SizedBox(
+                                              width: 15,
+                                              height: 15,
+                                              child: CircularProgressIndicator(
+                                                value: loadingProgress
+                                                            .expectedTotalBytes !=
+                                                        null
+                                                    ? loadingProgress
+                                                            .cumulativeBytesLoaded /
+                                                        loadingProgress
+                                                            .expectedTotalBytes
+                                                    : null,
+                                              ),
+                                            ));
+                                          },
+                                        ),
+                                      ))
+                                  : Padding(
+                                      padding: EdgeInsets.only(
+                                          left: 3.0, right: 3.0, bottom: 10),
+                                      child: ClipRRect(
+                                        borderRadius:
+                                            BorderRadius.circular(8.0),
+                                        child: Container(
+                                            width: 83,
+                                            height: 83,
+                                            color: Colors.grey[300],
+                                            child: IconButton(
+                                              // Use the FaIcon Widget + FontAwesomeIcons class for the IconData
+                                              iconSize: 35,
+                                              color: Colors.grey,
+                                              icon: FaIcon(
+                                                  FontAwesomeIcons.camera),
+                                              onPressed: () {
+                                                _uploadPhoto();
+                                              },
+                                            )),
+                                      ),
                                     ),
-                                  )),
                             ],
                           ),
 
@@ -504,28 +602,6 @@ class _MerchantProfilePageState extends State<MerchantProfilePage> {
                           //     return null;
                           //   },
                           // ),
-                          TextFormField(
-                            // The validator receives the text that the user has entered.
-                            decoration: InputDecoration(
-                              icon: Icon(Icons.insert_photo_rounded,
-                                  color: Colors.blue[300]),
-                              hintText: 'Enter your image url',
-                              labelText: 'Image',
-                            ),
-                            controller: imageController,
-                            validator: (value) {
-                              if (value.isEmpty) {
-                                return '情報を入力してください';
-                              }
-                              return null;
-                            },
-                          ),
-                          RaisedButton(onPressed: () {
-                            _filepick();
-                          }),
-                          RaisedButton(onPressed: () {
-                            _filepick();
-                          }),
                           Padding(
                             padding: EdgeInsets.fromLTRB(0, 10, 10, 0),
                             child: Row(children: [
@@ -665,6 +741,22 @@ class _MerchantProfilePageState extends State<MerchantProfilePage> {
     }
   }
 
+  Future<void> _updatePhoto() async {
+    await _getAddress(shopData["address"]);
+    var response = await http.patch(
+      "https://pq3mbzzsbg.execute-api.ap-northeast-1.amazonaws.com/CaffeExpressRESTAPI/store/$_userId",
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(shopData),
+    );
+    if (response.statusCode == 200) {
+      print('Succesfully Updated Photo');
+    } else {
+      print('Request failed with status: ${response.statusCode}.');
+    }
+  }
+
   void assignVariable() {
     shopData["name"] = nameController.text;
     shopData["description"] = descriptionController.text;
@@ -674,10 +766,8 @@ class _MerchantProfilePageState extends State<MerchantProfilePage> {
     shopData["contactEmail"] = emailController.text;
     shopData["storeURL"] = storeUrlController.text;
     shopData["category"] = _category;
-    // shopData["depositAmountPerPerson"] = depositController.text;
-    shopData["imagePaths"] = imageController.text;
     shopData["vacancyType"] = _vacancyType;
-    shopData["updatedAt"] = DateTime.now().toUtc().toIso8601String();
+    shopData["updatedAt"] = DateTime.now().toString();
   }
 
   void _mapMountedStoreData() {
@@ -689,12 +779,11 @@ class _MerchantProfilePageState extends State<MerchantProfilePage> {
     emailController.text = shopData['contactEmail'];
     storeUrlController.text = shopData['storeURL'];
     _category = shopData['category'];
-    // depositController.text = shopData['depositAmountPerPerson'].toString();
-    if (shopData['imagePaths'].length > 0) {
-      imageController.text = shopData['imagePaths'][0];
-    } else {
-      imageController.text = "";
-    }
+    // if (shopData['imagePaths'].length > 0) {
+    //   imageController.text = shopData['imagePaths'][0];
+    // } else {
+    //   imageController.text = "";
+    // }
     _vacancyType = shopData['vacancyType'];
     shopData.remove("id");
   }
