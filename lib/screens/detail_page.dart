@@ -23,7 +23,7 @@ class _DetailPageState extends State<DetailPage> {
   final _scrollController = ScrollController();
   bool showSpinner = false;
   String text = 'Click the button to start the payment';
-  int amount = 1000;
+  // int amount = 1000;
   String url =
       'https://pq3mbzzsbg.execute-api.ap-northeast-1.amazonaws.com/CaffeExpressRESTAPI/paymentintent';
 
@@ -49,11 +49,11 @@ class _DetailPageState extends State<DetailPage> {
   Map shopData;
   String vacancyType;
   int groupNum = 1;
-  int price = 0;
-  Map sheet;
-  int sheetindex;
-  var availableSheets;
-  bool isSheetAvailable = false;
+  int price;
+  Map seat;
+  int seatIndex;
+  var availableSeats;
+  bool isSeatAvailable = false;
 
   @override
   void initState() {
@@ -261,7 +261,7 @@ class _DetailPageState extends State<DetailPage> {
                       ),
                     ),
                     Wrap(
-                      children: availableSheets.map<Widget>((table) {
+                      children: availableSeats.map<Widget>((table) {
                         return Card(
                           child: Text(
                             '${table['label']}',
@@ -294,14 +294,7 @@ class _DetailPageState extends State<DetailPage> {
                         onChanged: (int newValue) {
                           setState(() {
                             groupNum = newValue;
-                            detectSheet(groupNum);
-                            (() {
-                              if (sheet == null) {
-                                price = 0;
-                              } else {
-                                price = sheet['cancelFee'];
-                              }
-                            })();
+                            detectSeat(newValue);
                             print('PRICE:$price');
                           });
                         },
@@ -339,7 +332,7 @@ class _DetailPageState extends State<DetailPage> {
                         ),
                         Text("Book now!"),
                       ]),
-                  onPressed: isSheetAvailable
+                  onPressed: isSeatAvailable
                       ? () => showDialog(
                             context: context,
                             builder: (_) {
@@ -348,7 +341,7 @@ class _DetailPageState extends State<DetailPage> {
                                 content: Column(
                                   children: [
                                     Text(
-                                      '人数:$groupNum人 \n 頭金:$price 円 \n 予約するテーブル:${sheet['label']}',
+                                      '人数:$groupNum人 \n 頭金:$price 円 \n 予約するテーブル:${seat['label']}',
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                       ),
@@ -373,10 +366,10 @@ class _DetailPageState extends State<DetailPage> {
                                       bookData["createdAt"] = "$bookedTime",
                                       bookData["depositAmount"] = price,
                                       bookData["expiredAt"] = "$expireTime",
-                                      bookData["index"] = sheetindex,
+                                      bookData["index"] = seatIndex,
                                       bookData["partySize"] = groupNum,
                                       bookData["status"] = "paid",
-                                      bookData["tableType"] = sheet,
+                                      bookData["tableType"] = seat,
                                       bookData["updatedAt"] = "$bookedTime",
                                       debugPrint(json.encode(bookData)),
                                       channel.sink.add(json.encode(bookData)),
@@ -441,16 +434,12 @@ class _DetailPageState extends State<DetailPage> {
       shopData = jsonResponse['body'];
       print("shopdata in _getShopData $shopData");
       vacancyType = shopData['vacancyType'];
-      await detectSheet(groupNum);
-      setState(() {
-        // price = shopData['depositAmountPerPerson'];
+      availableSeats = shopData['vacancy']['$vacancyType']
+          .where((seat) => seat['isVacant'] == true)
+          .toList();
+      // setState(() {});
+      await detectSeat(groupNum);
 
-        availableSheets = shopData['vacancy']['$vacancyType']
-            .where((sheet) => sheet['isVacant'] == true)
-            .toList();
-        price = sheet['cancelFee'];
-        // price = 1000;
-      });
       bookData["storeInfo"] = {
         "address": shopData['address'],
         "category": shopData['category'],
@@ -468,27 +457,22 @@ class _DetailPageState extends State<DetailPage> {
     }
   }
 
-  Future<void> detectSheet(int groupNum) async {
-    print("shopdata in detectSheet $shopData");
-    sheet = await shopData['vacancy']['$vacancyType'].firstWhere(
-        (sheet) =>
-            sheet['isVacant'] &&
-            sheet['Min'] <= groupNum &&
-            sheet['Max'] >= groupNum, orElse: () {
-      return null;
-    });
-    sheetindex = await shopData['vacancy']['$vacancyType'].indexWhere((sheet) =>
-        sheet['isVacant'] == true &&
-        sheet['Min'] <= groupNum &&
-        sheet['Max'] >= groupNum);
+  Future<void> detectSeat(int groupNum) async {
+    seatIndex = await shopData['vacancy']['$vacancyType'].indexWhere((table) =>
+        table['isVacant'] == true &&
+        table['Min'] <= groupNum &&
+        table['Max'] >= groupNum);
+    seat =
+        seatIndex != -1 ? shopData['vacancy']['$vacancyType'][seatIndex] : null;
     setState(() {
-      if (sheet != null && sheetindex != -1) {
-        isSheetAvailable = true;
+      if (seat != null && seatIndex != -1) {
+        isSeatAvailable = true;
       } else {
-        isSheetAvailable = false;
+        isSeatAvailable = false;
       }
     });
-    print("Sheet in detectSheet $sheet");
+    price = seat != null ? seat['cancelFee'] : 0;
+    print("Seat in detectSeat $seat");
   }
 
   void _goStripePage(BuildContext context, id, price) {
@@ -531,9 +515,11 @@ class _DetailPageState extends State<DetailPage> {
     });
     //step 2: request to create PaymentIntent, attempt to confirm the payment & return PaymentIntent
     final http.Response response = await http.post(
-        '$url?amount=$amount&payMethod=${paymentMethod.id}&storeStripeId=${shopData["stripeId"]}'); // acct_1IAYF4QG0EUj44rM
+        '$url?amount=$price&payMethod=${paymentMethod.id}&storeStripeId=${shopData["stripeId"]}'); // acct_1IAYF4QG0EUj44rM
     if (response.body != null && response.body != 'error') {
-      final paymentIntentX = jsonDecode(response.body);
+      final decordedBody = jsonDecode(response.body);
+      print("decode paymentIntentX: ${jsonDecode(decordedBody["body"])}");
+      final paymentIntentX = jsonDecode(decordedBody["body"]);
       final status = paymentIntentX['paymentIntent']['status'];
       final strAccount = paymentIntentX['stripeAccount'];
       //step 3: check if payment was succesfully confirmed
