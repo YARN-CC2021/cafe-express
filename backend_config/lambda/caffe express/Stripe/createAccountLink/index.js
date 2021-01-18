@@ -53,7 +53,7 @@ exports.handler = async (event) => {
       const account = await stripe.accounts.create({ type: "standard" });
       // req.session.accountID = account.id;
       accountId = account.id;
-      await updateStripeId(storeId, storeStripeId);
+      await updateStripeId(storeId, accountId);
     }
 
     const origin = `${event.headers.origin}`;
