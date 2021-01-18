@@ -45,6 +45,15 @@ class _MerchantProfileSettingPageState
     }
   }
 
+  Future<void> _goToStripeLink() async {
+    var response = await http.post(
+      "https://pq3mbzzsbg.execute-api.ap-northeast-1.amazonaws.com/CaffeExpressRESTAPI/stripeaccount?storeStripeId=acct_1IAYF4QG0EUj44rM&storeId=near_azamino",
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -270,6 +279,10 @@ class _MerchantProfileSettingPageState
                     subtitle: Text(
                       "${shopData["description"]}",
                     ),
+                  ),
+                  MaterialButton(
+                    child: Text("Stripeへ行く", style: TextStyle(fontSize: 10)),
+                    onPressed: _goToStripeLink,
                   ),
                   MediaQuery.of(context).platformBrightness == Brightness.dark
                       ? SizedBox()
