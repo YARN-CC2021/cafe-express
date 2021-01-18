@@ -5,6 +5,7 @@ import 'dart:convert';
 import '../global.dart' as globals;
 import 'package:http/http.dart' as http;
 import 'package:web_socket_channel/io.dart';
+import '../app.dart';
 
 class BookingListPage extends StatefulWidget {
   @override
@@ -48,28 +49,92 @@ class _BookingPageState extends State<BookingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          leading: new Container(),
-          title: Text(
-            "予約履歴",
-            textAlign: TextAlign.center,
-          ),
-          backgroundColor: Theme.of(context).primaryColor,
-          elevation: 0.0,
+      appBar: AppBar(
+        leading: new Container(),
+        title: Text(
+          "予約履歴",
+          textAlign: TextAlign.center,
         ),
-        body: bookingData == null
-            ? Center(child: CircularProgressIndicator())
-            : StreamBuilder(
-                stream: channel.stream,
-                builder: (context, snapshot) {
-                  if (snapshot.hasData &&
-                      json.decode(snapshot.data)["bookingId"] != bookingId) {
-                    print(snapshot.data);
-                    _insertBooking(json.decode(snapshot.data));
-                    bookingId = json.decode(snapshot.data)["bookingId"];
-                  }
-                  return buildListView();
-                }));
+        backgroundColor: Theme.of(context).primaryColor,
+        elevation: 0.0,
+      ),
+      body: bookingData == null
+          ? Center(child: CircularProgressIndicator())
+          : StreamBuilder(
+              stream: channel.stream,
+              builder: (context, snapshot) {
+                if (snapshot.hasData &&
+                    json.decode(snapshot.data)["bookingId"] != bookingId) {
+                  print(snapshot.data);
+                  _insertBooking(json.decode(snapshot.data));
+                  bookingId = json.decode(snapshot.data)["bookingId"];
+                }
+                return buildListView();
+              }),
+      bottomNavigationBar: BottomAppBar(
+        child: new Row(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            SizedBox(width: 7),
+            IconButton(
+              icon: Icon(
+                Icons.qr_code_rounded,
+                size: 24.0,
+              ),
+              color: Colors.black,
+              onPressed: () => {_changePage(context, QrRoute)},
+            ),
+            IconButton(
+              icon: Icon(
+                Icons.calendar_today_rounded,
+                size: 24.0,
+              ),
+              color: Colors.black,
+              onPressed: () => {_changePage(context, MerchantCalendarRoute)},
+            ),
+            Container(
+              width: 24.0,
+              height: 10,
+            ),
+            IconButton(
+              icon: Icon(
+                Icons.assignment,
+                size: 24.0,
+              ),
+              color: Colors.black,
+              onPressed: () => {_changePage(context, BookingListRoute)},
+            ),
+            IconButton(
+              icon: Icon(
+                Icons.account_circle,
+                size: 24.0,
+              ),
+              color: Colors.black,
+              onPressed: () =>
+                  {_changePage(context, MerchantProfileSettingRoute)},
+            ),
+            SizedBox(width: 7),
+          ],
+        ),
+        color: Theme.of(context).primaryColor,
+        shape: CircularNotchedRectangle(),
+      ),
+      floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: FloatingActionButton(
+        elevation: 4.0,
+        child: Icon(
+          Icons.videogame_asset,
+        ),
+        onPressed: () => {_changePage(context, MerchantRoute)},
+      ),
+    );
+  }
+
+  void _changePage(BuildContext context, String route) {
+    Navigator.pushNamed(context, route);
+    print("Going to $route was triggered");
   }
 
   Future<void> _getBookingData() async {

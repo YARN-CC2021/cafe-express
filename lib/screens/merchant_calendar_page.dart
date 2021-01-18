@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:amplify_core/amplify_core.dart';
+import 'package:awesome_dialog/awesome_dialog.dart';
 
 class MerchantCalendarPage extends StatefulWidget {
   @override
@@ -152,13 +153,13 @@ class _MerchantCalendarPageState extends State<MerchantCalendarPage> {
             body: Center(
               child: new ListView(
                   padding:
-                      EdgeInsets.symmetric(horizontal: 30.0, vertical: 30.0),
+                      EdgeInsets.symmetric(horizontal: 30.0, vertical: 10.0),
                   children: [
                     Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Container(
-                            margin: const EdgeInsets.only(bottom: 10.0),
+                            margin: const EdgeInsets.only(bottom: 3.0),
                             child: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceEvenly,
@@ -197,7 +198,7 @@ class _MerchantCalendarPageState extends State<MerchantCalendarPage> {
                                   ),
                                 ])),
                         Container(
-                            margin: const EdgeInsets.only(bottom: 10.0),
+                            margin: const EdgeInsets.only(top: 0, bottom: 10.0),
                             child: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceEvenly,
@@ -457,7 +458,7 @@ class _MerchantCalendarPageState extends State<MerchantCalendarPage> {
                               ]),
                         ),
                         Container(
-                          margin: const EdgeInsets.only(bottom: 20.0),
+                          margin: const EdgeInsets.only(bottom: 10.0),
                           child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
@@ -496,17 +497,115 @@ class _MerchantCalendarPageState extends State<MerchantCalendarPage> {
                         ),
                       ],
                     ),
-                    ElevatedButton(
-                      onPressed: () {
-                        assignNewHours();
-                        _updateStoreProfile();
-                        _goMerchantPage(context);
-                      },
-                      child: Text('保存'),
-                    )
+                    Container(
+                        width: 100,
+                        child: MaterialButton(
+                          color: Colors.lightBlue,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(18.0),
+                              side: BorderSide(color: Colors.lightBlue)),
+                          onPressed: () {
+                            try {
+                              assignNewHours();
+                              _updateStoreProfile();
+                              AwesomeDialog(
+                                context: context,
+                                customHeader: null,
+                                dialogType: DialogType.NO_HEADER,
+                                animType: AnimType.BOTTOMSLIDE,
+                                body: Center(
+                                  child: Text('カレンダー情報がアップデートされました'),
+                                ),
+                                // btnOkOnPress: () {},
+                                useRootNavigator: false,
+                                // btnOkColor: Colors.tealAccent[400],
+                                // btnCancelOnPress: () {},
+                                // btnOkText: 'ログアウト',
+                                // btnCancelText: 'キャンセル',
+                                // btnCancelColor: Colors.blueGrey[400],
+                                dismissOnTouchOutside: true,
+                                headerAnimationLoop: false,
+                                showCloseIcon: false,
+                                buttonsBorderRadius:
+                                    BorderRadius.all(Radius.circular(100)),
+                              )..show();
+                            } catch (e) {
+                              print(e.toString());
+                            }
+                          },
+                          child: Text(
+                            '保存',
+                            style: TextStyle(color: Colors.white, fontSize: 25),
+                          ),
+                        ))
                   ]),
             ),
+            bottomNavigationBar: BottomAppBar(
+              child: new Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  SizedBox(width: 7),
+                  IconButton(
+                    icon: Icon(
+                      Icons.qr_code_rounded,
+                      size: 24.0,
+                    ),
+                    color: Colors.black,
+                    onPressed: () => {_changePage(context, QrRoute)},
+                  ),
+                  IconButton(
+                    icon: Icon(
+                      Icons.calendar_today_rounded,
+                      size: 24.0,
+                    ),
+                    color: Colors.black,
+                    onPressed: () =>
+                        {_changePage(context, MerchantCalendarRoute)},
+                  ),
+                  Container(
+                    width: 24.0,
+                    height: 10,
+                  ),
+                  IconButton(
+                    icon: Icon(
+                      Icons.assignment,
+                      size: 24.0,
+                    ),
+                    color: Colors.black,
+                    onPressed: () => {_changePage(context, BookingListRoute)},
+                  ),
+                  IconButton(
+                    icon: Icon(
+                      Icons.account_circle,
+                      size: 24.0,
+                    ),
+                    color: Colors.black,
+                    onPressed: () =>
+                        {_changePage(context, MerchantProfileSettingRoute)},
+                  ),
+                  SizedBox(width: 7),
+                ],
+              ),
+              color: Theme.of(context).primaryColor,
+              shape: CircularNotchedRectangle(),
+            ),
+            floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.centerDocked,
+            floatingActionButton: FloatingActionButton(
+              elevation: 4.0,
+              child: Icon(
+                Icons.videogame_asset,
+              ),
+              onPressed: () => {_changePage(context, MerchantRoute)},
+            ),
           );
+  }
+
+  void _changePage(BuildContext context, String route) {
+    Navigator.pushNamed(context, route);
+    print("Going to $route was triggered");
   }
 
   void _goMerchantPage(BuildContext context) {
