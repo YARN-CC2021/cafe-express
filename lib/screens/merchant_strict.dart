@@ -149,10 +149,12 @@ class _MerchantStrictState extends State<MerchantStrict> {
     return Scaffold(
       appBar: AppBar(
         leading: new Container(),
-        title: Text(
-          "Cafe Express Control Panel",
-          textAlign: TextAlign.center,
-        ),
+        title: Text("空席管理",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+            )),
+        centerTitle: true,
         backgroundColor: Theme.of(context).primaryColor,
         elevation: 0.0,
       ),
@@ -173,7 +175,13 @@ class _MerchantStrictState extends State<MerchantStrict> {
                             body: Center(
                                 child: Column(children: [
                               Text(
-                                  'Party Size:${json.decode(snapshot.data)["partySize"]}\nBooked Time:${json.decode(snapshot.data)["bookedAt"]}\nArrival Time By:${json.decode(snapshot.data)["expiredAt"]}\nDeposit:${json.decode(snapshot.data)["depositAmount"]} Yen'),
+                                  '人数: ${json.decode(snapshot.data)["partySize"]}'),
+                              Text(
+                                  '予約時間: ${json.decode(snapshot.data)["bookedAt"]}'),
+                              Text(
+                                  '到着締切: ${json.decode(snapshot.data)["expiredAt"]}'),
+                              Text(
+                                  'キャンセル料: ${json.decode(snapshot.data)["depositAmount"]}円'),
                             ])),
                             btnOkOnPress: () {},
                             useRootNavigator: false,

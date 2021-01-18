@@ -143,7 +143,7 @@ class _MerchantProfilePageState extends State<MerchantProfilePage> {
     // Build a Form widget using the _formKey created above.
     return Scaffold(
         appBar: AppBar(
-          title: Text("プロファイル編集",
+          title: Text("プロフィール編集",
               style: TextStyle(
                 fontWeight: FontWeight.bold,
               )),
@@ -151,7 +151,7 @@ class _MerchantProfilePageState extends State<MerchantProfilePage> {
           backgroundColor: Theme.of(context).primaryColor,
           elevation: 0.0,
         ),
-        body: shopData == null && images == null
+        body: shopData == null && images == null && _category == null
             ? Center(child: CircularProgressIndicator())
             : Form(
                 key: _formKey,
