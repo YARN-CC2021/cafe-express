@@ -24,6 +24,7 @@ class _AuthState extends State<Auth> {
   @override
   initState() {
     super.initState();
+    // if (Amplify.Auth.getCurrentUser() != null) Amplify.Auth.signOut();
     print("Very beginning auth: ${globals.userId}");
     if (!isConfigured) config();
   }
@@ -71,6 +72,14 @@ class _AuthState extends State<Auth> {
       }
     } catch (e) {
       print(e);
+    }
+  }
+
+  Future<String> signOut() async {
+    try {
+      await Amplify.Auth.signOut();
+    } catch (error) {
+      return 'Sign out error';
     }
   }
 

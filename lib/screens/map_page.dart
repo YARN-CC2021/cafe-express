@@ -72,10 +72,17 @@ class _MapPageState extends State<MapPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Cafe Express"),
-        backgroundColor: Theme.of(context).primaryColor,
-        elevation: 0.0,
-      ),
+          title: Text("Cafe Express"),
+          backgroundColor: Theme.of(context).primaryColor,
+          elevation: 0.0,
+          actions: <Widget>[
+            FlatButton.icon(
+                icon: Icon(Icons.person),
+                label: Text("logout"),
+                onPressed: () async {
+                  _logOut();
+                })
+          ]),
       body: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
         Expanded(
           child: Stack(
@@ -242,50 +249,50 @@ class _MapPageState extends State<MapPage> {
               ]),
             ]),
       ]),
-      bottomNavigationBar: BottomAppBar(
-        child: new Row(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            SizedBox(width: 7),
-            IconButton(
-              ///Timer
-              icon: Icon(
-                Icons.qr_code_rounded,
-                size: 24.0,
-              ),
-              color: Colors.black,
-              onPressed: () => {_changePage(context, QrRoute)},
-            ),
-            Container(
-              width: 56.0,
-              height: 10,
-            ),
-            IconButton(
-              /// booking history
-              icon: Icon(
-                Icons.assignment,
-                size: 24.0,
-              ),
-              color: Colors.black,
-              onPressed: () => {_changePage(context, BookingHistoryRoute)},
-            ),
-            SizedBox(width: 7),
-          ],
-        ),
-        color: Theme.of(context).primaryColor,
-        shape: CircularNotchedRectangle(),
-      ),
-      floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: FloatingActionButton(
-        elevation: 4.0,
-        child: Icon(
-          ///map search
-          Icons.map,
-        ),
-        onPressed: () => {_changePage(context, MapSearchRoute)},
-      ),
+      // bottomNavigationBar: BottomAppBar(
+      //   child: new Row(
+      //     mainAxisSize: MainAxisSize.max,
+      //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      //     children: <Widget>[
+      //       SizedBox(width: 7),
+      //       IconButton(
+      //         ///Timer
+      //         icon: Icon(
+      //           Icons.qr_code_rounded,
+      //           size: 24.0,
+      //         ),
+      //         color: Colors.black,
+      //         onPressed: () => {_changePage(context, QrRoute)},
+      //       ),
+      //       Container(
+      //         width: 56.0,
+      //         height: 10,
+      //       ),
+      //       IconButton(
+      //         /// booking history
+      //         icon: Icon(
+      //           Icons.assignment,
+      //           size: 24.0,
+      //         ),
+      //         color: Colors.black,
+      //         onPressed: () => {_changePage(context, BookingHistoryRoute)},
+      //       ),
+      //       SizedBox(width: 7),
+      //     ],
+      //   ),
+      //   color: Theme.of(context).primaryColor,
+      //   shape: CircularNotchedRectangle(),
+      // ),
+      // floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,
+      // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      // floatingActionButton: FloatingActionButton(
+      //   elevation: 4.0,
+      //   child: Icon(
+      //     ///map search
+      //     Icons.videogame_asset,
+      //   ),
+      //   onPressed: () => {_changePage(context, MerchantRoute)},
+      // ),
     );
   }
 
@@ -516,5 +523,12 @@ class _MapPageState extends State<MapPage> {
 
   void _onTap(BuildContext context, String shopId) {
     Navigator.pushNamed(context, DetailRoute, arguments: {"id": shopId});
+  }
+
+  _logOut() {
+    Amplify.Auth.signOut();
+    Navigator.pushNamed(context, AuthRoute);
+
+    print("triggered");
   }
 }
