@@ -30,10 +30,11 @@ class _QrPageState extends State<QrPage> {
     return Scaffold(
       appBar: AppBar(
         leading: new Container(),
-        title: Text(
-          "Cafe Express Control Panel",
-          textAlign: TextAlign.center,
-        ),
+        title: Text("QRコード",
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+            )),
+        centerTitle: true,
         backgroundColor: Theme.of(context).primaryColor,
         elevation: 0.0,
       ),

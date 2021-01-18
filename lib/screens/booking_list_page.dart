@@ -51,10 +51,12 @@ class _BookingPageState extends State<BookingPage> {
     return Scaffold(
       appBar: AppBar(
         leading: new Container(),
-        title: Text(
-          "予約履歴",
-          textAlign: TextAlign.center,
-        ),
+        title: Text("予約管理",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+            )),
+        centerTitle: true,
         backgroundColor: Theme.of(context).primaryColor,
         elevation: 0.0,
       ),
@@ -330,8 +332,7 @@ class _BookingPageState extends State<BookingPage> {
                         child: SizedBox(
                           width: 100,
                           child: Text(
-                            // booking["bookName"],
-                            "隆盛カフェ",
+                            booking["bookName"],
                             style: TextStyle(fontWeight: FontWeight.bold),
                             textAlign: TextAlign.left,
                           ),
@@ -340,8 +341,7 @@ class _BookingPageState extends State<BookingPage> {
                       Padding(
                         padding: EdgeInsets.only(right: 15),
                         child: Text(
-                          // "種類：${booking["tableType"]["label"]}\n人数：${booking["partySize"]}人",
-                          "種類：１２人席\n人数：${booking["partySize"]}人",
+                          "種類：${booking["tableType"]["label"]}\n人数：${booking["partySize"]}人",
                           style: TextStyle(fontSize: 10),
                         ),
                       ),

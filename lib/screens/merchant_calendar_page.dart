@@ -143,10 +143,12 @@ class _MerchantCalendarPageState extends State<MerchantCalendarPage> {
         : Scaffold(
             appBar: AppBar(
               leading: new Container(),
-              title: Text(
-                "カレンダー",
-                textAlign: TextAlign.center,
-              ),
+              title: Text("営業日時管理",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                  )),
+              centerTitle: true,
               backgroundColor: Theme.of(context).primaryColor,
               elevation: 0.0,
             ),
@@ -497,12 +499,15 @@ class _MerchantCalendarPageState extends State<MerchantCalendarPage> {
                         ),
                       ],
                     ),
-                    Container(
-                        width: 100,
-                        child: MaterialButton(
+                    Center(
+                        child: Row(
+                      children: [
+                        SizedBox(width: 100),
+                        Expanded(
+                            child: MaterialButton(
                           color: Colors.lightBlue,
                           shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(18.0),
+                              borderRadius: BorderRadius.circular(5.0),
                               side: BorderSide(color: Colors.lightBlue)),
                           onPressed: () {
                             try {
@@ -535,9 +540,12 @@ class _MerchantCalendarPageState extends State<MerchantCalendarPage> {
                           },
                           child: Text(
                             '保存',
-                            style: TextStyle(color: Colors.white, fontSize: 25),
+                            style: TextStyle(color: Colors.white, fontSize: 16),
                           ),
-                        ))
+                        )),
+                        SizedBox(width: 100),
+                      ],
+                    )),
                   ]),
             ),
             bottomNavigationBar: BottomAppBar(
@@ -606,10 +614,5 @@ class _MerchantCalendarPageState extends State<MerchantCalendarPage> {
   void _changePage(BuildContext context, String route) {
     Navigator.pushNamed(context, route);
     print("Going to $route was triggered");
-  }
-
-  void _goMerchantPage(BuildContext context) {
-    Navigator.pushNamed(context, MerchantRoute);
-    print("goMerchantPage was triggered");
   }
 }
