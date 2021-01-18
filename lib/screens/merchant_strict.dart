@@ -1,3 +1,4 @@
+import 'package:cafeexpress/screens/booking_list_page.dart';
 import "package:flutter/material.dart";
 import '../global.dart' as globals;
 import 'package:web_socket_channel/io.dart';
@@ -183,7 +184,9 @@ class _MerchantStrictState extends State<MerchantStrict> {
                               Text(
                                   'キャンセル料: ${json.decode(snapshot.data)["depositAmount"]}円'),
                             ])),
-                            btnOkOnPress: () {},
+                            btnOkOnPress: () {
+                              _changePage(context, BookingListRoute);
+                            },
                             useRootNavigator: false,
                             btnOkColor: Colors.tealAccent[400],
                             // btnCancelOnPress: () {},
