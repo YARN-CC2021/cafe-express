@@ -42,7 +42,7 @@ const StoredCardsRoute = "/stored_cards";
 
 class MyApp extends StatelessWidget {
   static init() {
-    // if (Amplify.Auth.getCurrentUser() != null) Amplify.Auth.signOut();
+    if (Amplify.Auth.getCurrentUser() != null) Amplify.Auth.signOut();
   }
 
   // This widget is the root of your application.

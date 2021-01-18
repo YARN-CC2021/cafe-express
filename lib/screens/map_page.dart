@@ -79,7 +79,7 @@ class _MapPageState extends State<MapPage> {
           actions: <Widget>[
             FlatButton.icon(
                 icon: Icon(Icons.person),
-                label: Text("logout"),
+                label: Text("ログアウト"),
                 onPressed: () {
                   //_logOut();
                   AwesomeDialog(
