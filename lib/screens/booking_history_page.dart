@@ -98,7 +98,7 @@ class _BookingHistoryPageState extends State<BookingHistoryPage> {
           ///map search
           Icons.videogame_asset,
         ),
-        onPressed: () => {_changePage(context, MerchantRoute)},
+        onPressed: () => {_changePage(context, MapSearchRoute)},
       ),
     );
   }
