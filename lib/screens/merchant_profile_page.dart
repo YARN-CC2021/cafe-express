@@ -107,8 +107,8 @@ class _MerchantProfilePageState extends State<MerchantProfilePage> {
       accessLevel: StorageAccessLevel.guest,
     );
     var listOfUrl = [];
-    print("shopData: ${shopData["imageUrl"]}");
-    if (shopData["imageUrl"].length > 0) {
+    print("shopData Image URL: ${shopData["imageUrl"]}");
+    if (shopData["imageUrl"] != null && shopData["imageUrl"].length > 0) {
       for (var key in shopData["imageUrl"]) {
         var result =
             await Amplify.Storage.getUrl(key: key, options: getUrlOptions);
