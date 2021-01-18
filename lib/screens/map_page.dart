@@ -117,36 +117,42 @@ class _MapPageState extends State<MapPage> {
                                         MainAxisAlignment.spaceEvenly,
                                     children: [
                                       FutureBuilder(
-                                        future: _showPic(shop),
-                                        builder:(BuildContext context, AsyncSnapshot<String> snapshot) {
-                                          if (snapshot.connectionState != ConnectionState.done) {
-                                            return CircularProgressIndicator();
-                                          }
-                                          if (snapshot.hasError) {
-                                            return Text(snapshot.error.toString());
-                                          }
-                                          if(snapshot.hasData) {
-                                            return Center(
-                                              child: Image.network(
-                                                '${snapshot.data}',
-                                                // '${shop['imageUrl']}',
-                                                // listOfUrl[shop["id"]],
-                                                fit: BoxFit.cover,
-                                                loadingBuilder: (context, child, loadingProgress) {
-                                                  if (loadingProgress == null) return child;
-                                                  return CircularProgressIndicator();
-                                                },
-                                                errorBuilder:
-                                                    (BuildContext context, Object exception, StackTrace stackTrace) {
-                                                  return Text('写真がありません');
-                                                },
-                                              ),
-                                            );
-                                          } else {
-                                            return Text('写真がありません');
-                                          }
-                                        }
-                                      ),
+                                          future: _showPic(shop),
+                                          builder: (BuildContext context,
+                                              AsyncSnapshot<String> snapshot) {
+                                            if (snapshot.connectionState !=
+                                                ConnectionState.done) {
+                                              return CircularProgressIndicator();
+                                            }
+                                            if (snapshot.hasError) {
+                                              return Text(
+                                                  snapshot.error.toString());
+                                            }
+                                            if (snapshot.hasData) {
+                                              return Center(
+                                                child: Image.network(
+                                                  '${snapshot.data}',
+                                                  // '${shop['imageUrl']}',
+                                                  // listOfUrl[shop["id"]],
+                                                  fit: BoxFit.cover,
+                                                  loadingBuilder: (context,
+                                                      child, loadingProgress) {
+                                                    if (loadingProgress == null)
+                                                      return child;
+                                                    return CircularProgressIndicator();
+                                                  },
+                                                  errorBuilder: (BuildContext
+                                                          context,
+                                                      Object exception,
+                                                      StackTrace stackTrace) {
+                                                    return Text('写真がありません');
+                                                  },
+                                                ),
+                                              );
+                                            } else {
+                                              return Text('写真がありません');
+                                            }
+                                          }),
                                       imageCard(shop),
                                     ]),
                                 Positioned(
@@ -386,6 +392,8 @@ class _MapPageState extends State<MapPage> {
       var result =
           await Amplify.Storage.getUrl(key: key, options: getUrlOptions);
       return result.url;
+    } else {
+      return null;
     }
     // if (shopData["imageUrl"].length > 0) {
     //   for (var key in shopData["imageUrl"]) {
@@ -559,3 +567,4 @@ class _MapPageState extends State<MapPage> {
     print("triggered");
   }
 }
+
