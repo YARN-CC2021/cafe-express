@@ -378,7 +378,7 @@ class _DetailPageState extends State<DetailPage> {
                                       // bookData["status"] = "payed",
                                       // bookData["tableType"] = sheet,
                                       // bookData["updatedAt"] = "$bookedTime",
-                                      // // debugPrint(json.encode(bookData)),
+                                      // debugPrint(json.encode(bookData)),
                                       // channel.sink.add(json.encode(bookData)),
                                       createPaymentMethod(),
                                       // price == 0
@@ -447,7 +447,8 @@ class _DetailPageState extends State<DetailPage> {
             .where((sheet) => sheet['isVacant'] == true)
             .toList();
         detectSheet(groupNum);
-        price = groupNum * sheet['cancelFee'];
+        // price = groupNum * sheet['cancelFee'];
+        price = 1000;
       });
       bookData["storeInfo"] = {
         "address": shopData['address'],
@@ -502,7 +503,6 @@ class _DetailPageState extends State<DetailPage> {
 
   Future<void> createPaymentMethod() async {
     StripePayment.setStripeAccount(null);
-    print('amount in pence/cent which will be charged = $amount');
     //step 1: add card
     PaymentMethod paymentMethod = PaymentMethod();
     paymentMethod = await StripePayment.paymentRequestWithCardForm(
@@ -513,7 +513,7 @@ class _DetailPageState extends State<DetailPage> {
       print('Errore Card: ${e.toString()}');
     });
     paymentMethod != null
-        ? processPaymentAsDirectCharge(paymentMethod)
+        ? await processPaymentAsDirectCharge(paymentMethod)
         : showDialog(
             context: context,
             builder: (BuildContext context) => ShowDialogToDismiss(
@@ -521,6 +521,7 @@ class _DetailPageState extends State<DetailPage> {
                 content:
                     'It is not possible to pay with this card. Please try again with a different card',
                 buttonText: 'CLOSE'));
+    // _goTimerPage(context);
   }
 
   Future<void> processPaymentAsDirectCharge(PaymentMethod paymentMethod) async {
@@ -529,8 +530,7 @@ class _DetailPageState extends State<DetailPage> {
     });
     //step 2: request to create PaymentIntent, attempt to confirm the payment & return PaymentIntent
     final http.Response response = await http.post(
-        '$url?amount=$amount&payMethod=${paymentMethod.id}&storeStripeId=acct_1IAYF4QG0EUj44rM');
-    print('Now i decode');
+        '$url?amount=$amount&payMethod=${paymentMethod.id}&storeStripeId=${shopData["stripeId"]}'); // acct_1IAYF4QG0EUj44rM
     if (response.body != null && response.body != 'error') {
       final paymentIntentX = jsonDecode(response.body);
       final status = paymentIntentX['paymentIntent']['status'];
