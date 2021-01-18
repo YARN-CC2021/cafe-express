@@ -53,12 +53,12 @@ class _MapPageState extends State<MapPage> {
     _isPageViewAnimating = false;
 
     // 現在位置の変化を監視 backgroundでも動くのかどうか
-    _locationChangedListen =
-        _locationService.onLocationChanged.listen((LocationData result) async {
-      setState(() {
-        _yourLocation = result;
-      });
-    });
+    // _locationChangedListen =
+    //     _locationService.onLocationChanged.listen((LocationData result) async {
+    //   setState(() {
+    //     _yourLocation = result;
+    //   });
+    // });
   }
 
   @override
@@ -116,44 +116,45 @@ class _MapPageState extends State<MapPage> {
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceEvenly,
                                     children: [
-                                      FutureBuilder(
-                                          future: _showPic(shop),
-                                          builder: (BuildContext context,
-                                              AsyncSnapshot<String> snapshot) {
-                                            if (snapshot.connectionState !=
-                                                ConnectionState.done) {
-                                              return CircularProgressIndicator();
-                                            }
-                                            if (snapshot.hasError) {
-                                              return Text(
-                                                  snapshot.error.toString());
-                                            }
-                                            if (snapshot.hasData) {
-                                              return Center(
-                                                child: Image.network(
-                                                  '${snapshot.data}',
-                                                  // '${shop['imageUrl']}',
-                                                  // listOfUrl[shop["id"]],
-                                                  fit: BoxFit.cover,
-                                                  loadingBuilder: (context,
-                                                      child, loadingProgress) {
-                                                    if (loadingProgress == null)
-                                                      return child;
-                                                    return CircularProgressIndicator();
-                                                  },
-                                                  errorBuilder: (BuildContext
-                                                          context,
-                                                      Object exception,
-                                                      StackTrace stackTrace) {
-                                                    return Text('写真がありません');
-                                                  },
-                                                ),
-                                              );
-                                            } else {
-                                              return Text('写真がありません');
-                                            }
-                                          }),
-                                      imageCard(shop),
+                                      // FutureBuilder(
+                                      //     future: _showPic(shop),
+                                      //     builder: (BuildContext context,
+                                      //         AsyncSnapshot<String> snapshot) {
+                                      //       if (snapshot.connectionState !=
+                                      //           ConnectionState.done) {
+                                      //         return CircularProgressIndicator();
+                                      //       }
+                                      //       if (snapshot.hasError) {
+                                      //         return Text(
+                                      //             snapshot.error.toString());
+                                      //       }
+                                      //       if (snapshot.hasData) {
+                                      //         return Center(
+                                      //           child: Image.network(
+                                      //             '${snapshot.data}',
+                                      //             // '${shop['imageUrl']}',
+                                      //             // listOfUrl[shop["id"]],
+                                      //             fit: BoxFit.cover,
+                                      //             loadingBuilder: (context,
+                                      //                 child, loadingProgress) {
+                                      //               if (loadingProgress == null)
+                                      //                 return child;
+                                      //               return CircularProgressIndicator();
+                                      //             },
+                                      //             errorBuilder: (BuildContext
+                                      //                     context,
+                                      //                 Object exception,
+                                      //                 StackTrace stackTrace) {
+                                      //               return Text('写真がありません');
+                                      //             },
+                                      //           ),
+                                      //         );
+                                      //       } else {
+                                      //         return Center(
+                                      //             child: Text('写真がありません'));
+                                      //       }
+                                      //     }),
+                                      // imageCard(shop),
                                     ]),
                                 Positioned(
                                   left: 0,
@@ -354,7 +355,7 @@ class _MapPageState extends State<MapPage> {
           return Marker(
             markerId: MarkerId(shop['id']),
             position: LatLng(shop['lat'].toDouble(), shop['lng'].toDouble()),
-            icon: shop['id'] == selectedShop['id']
+            icon: selectedShop != null && shop['id'] == selectedShop['id']
                 ? BitmapDescriptor.defaultMarker
                 : BitmapDescriptor.defaultMarkerWithHue(120.0),
             onTap: () {
@@ -384,10 +385,11 @@ class _MapPageState extends State<MapPage> {
   // Map listOfUrl = {};
 
   Future<String> _showPic(shop) async {
+    print('${shop['name']}');
     final getUrlOptions = GetUrlOptions(
       accessLevel: StorageAccessLevel.guest,
     );
-    if (shop["imageUrl"].length > 0) {
+    if (shop["imageUrl"] != null && shop["imageUrl"].length > 0) {
       String key = shop["imageUrl"][0];
       var result =
           await Amplify.Storage.getUrl(key: key, options: getUrlOptions);
@@ -446,6 +448,7 @@ class _MapPageState extends State<MapPage> {
           .where((shop) => shop['lat'] != null && shop['lng'] != null)
           .toList();
       listShops = shopData;
+      print("listShops [0] ${listShops[0]}");
       _filterShop(distance, category, groupNum);
     } else {
       print('Request failed with status: ${response.statusCode}.');
@@ -567,4 +570,3 @@ class _MapPageState extends State<MapPage> {
     print("triggered");
   }
 }
-
