@@ -20,10 +20,9 @@ class MerchantProfilePage extends StatefulWidget {
 
 Map shopData;
 var _userId;
-var result;
-String identityId;
-var _category = "お店のカテゴリーを選択ください";
+var _category;
 var _vacancyType = "";
+var images;
 
 class _MerchantProfilePageState extends State<MerchantProfilePage> {
   @override
@@ -55,14 +54,12 @@ class _MerchantProfilePageState extends State<MerchantProfilePage> {
     setState(() => _userId = globals.userId);
     var response = await http.get(
         'https://pq3mbzzsbg.execute-api.ap-northeast-1.amazonaws.com/CaffeExpressRESTAPI/store/$_userId');
-    await _listPic();
-    await _fetchSession();
-    await _showPic();
     if (response.statusCode == 200) {
       final jsonResponse = await json.decode(utf8.decode(response.bodyBytes));
       setState(() {
         shopData = jsonResponse['body'];
       });
+      await _showPic();
       _mapMountedStoreData();
     } else {
       print('Request failed with status: ${response.statusCode}.');
@@ -80,9 +77,12 @@ class _MerchantProfilePageState extends State<MerchantProfilePage> {
           S3UploadFileOptions(accessLevel: StorageAccessLevel.guest);
       UploadFileResult result = await Amplify.Storage.uploadFile(
           key: fileName, local: file, options: options);
+      print("first print ${shopData["imageUrl"]}");
+      print("first print ${result.key}");
       setState(() {
-        shopData["imagePaths"].add(result.key);
+        shopData["imageUrl"].add(result.key);
       });
+      print("first print ${shopData["imageUrl"]}");
       await _updatePhoto();
       print("Upload Completed!");
     } catch (e) {
@@ -90,45 +90,55 @@ class _MerchantProfilePageState extends State<MerchantProfilePage> {
     }
   }
 
-  Future<void> _fetchSession() async {
-    print("Im in fetchSesssion!!!");
-    try {
-      CognitoAuthSession res = await Amplify.Auth.fetchAuthSession(
-          options: CognitoSessionOptions(getAWSCredentials: true));
-      identityId = res.identityId;
-      print("IdentityId $identityId");
-    } on AuthError catch (e) {
-      print(e);
-    }
-  }
+  // Future<void> _fetchSession() async {
+  //   print("Im in fetchSesssion!!!");
+  //   try {
+  //     CognitoAuthSession res = await Amplify.Auth.fetchAuthSession(
+  //         options: CognitoSessionOptions(getAWSCredentials: true));
+  //     identityId = res.identityId;
+  //     print("IdentityId $identityId");
+  //   } on AuthError catch (e) {
+  //     print(e);
+  //   }
+  // }
 
   Future<void> _showPic() async {
+    print("inside showpic");
     final getUrlOptions = GetUrlOptions(
       accessLevel: StorageAccessLevel.guest,
     );
-    try {
-      result =
-          await Amplify.Storage.getUrl(key: result, options: getUrlOptions);
-      result = result.url;
-      print("done getting $result");
-    } catch (e) {
-      print(e.toString());
+    var listOfUrl = [];
+    print("shopData: ${shopData["imageUrl"]}");
+    if (shopData["imageUrl"].length > 0) {
+      for (var key in shopData["imageUrl"]) {
+        var result =
+            await Amplify.Storage.getUrl(key: key, options: getUrlOptions);
+        var url = result.url;
+        listOfUrl.add(url);
+      }
     }
+    print("List of Url: $listOfUrl");
+    print("done getting getting image Url");
+    setState(() {
+      images = listOfUrl;
+    });
+    print("imagesssss: $images");
+    print("done listing");
   }
 
-  Future<void> _listPic() async {
-    print("Im in listPic");
-    try {
-      S3ListOptions options = S3ListOptions(
-        accessLevel: StorageAccessLevel.guest,
-      );
-      ListResult res = await Amplify.Storage.list(options: options);
-      result = res.items[0].key;
-      print("res $res");
-    } catch (e) {
-      print(e.toString());
-    }
-  }
+  // Future<void> _listPic() async {
+  //   print("Im in listPic");
+  //   try {
+  //     S3ListOptions options = S3ListOptions(
+  //       accessLevel: StorageAccessLevel.guest,
+  //     );
+  //     ListResult res = await Amplify.Storage.list(options: options);
+  //     result = res.items[0].key;
+  //     print("res $res");
+  //   } catch (e) {
+  //     print(e.toString());
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -139,7 +149,7 @@ class _MerchantProfilePageState extends State<MerchantProfilePage> {
           backgroundColor: Theme.of(context).primaryColor,
           elevation: 0.0,
         ),
-        body: shopData == null || result == null
+        body: shopData == null && images == null
             ? Center(child: CircularProgressIndicator())
             : Form(
                 key: _formKey,
@@ -152,7 +162,7 @@ class _MerchantProfilePageState extends State<MerchantProfilePage> {
                           // Add TextFormFields and ElevatedButton here.
                           Row(
                             children: [
-                              shopData["imagePaths"].length != 0
+                              images.length != 0
                                   ? Padding(
                                       padding: EdgeInsets.only(
                                           left: 3.0, right: 3.0, bottom: 10),
@@ -160,7 +170,7 @@ class _MerchantProfilePageState extends State<MerchantProfilePage> {
                                         borderRadius:
                                             BorderRadius.circular(8.0),
                                         child: Image.network(
-                                          result,
+                                          images[0],
                                           width: 83,
                                           height: 83,
                                           fit: BoxFit.cover,
@@ -171,8 +181,8 @@ class _MerchantProfilePageState extends State<MerchantProfilePage> {
                                               return child;
                                             return Center(
                                                 child: SizedBox(
-                                              width: 15,
-                                              height: 15,
+                                              width: 83,
+                                              height: 83,
                                               child: CircularProgressIndicator(
                                                 value: loadingProgress
                                                             .expectedTotalBytes !=
@@ -209,7 +219,7 @@ class _MerchantProfilePageState extends State<MerchantProfilePage> {
                                             )),
                                       ),
                                     ),
-                              shopData["imagePaths"].length >= 1
+                              images.length >= 2
                                   ? Padding(
                                       padding: EdgeInsets.only(
                                           left: 3.0, right: 3.0, bottom: 10),
@@ -217,7 +227,7 @@ class _MerchantProfilePageState extends State<MerchantProfilePage> {
                                         borderRadius:
                                             BorderRadius.circular(8.0),
                                         child: Image.network(
-                                          result,
+                                          images[1],
                                           width: 83,
                                           height: 83,
                                           fit: BoxFit.cover,
@@ -228,8 +238,8 @@ class _MerchantProfilePageState extends State<MerchantProfilePage> {
                                               return child;
                                             return Center(
                                                 child: SizedBox(
-                                              width: 15,
-                                              height: 15,
+                                              width: 83,
+                                              height: 83,
                                               child: CircularProgressIndicator(
                                                 value: loadingProgress
                                                             .expectedTotalBytes !=
@@ -266,7 +276,7 @@ class _MerchantProfilePageState extends State<MerchantProfilePage> {
                                             )),
                                       ),
                                     ),
-                              shopData["imagePaths"].length >= 2
+                              images.length >= 3
                                   ? Padding(
                                       padding: EdgeInsets.only(
                                           left: 3.0, right: 3.0, bottom: 10),
@@ -274,7 +284,7 @@ class _MerchantProfilePageState extends State<MerchantProfilePage> {
                                         borderRadius:
                                             BorderRadius.circular(8.0),
                                         child: Image.network(
-                                          result,
+                                          images[2],
                                           width: 83,
                                           height: 83,
                                           fit: BoxFit.cover,
@@ -285,8 +295,8 @@ class _MerchantProfilePageState extends State<MerchantProfilePage> {
                                               return child;
                                             return Center(
                                                 child: SizedBox(
-                                              width: 15,
-                                              height: 15,
+                                              width: 83,
+                                              height: 83,
                                               child: CircularProgressIndicator(
                                                 value: loadingProgress
                                                             .expectedTotalBytes !=
@@ -323,7 +333,7 @@ class _MerchantProfilePageState extends State<MerchantProfilePage> {
                                             )),
                                       ),
                                     ),
-                              shopData["imagePaths"].length >= 3
+                              images.length >= 4
                                   ? Padding(
                                       padding: EdgeInsets.only(
                                           left: 3.0, right: 3.0, bottom: 10),
@@ -331,7 +341,7 @@ class _MerchantProfilePageState extends State<MerchantProfilePage> {
                                         borderRadius:
                                             BorderRadius.circular(8.0),
                                         child: Image.network(
-                                          result,
+                                          images[3],
                                           width: 83,
                                           height: 83,
                                           fit: BoxFit.cover,
@@ -342,8 +352,8 @@ class _MerchantProfilePageState extends State<MerchantProfilePage> {
                                               return child;
                                             return Center(
                                                 child: SizedBox(
-                                              width: 15,
-                                              height: 15,
+                                              width: 83,
+                                              height: 83,
                                               child: CircularProgressIndicator(
                                                 value: loadingProgress
                                                             .expectedTotalBytes !=
@@ -743,6 +753,7 @@ class _MerchantProfilePageState extends State<MerchantProfilePage> {
 
   Future<void> _updatePhoto() async {
     await _getAddress(shopData["address"]);
+    assignVariable();
     var response = await http.patch(
       "https://pq3mbzzsbg.execute-api.ap-northeast-1.amazonaws.com/CaffeExpressRESTAPI/store/$_userId",
       headers: <String, String>{
@@ -779,8 +790,8 @@ class _MerchantProfilePageState extends State<MerchantProfilePage> {
     emailController.text = shopData['contactEmail'];
     storeUrlController.text = shopData['storeURL'];
     _category = shopData['category'];
-    // if (shopData['imagePaths'].length > 0) {
-    //   imageController.text = shopData['imagePaths'][0];
+    // if (shopData['imageUrl'].length > 0) {
+    //   imageController.text = shopData['imageUrl'][0];
     // } else {
     //   imageController.text = "";
     // }
