@@ -9,7 +9,6 @@ import 'package:file_picker/file_picker.dart';
 import 'dart:io';
 import 'package:amplify_storage_s3/amplify_storage_s3.dart';
 import 'package:amplify_core/amplify_core.dart';
-import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class MerchantProfilePage extends StatefulWidget {
@@ -144,11 +143,15 @@ class _MerchantProfilePageState extends State<MerchantProfilePage> {
     // Build a Form widget using the _formKey created above.
     return Scaffold(
         appBar: AppBar(
-          title: Text("Cafe Express"),
+          title: Text("プロフィール編集",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              )),
+          centerTitle: true,
           backgroundColor: Theme.of(context).primaryColor,
           elevation: 0.0,
         ),
-        body: shopData == null && images == null
+        body: shopData == null && images == null && _category == null
             ? Center(child: CircularProgressIndicator())
             : Form(
                 key: _formKey,
@@ -161,7 +164,7 @@ class _MerchantProfilePageState extends State<MerchantProfilePage> {
                           // Add TextFormFields and ElevatedButton here.
                           Row(
                             children: [
-                              images.length != 0
+                              images != null && images.length != 0
                                   ? Padding(
                                       padding: EdgeInsets.only(
                                           left: 3.0, right: 3.0, bottom: 10),
@@ -218,7 +221,7 @@ class _MerchantProfilePageState extends State<MerchantProfilePage> {
                                             )),
                                       ),
                                     ),
-                              images.length >= 2
+                              images != null && images.length >= 2
                                   ? Padding(
                                       padding: EdgeInsets.only(
                                           left: 3.0, right: 3.0, bottom: 10),
@@ -275,7 +278,7 @@ class _MerchantProfilePageState extends State<MerchantProfilePage> {
                                             )),
                                       ),
                                     ),
-                              images.length >= 3
+                              images != null && images.length >= 3
                                   ? Padding(
                                       padding: EdgeInsets.only(
                                           left: 3.0, right: 3.0, bottom: 10),
@@ -332,7 +335,7 @@ class _MerchantProfilePageState extends State<MerchantProfilePage> {
                                             )),
                                       ),
                                     ),
-                              images.length >= 4
+                              images != null && images.length >= 4
                                   ? Padding(
                                       padding: EdgeInsets.only(
                                           left: 3.0, right: 3.0, bottom: 10),
@@ -594,23 +597,6 @@ class _MerchantProfilePageState extends State<MerchantProfilePage> {
                               ),
                             )
                           ]),
-                          // TextFormField(
-                          //   // The validator receives the text that the user has entered.
-                          //   decoration: InputDecoration(
-                          //     icon: Icon(Icons.attach_money_rounded,
-                          //         color: Colors.blue[300]),
-                          //     hintText:
-                          //         'Enter your cancellation fee per person',
-                          //     labelText: 'Cancellation Fee',
-                          //   ),
-                          //   controller: depositController,
-                          //   validator: (value) {
-                          //     if (value.isEmpty) {
-                          //       return '情報を入力してください';
-                          //     }
-                          //     return null;
-                          //   },
-                          // ),
                           Padding(
                             padding: EdgeInsets.fromLTRB(0, 10, 10, 0),
                             child: Row(children: [
@@ -671,45 +657,45 @@ class _MerchantProfilePageState extends State<MerchantProfilePage> {
                                 ),
                               ),
                             ),
-                            // Expanded(
-                            //   child: ListTile(
-                            //     title: const Text(
-                            //       'Custom',
-                            //       style: TextStyle(
-                            //         fontSize: 11.5,
-                            //       ),
-                            //     ),
-                            //     leading: Radio(
-                            //       value: "custom",
-                            //       groupValue: _vacancyType,
-                            //       onChanged: (value) {
-                            //         setState(() {
-                            //           _vacancyType = value;
-                            //         });
-                            //       },
-                            //     ),
-                            //   ),
-                            // ),
                           ]),
-                          ElevatedButton(
-                            onPressed: () {
-                              // Validate returns true if the form is valid, otherwise false.
-                              if (_formKey.currentState.validate()) {
-                                // If the form is valid, display a snackbar. In the real world,
-                                // you'd often call a server or save the information in a database.
-                                assignVariable();
-                                _updateStoreProfile();
-                                // Navigator.push(
-                                //   context,
-                                //   MaterialPageRoute(
-                                //     builder: (context) =>
-                                //         MerchantCalendarPage(shopData: shopData),
-                                //   ),
-                                // );
-                              }
-                            },
-                            child: Text('保存'),
-                          )
+                          // ElevatedButton(
+                          //   onPressed: () {
+                          //     if (_formKey.currentState.validate()) {
+                          //       assignVariable();
+                          //       _updateStoreProfile();
+                          //     }
+                          //   },
+                          //   child: Text('保存'),
+                          // ),
+                          Center(
+                              child: Row(
+                            children: [
+                              SizedBox(width: 100),
+                              Expanded(
+                                child: ButtonTheme(
+                                  minWidth: 50,
+                                  child: RaisedButton(
+                                    color: Colors.lightBlue,
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(5.0),
+                                        side: BorderSide(
+                                            color: Colors.lightBlue)),
+                                    onPressed: () {
+                                      if (_formKey.currentState.validate()) {
+                                        assignVariable();
+                                        _updateStoreProfile();
+                                      }
+                                    },
+                                    child: Text('保存',
+                                        style: TextStyle(
+                                            color: Colors.white, fontSize: 16)),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(width: 100),
+                            ],
+                          )),
                         ]))));
   }
 
