@@ -437,7 +437,6 @@ class _DetailPageState extends State<DetailPage> {
       availableSeats = shopData['vacancy']['$vacancyType']
           .where((seat) => seat['isVacant'] == true)
           .toList();
-      // setState(() {});
       await detectSeat(groupNum);
 
       bookData["storeInfo"] = {
