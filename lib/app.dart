@@ -18,6 +18,8 @@ import 'screens/booking_history_page.dart';
 import 'screens/merchant_profile_setting_page.dart';
 import 'screens/stripe.dart';
 import 'services/stored_cards.dart';
+import 'package:amplify_core/amplify_core.dart';
+import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 
 const WrapperRoute = "/";
 const AuthRoute = "/auth";
@@ -39,6 +41,10 @@ const StripeRoute = "/stripe";
 const StoredCardsRoute = "/stored_cards";
 
 class MyApp extends StatelessWidget {
+  static init() {
+    // if (Amplify.Auth.getCurrentUser() != null) Amplify.Auth.signOut();
+  }
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
