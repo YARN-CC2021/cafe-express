@@ -1,9 +1,11 @@
+import 'package:cafeexpress/screens/auth.dart';
 import 'package:flutter/material.dart';
 import 'screens/map_page.dart';
 import 'screens/merchant_strict.dart';
 import 'screens/merchant_flex.dart';
 import 'screens/merchant_page.dart';
 import 'wrapper.dart';
+import 'screens/auth.dart';
 import 'screens/detail_page.dart';
 import 'screens/user_category_page.dart';
 import 'screens/validation.dart';
@@ -18,6 +20,7 @@ import 'screens/stripe.dart';
 import 'services/stored_cards.dart';
 
 const WrapperRoute = "/";
+const AuthRoute = "/auth";
 const MapSearchRoute = "/map_search";
 const DetailRoute = "/detail";
 const MerchantRoute = "/merchant_settings";
@@ -50,7 +53,6 @@ class MyApp extends StatelessWidget {
             bodyText2: TextStyle(fontSize: 14.0, fontFamily: 'Hind'),
           )),
       onGenerateRoute: _routes(),
-      // home: Wrapper(),
       home: Wrapper(),
     );
   }
@@ -63,6 +65,9 @@ class MyApp extends StatelessWidget {
       switch (settings.name) {
         case WrapperRoute:
           screen = Wrapper();
+          break;
+        case AuthRoute:
+          screen = Auth();
           break;
         case MapSearchRoute:
           screen = MapPage();
@@ -95,7 +100,7 @@ class MyApp extends StatelessWidget {
           screen = MerchantCalendarPage();
           break;
         case TimerRoute:
-          screen = TimerPage();
+          screen = TimerPage(arguments['shopData']);
           break;
         case QrRoute:
           screen = QrPage();
