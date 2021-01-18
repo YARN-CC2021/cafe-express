@@ -57,7 +57,7 @@ class _MerchantProfileSettingPageState
     );
 
     final jsonResponse = await json.decode(utf8.decode(response.bodyBytes));
-    final myUrl = jsonDecode(jsonResponse["body"])["accountLinkURL"];
+    final myUrl = await jsonDecode(jsonResponse["body"])["accountLinkURL"];
     print(myUrl);
     await launch("$myUrl");
   }
