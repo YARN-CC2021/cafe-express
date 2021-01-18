@@ -331,18 +331,24 @@ class _BookingPageState extends State<BookingPage> {
                         padding: EdgeInsets.only(bottom: 10, top: 8),
                         child: SizedBox(
                           width: 100,
+                          height: 20,
                           child: Text(
                             booking["bookName"],
                             style: TextStyle(fontWeight: FontWeight.bold),
+                            overflow: TextOverflow.ellipsis,
                             textAlign: TextAlign.left,
                           ),
                         ),
                       ),
                       Padding(
                         padding: EdgeInsets.only(right: 15),
-                        child: Text(
-                          "種類：${booking["tableType"]["label"]}\n人数：${booking["partySize"]}人",
-                          style: TextStyle(fontSize: 10),
+                        child: Container(
+                          width: 100,
+                          child: Text(
+                            "種類：${booking["tableType"]["label"]}\n人数：${booking["partySize"]}人",
+                            // "種類：１２人席\n人数：${booking["partySize"]}人",
+                            style: TextStyle(fontSize: 10),
+                          ),
                         ),
                       ),
                     ]))),
