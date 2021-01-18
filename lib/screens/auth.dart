@@ -77,11 +77,12 @@ class _AuthState extends State<Auth> {
         dialogType: DialogType.NO_HEADER,
         animType: AnimType.BOTTOMSLIDE,
         body: Center(
-          child: Text(e.toString()),
+          child: Text("Log in failed. Pleas try again."),
         ),
         btnOkOnPress: () {
           _returnWrapper(context);
         },
+        btnOkText: "Return to Log In Screen",
         btnOkColor: Colors.tealAccent[400],
         useRootNavigator: false,
         dismissOnTouchOutside: false,
