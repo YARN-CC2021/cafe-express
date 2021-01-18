@@ -53,7 +53,6 @@ class MyApp extends StatelessWidget {
             bodyText2: TextStyle(fontSize: 14.0, fontFamily: 'Hind'),
           )),
       onGenerateRoute: _routes(),
-      // home: Wrapper(),
       home: Wrapper(),
     );
   }
@@ -101,7 +100,7 @@ class MyApp extends StatelessWidget {
           screen = MerchantCalendarPage();
           break;
         case TimerRoute:
-          screen = TimerPage();
+          screen = TimerPage(arguments['shopData']);
           break;
         case QrRoute:
           screen = QrPage();
