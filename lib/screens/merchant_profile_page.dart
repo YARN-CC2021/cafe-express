@@ -50,297 +50,298 @@ class _MerchantProfilePageState extends State<MerchantProfilePage> {
           backgroundColor: Theme.of(context).primaryColor,
           elevation: 0.0,
         ),
-        body: Form(
-            key: _formKey,
-            child: new ListView(
-                padding: EdgeInsets.symmetric(horizontal: 16.0),
-                children: <Widget>[
-                  // Add TextFormFields and ElevatedButton here.
-                  TextFormField(
-                    // The validator receives the text that the user has entered.
-                    decoration: InputDecoration(
-                      icon: Icon(Icons.person, color: Colors.blue[300]),
-                      hintText: 'Enter your store name',
-                      labelText: 'Name',
-                    ),
-                    controller: nameController,
-                    validator: (value) {
-                      if (value.isEmpty) {
-                        return 'Please enter some text';
-                      }
-                      return null;
-                    },
-                  ),
-                  TextFormField(
-                    // The validator receives the text that the user has entered.
-                    decoration: InputDecoration(
-                      icon: Icon(Icons.person, color: Colors.blue[300]),
-                      hintText: 'Enter your store description',
-                      labelText: 'Store Description',
-                    ),
-                    maxLines: 2,
-                    controller: descriptionController,
-                    validator: (value) {
-                      if (value.isEmpty) {
-                        return 'Please enter some text';
-                      }
-                      return null;
-                    },
-                  ),
-                  Row(
-                    children: [
-                      Container(
-                          child: Icon(Icons.person, color: Colors.blue[300]),
-                          width: 30),
-                      Expanded(
-                        child: TextFormField(
-                          maxLines: 1,
-                          controller: zipCodeController,
-                          keyboardType: TextInputType.number,
-                          decoration: InputDecoration(
-                            labelText: '郵便番号',
-                            suffixIcon: IconButton(
-                              highlightColor: Colors.transparent,
-                              icon: Container(
-                                  width: 36.0, child: new Icon(Icons.clear)),
-                              onPressed: () {
-                                zipCodeController.clear();
-                                addressController.clear();
+        body: shopData == null
+            ? Center(child: CircularProgressIndicator())
+            : Form(
+                key: _formKey,
+                child: new ListView(
+                    padding: EdgeInsets.symmetric(horizontal: 16.0),
+                    children: <Widget>[
+                      // Add TextFormFields and ElevatedButton here.
+                      TextFormField(
+                        // The validator receives the text that the user has entered.
+                        decoration: InputDecoration(
+                          icon: Icon(Icons.person, color: Colors.blue[300]),
+                          hintText: 'Enter your store name',
+                          labelText: 'Name',
+                        ),
+                        controller: nameController,
+                        validator: (value) {
+                          if (value.isEmpty) {
+                            return 'Please enter some text';
+                          }
+                          return null;
+                        },
+                      ),
+                      TextFormField(
+                        // The validator receives the text that the user has entered.
+                        decoration: InputDecoration(
+                          icon: Icon(Icons.person, color: Colors.blue[300]),
+                          hintText: 'Enter your store description',
+                          labelText: 'Store Description',
+                        ),
+                        maxLines: 2,
+                        controller: descriptionController,
+                        validator: (value) {
+                          if (value.isEmpty) {
+                            return 'Please enter some text';
+                          }
+                          return null;
+                        },
+                      ),
+                      Row(
+                        children: [
+                          Container(
+                              child:
+                                  Icon(Icons.person, color: Colors.blue[300]),
+                              width: 30),
+                          Expanded(
+                            child: TextFormField(
+                              maxLines: 1,
+                              controller: zipCodeController,
+                              keyboardType: TextInputType.number,
+                              decoration: InputDecoration(
+                                labelText: '郵便番号',
+                                suffixIcon: IconButton(
+                                  highlightColor: Colors.transparent,
+                                  icon: Container(
+                                      width: 36.0,
+                                      child: new Icon(Icons.clear)),
+                                  onPressed: () {
+                                    zipCodeController.clear();
+                                    addressController.clear();
+                                  },
+                                  splashColor: Colors.transparent,
+                                ),
+                              ),
+                            ),
+                          ),
+                          OutlineButton(
+                            child: Text('検索'),
+                            onPressed: () async {
+                              var result = await http.get(
+                                  'https://zipcloud.ibsnet.co.jp/api/search?zipcode=${zipCodeController.text}');
+                              Map<String, dynamic> map =
+                                  json.decode(result.body)['results'][0];
+                              addressController.text =
+                                  '${map['address1']}${map['address2']}${map['address3']}';
+                            },
+                          ),
+                        ],
+                      ),
+                      TextFormField(
+                        // The validator receives the text that the user has entered.
+                        decoration: InputDecoration(
+                          icon: Icon(Icons.store_mall_directory,
+                              color: Colors.blue[300]),
+                          hintText: 'Enter your store address',
+                          labelText: 'Address',
+                        ),
+                        controller: addressController,
+                        validator: (value) {
+                          if (value.isEmpty) {
+                            return 'Please enter some text';
+                          }
+                          return null;
+                        },
+                      ),
+                      TextFormField(
+                        // The validator receives the text that the user has entered.
+                        decoration: InputDecoration(
+                          icon:
+                              Icon(Icons.local_phone, color: Colors.blue[300]),
+                          hintText: 'Enter your phone number',
+                          labelText: 'Phone Number',
+                        ),
+                        //fillColor: Colors.green),
+                        controller: telController,
+                        validator: (value) {
+                          if (value.isEmpty) {
+                            return 'Please enter some text';
+                          }
+                          return null;
+                        },
+                      ),
+                      TextFormField(
+                        // The validator receives the text that the user has entered.
+                        decoration: InputDecoration(
+                          icon: Icon(Icons.alternate_email_outlined,
+                              color: Colors.blue[300]),
+                          hintText: 'Enter your email address',
+                          labelText: 'Email',
+                        ),
+                        controller: emailController,
+                        validator: (value) {
+                          if (value.isEmpty) {
+                            return 'Please enter some text';
+                          }
+                          return null;
+                        },
+                      ),
+                      TextFormField(
+                        // The validator receives the text that the user has entered.
+                        decoration: InputDecoration(
+                          icon: Icon(Icons.wb_cloudy_rounded,
+                              color: Colors.blue[300]),
+                          hintText: 'Enter your store website URLs',
+                          labelText: 'Website',
+                        ),
+                        controller: storeUrlController,
+                        validator: (value) {
+                          if (value.isEmpty) {
+                            return 'Please enter some text';
+                          }
+                          return null;
+                        },
+                      ),
+                      TextFormField(
+                        // The validator receives the text that the user has entered.
+                        decoration: InputDecoration(
+                          icon: Icon(Icons.local_restaurant_rounded,
+                              color: Colors.blue[300]),
+                          hintText: 'Enter your store category',
+                          labelText: 'Category',
+                        ),
+                        controller: categoryController,
+                        validator: (value) {
+                          if (value.isEmpty) {
+                            return 'Please enter some text';
+                          }
+                          return null;
+                        },
+                      ),
+                      TextFormField(
+                        // The validator receives the text that the user has entered.
+                        decoration: InputDecoration(
+                          icon: Icon(Icons.attach_money_rounded,
+                              color: Colors.blue[300]),
+                          hintText: 'Enter your cancellation fee per person',
+                          labelText: 'Cancellation Fee',
+                        ),
+                        controller: depositController,
+                        validator: (value) {
+                          if (value.isEmpty) {
+                            return 'Please enter some text';
+                          }
+                          return null;
+                        },
+                      ),
+                      TextFormField(
+                        // The validator receives the text that the user has entered.
+                        decoration: InputDecoration(
+                          icon: Icon(Icons.insert_photo_rounded,
+                              color: Colors.blue[300]),
+                          hintText: 'Enter your image url',
+                          labelText: 'Image',
+                        ),
+                        controller: imageController,
+                        validator: (value) {
+                          if (value.isEmpty) {
+                            return 'Please enter some text';
+                          }
+                          return null;
+                        },
+                      ),
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(0, 10, 10, 0),
+                        child: Text(
+                          "Vacancy Type",
+                          style: TextStyle(
+                            fontSize: 15.0,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.blue[300],
+                          ),
+                        ),
+                      ),
+                      Row(children: [
+                        Expanded(
+                            child: ListTile(
+                          title: const Text(
+                            'Strict',
+                            style: TextStyle(
+                              fontSize: 11.5,
+                            ),
+                          ),
+                          leading: Radio(
+                            value: "strict",
+                            groupValue: _vacancyType,
+                            onChanged: (value) {
+                              setState(() {
+                                _vacancyType = value;
+                              });
+                            },
+                          ),
+                        )),
+                        Expanded(
+                          child: ListTile(
+                            title: const Text(
+                              'Flex',
+                              style: TextStyle(
+                                fontSize: 11.5,
+                              ),
+                            ),
+                            leading: Radio(
+                              value: "flex",
+                              groupValue: _vacancyType,
+                              onChanged: (value) {
+                                setState(() {
+                                  _vacancyType = value;
+                                });
                               },
-                              splashColor: Colors.transparent,
                             ),
                           ),
                         ),
-                      ),
-                      OutlineButton(
-                        child: Text('検索'),
-                        onPressed: () async {
-                          var result = await http.get(
-                              'https://zipcloud.ibsnet.co.jp/api/search?zipcode=${zipCodeController.text}');
-                          Map<String, dynamic> map =
-                              json.decode(result.body)['results'][0];
-                          addressController.text =
-                              '${map['address1']}${map['address2']}${map['address3']}';
-                        },
-                      ),
-                    ],
-                  ),
-                  TextFormField(
-                    // The validator receives the text that the user has entered.
-                    decoration: InputDecoration(
-                      icon: Icon(Icons.store_mall_directory,
-                          color: Colors.blue[300]),
-                      hintText: 'Enter your store address',
-                      labelText: 'Address',
-                    ),
-                    controller: addressController,
-                    validator: (value) {
-                      if (value.isEmpty) {
-                        return 'Please enter some text';
-                      }
-                      return null;
-                    },
-                  ),
-                  TextFormField(
-                    // The validator receives the text that the user has entered.
-                    decoration: InputDecoration(
-                      icon: Icon(Icons.local_phone, color: Colors.blue[300]),
-                      hintText: 'Enter your phone number',
-                      labelText: 'Phone Number',
-                    ),
-                    //fillColor: Colors.green),
-                    controller: telController,
-                    validator: (value) {
-                      if (value.isEmpty) {
-                        return 'Please enter some text';
-                      }
-                      return null;
-                    },
-                  ),
-                  TextFormField(
-                    // The validator receives the text that the user has entered.
-                    decoration: InputDecoration(
-                      icon: Icon(Icons.alternate_email_outlined,
-                          color: Colors.blue[300]),
-                      hintText: 'Enter your email address',
-                      labelText: 'Email',
-                    ),
-                    controller: emailController,
-                    validator: (value) {
-                      if (value.isEmpty) {
-                        return 'Please enter some text';
-                      }
-                      return null;
-                    },
-                  ),
-                  TextFormField(
-                    // The validator receives the text that the user has entered.
-                    decoration: InputDecoration(
-                      icon: Icon(Icons.wb_cloudy_rounded,
-                          color: Colors.blue[300]),
-                      hintText: 'Enter your store website URLs',
-                      labelText: 'Website',
-                    ),
-                    controller: storeUrlController,
-                    validator: (value) {
-                      if (value.isEmpty) {
-                        return 'Please enter some text';
-                      }
-                      return null;
-                    },
-                  ),
-                  TextFormField(
-                    // The validator receives the text that the user has entered.
-                    decoration: InputDecoration(
-                      icon: Icon(Icons.local_restaurant_rounded,
-                          color: Colors.blue[300]),
-                      hintText: 'Enter your store category',
-                      labelText: 'Category',
-                    ),
-                    controller: categoryController,
-                    validator: (value) {
-                      if (value.isEmpty) {
-                        return 'Please enter some text';
-                      }
-                      return null;
-                    },
-                  ),
-                  TextFormField(
-                    // The validator receives the text that the user has entered.
-                    decoration: InputDecoration(
-                      icon: Icon(Icons.attach_money_rounded,
-                          color: Colors.blue[300]),
-                      hintText: 'Enter your cancellation fee per person',
-                      labelText: 'Cancellation Fee',
-                    ),
-                    controller: depositController,
-                    validator: (value) {
-                      if (value.isEmpty) {
-                        return 'Please enter some text';
-                      }
-                      return null;
-                    },
-                  ),
-                  TextFormField(
-                    // The validator receives the text that the user has entered.
-                    decoration: InputDecoration(
-                      icon: Icon(Icons.insert_photo_rounded,
-                          color: Colors.blue[300]),
-                      hintText: 'Enter your image url',
-                      labelText: 'Image',
-                    ),
-                    controller: imageController,
-                    validator: (value) {
-                      if (value.isEmpty) {
-                        return 'Please enter some text';
-                      }
-                      return null;
-                    },
-                  ),
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(0, 10, 10, 0),
-                    child: Text(
-                      "Vacancy Type",
-                      style: TextStyle(
-                        fontSize: 15.0,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.blue[300],
-                      ),
-                    ),
-                  ),
-                  Row(children: [
-                    Expanded(
-                        child: ListTile(
-                      title: const Text(
-                        'Strict',
-                        style: TextStyle(
-                          fontSize: 11.5,
-                        ),
-                      ),
-                      leading: Radio(
-                        value: "strict",
-                        groupValue: _vacancyType,
-                        onChanged: (value) {
-                          setState(() {
-                            _vacancyType = value;
-                          });
-                        },
-                      ),
-                    )),
-                    Expanded(
-                      child: ListTile(
-                        title: const Text(
-                          'Flex',
-                          style: TextStyle(
-                            fontSize: 11.5,
+                        Expanded(
+                          child: ListTile(
+                            title: const Text(
+                              'Custom',
+                              style: TextStyle(
+                                fontSize: 11.5,
+                              ),
+                            ),
+                            leading: Radio(
+                              value: "custom",
+                              groupValue: _vacancyType,
+                              onChanged: (value) {
+                                setState(() {
+                                  _vacancyType = value;
+                                });
+                              },
+                            ),
                           ),
                         ),
-                        leading: Radio(
-                          value: "flex",
-                          groupValue: _vacancyType,
-                          onChanged: (value) {
-                            setState(() {
-                              _vacancyType = value;
-                            });
-                          },
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: ListTile(
-                        title: const Text(
-                          'Custom',
-                          style: TextStyle(
-                            fontSize: 11.5,
-                          ),
-                        ),
-                        leading: Radio(
-                          value: "custom",
-                          groupValue: _vacancyType,
-                          onChanged: (value) {
-                            setState(() {
-                              _vacancyType = value;
-                            });
-                          },
-                        ),
-                      ),
-                    ),
-                  ]),
-                  ElevatedButton(
-                    onPressed: () {
-                      // Validate returns true if the form is valid, otherwise false.
-                      if (_formKey.currentState.validate()) {
-                        // If the form is valid, display a snackbar. In the real world,
-                        // you'd often call a server or save the information in a database.
-                        assignVariable();
-                        _updateStoreProfile();
-                        print("shopData in ElevatedButton onPressed $shopData");
-                        // Navigator.push(
-                        //   context,
-                        //   MaterialPageRoute(
-                        //     builder: (context) =>
-                        //         MerchantCalendarPage(shopData: shopData),
-                        //   ),
-                        // );
-                      }
-                    },
-                    child: Text('保存'),
-                  )
-                ])));
+                      ]),
+                      ElevatedButton(
+                        onPressed: () {
+                          // Validate returns true if the form is valid, otherwise false.
+                          if (_formKey.currentState.validate()) {
+                            // If the form is valid, display a snackbar. In the real world,
+                            // you'd often call a server or save the information in a database.
+                            assignVariable();
+                            _updateStoreProfile();
+                            // Navigator.push(
+                            //   context,
+                            //   MaterialPageRoute(
+                            //     builder: (context) =>
+                            //         MerchantCalendarPage(shopData: shopData),
+                            //   ),
+                            // );
+                          }
+                        },
+                        child: Text('保存'),
+                      )
+                    ])));
   }
 
   Future<void> _getAddress(String address) async {
     var addresses = await Geocoder.local.findAddressesFromQuery(address);
     var first = addresses.first;
-    print("${first.featureName} : ${first.coordinates}");
     var strCoordinates = first.coordinates
         .toString()
         .substring(1, first.coordinates.toString().length - 1);
-    print("String $strCoordinates");
     List coordinates = strCoordinates.split(",");
     shopData['lat'] = double.parse(coordinates[0]);
     shopData['lng'] = double.parse(coordinates[1]);
-    print("Lat, Lng= ${shopData['lat']}, ${shopData['lng']}");
   }
 
   void _changePage(BuildContext context, String route) {
@@ -349,8 +350,6 @@ class _MerchantProfilePageState extends State<MerchantProfilePage> {
   }
 
   Future<void> _updateStoreProfile() async {
-    print("shopData in _updateStoreProfile $shopData");
-    print("JSON stringiified shopdata ${jsonEncode(shopData)}");
     await _getAddress(shopData["address"]);
     var response = await http.patch(
       "https://pq3mbzzsbg.execute-api.ap-northeast-1.amazonaws.com/CaffeExpressRESTAPI/store/$_userId",
@@ -361,7 +360,6 @@ class _MerchantProfilePageState extends State<MerchantProfilePage> {
     );
     if (response.statusCode == 200) {
       final jsonResponse = json.decode(response.body);
-      print("_updateStoreProfile jsonResponse= $jsonResponse");
       if (globals.firstSignIn) {
         globals.firstSignIn = false;
         _changePage(context, MerchantRoute);
@@ -387,7 +385,6 @@ class _MerchantProfilePageState extends State<MerchantProfilePage> {
 
   Future<void> _getShopData() async {
     setState(() => _userId = globals.userId);
-    print("Profile Page $_userId");
     var response = await http.get(
         'https://pq3mbzzsbg.execute-api.ap-northeast-1.amazonaws.com/CaffeExpressRESTAPI/store/$_userId');
     if (response.statusCode == 200) {
@@ -402,7 +399,6 @@ class _MerchantProfilePageState extends State<MerchantProfilePage> {
   }
 
   void _mapMountedStoreData() {
-    print("shopData in _mapMountedStoreData $shopData");
     nameController.text = shopData['name'];
     descriptionController.text = shopData['description'];
     addressController.text = shopData['address'];

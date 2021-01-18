@@ -5,28 +5,14 @@ import 'dart:convert';
 import '../global.dart' as globals;
 import 'package:http/http.dart' as http;
 import 'package:web_socket_channel/io.dart';
+import '../app.dart';
 
-class BookingListPage extends StatefulWidget {
+class BookingHistoryPage extends StatefulWidget {
   @override
-  _BookingListPageState createState() => _BookingListPageState();
+  _BookingHistoryPageState createState() => _BookingHistoryPageState();
 }
 
-class _BookingListPageState extends State<BookingListPage> {
-  // String status;
-  // final TextEditingController _searchControl = new TextEditingController();
-
-  @override
-  Widget build(BuildContext context) {
-    return BookingPage();
-  }
-}
-
-class BookingPage extends StatefulWidget {
-  @override
-  _BookingPageState createState() => _BookingPageState();
-}
-
-class _BookingPageState extends State<BookingPage> {
+class _BookingHistoryPageState extends State<BookingHistoryPage> {
   var bookingData;
   final channel = IOWebSocketChannel.connect(
       "wss://gu2u8vdip2.execute-api.ap-northeast-1.amazonaws.com/CafeExpressWS?id=${globals.userId}");
@@ -48,33 +34,84 @@ class _BookingPageState extends State<BookingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          leading: new Container(),
-          title: Text(
-            "予約履歴",
-            textAlign: TextAlign.center,
-          ),
-          backgroundColor: Theme.of(context).primaryColor,
-          elevation: 0.0,
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).cardColor,
+        brightness: Theme.of(context).brightness,
+        iconTheme: Theme.of(context).iconTheme,
+        title: Text(
+          "Booking History",
+          style: TextStyle(color: Theme.of(context).primaryColor),
         ),
-        body: bookingData == null
-            ? Center(child: CircularProgressIndicator())
-            : StreamBuilder(
-                stream: channel.stream,
-                builder: (context, snapshot) {
-                  if (snapshot.hasData &&
-                      json.decode(snapshot.data)["bookingId"] != bookingId) {
-                    print(snapshot.data);
-                    _insertBooking(json.decode(snapshot.data));
-                    bookingId = json.decode(snapshot.data)["bookingId"];
-                  }
-                  return buildListView();
-                }));
+      ),
+      body: StreamBuilder(
+          stream: channel.stream,
+          builder: (context, snapshot) {
+            if (snapshot.hasData &&
+                json.decode(snapshot.data)["bookingId"] != bookingId) {
+              print("SNAPSHOT DATA in Stream, History Page ${snapshot.data}");
+              // _insertBooking(json.decode(snapshot.data));
+              _statusUpdate(json.decode(snapshot.data)["bookingId"],
+                  json.decode(snapshot.data)["status"]);
+              bookingId = json.decode(snapshot.data)["bookingId"];
+            }
+            return buildListView();
+          }),
+      bottomNavigationBar: BottomAppBar(
+        child: new Row(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            SizedBox(width: 7),
+            IconButton(
+              ///Timer
+              icon: Icon(
+                Icons.qr_code_rounded,
+                size: 24.0,
+              ),
+              color: Colors.black,
+              onPressed: () => {_changePage(context, QrRoute)},
+            ),
+            Container(
+              width: 56.0,
+              height: 10,
+            ),
+            IconButton(
+              /// booking history
+              icon: Icon(
+                Icons.assignment,
+                size: 24.0,
+              ),
+              color: Colors.black,
+              onPressed: () => {_changePage(context, BookingHistoryRoute)},
+            ),
+            SizedBox(width: 7),
+          ],
+        ),
+        color: Theme.of(context).primaryColor,
+        shape: CircularNotchedRectangle(),
+      ),
+      floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: FloatingActionButton(
+        elevation: 4.0,
+        child: Icon(
+          ///map search
+          Icons.videogame_asset,
+        ),
+        onPressed: () => {_changePage(context, MapSearchRoute)},
+      ),
+    );
+  }
+
+  void _changePage(BuildContext context, String route) {
+    channel.sink.close();
+    Navigator.pushNamed(context, route);
+    print("Going to $route was triggered");
   }
 
   Future<void> _getBookingData() async {
     var response = await http.get(
-        'https://pq3mbzzsbg.execute-api.ap-northeast-1.amazonaws.com/CaffeExpressRESTAPI/booking?storeId=${globals.userId}');
+        'https://pq3mbzzsbg.execute-api.ap-northeast-1.amazonaws.com/CaffeExpressRESTAPI/booking?customerId=${globals.userId}');
     if (response.statusCode == 200) {
       final jsonResponse = await json.decode(utf8.decode(response.bodyBytes));
       setState(() {
@@ -95,23 +132,32 @@ class _BookingPageState extends State<BookingPage> {
     });
   }
 
-  void _statusUpdate(int index, String status) {
-    setState(() {
-      bookingData[index]["status"] = status;
-    });
-
-    channel.sink.add(json.encode({
-      "action": "onBookingStatusChange",
-      "bookingId": bookingData[index]["bookingId"],
-      "status": status,
-      "updatedAt": "${DateTime.now()}",
-      "customerId": bookingData[index]["customerInfo"]["customerId"]
-    }));
+  void _statusUpdate(String bookingId, String status) {
+    for (final booking in bookingData) {
+      if (booking["bookingId"] == bookingId) {
+        booking["status"] = status;
+        print("BOOKING STATUS in for loop ${booking["status"]}");
+        break;
+      }
+    }
   }
 
-  void _insertBooking(data) {
-    bookingData.insert(0, data);
-  }
+  // void _statusUpdate(int index, String status) {
+  //   setState(() {
+  //     bookingData[index]["status"] = status;
+  //   });
+
+  //   channel.sink.add(json.encode({
+  //     "action": "onBookingStatusChange",
+  //     "bookingId": bookingData[index]["bookingId"],
+  //     "status": status,
+  //     "updatedAt": "${DateTime.now()}",
+  //   }));
+  // }
+
+  // void _insertBooking(data) {
+  //   bookingData.insert(0, data);
+  // }
 
   ListView buildListView() {
     String prevDay;
@@ -281,43 +327,27 @@ class _BookingPageState extends State<BookingPage> {
                         ),
                       ),
                     ]))),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-              child: Column(children: [
-                MaterialButton(
-                  minWidth: 110,
-                  child: Text('チェックイン',
-                      style: TextStyle(fontSize: 12, color: Colors.white)),
-                  color: Theme.of(context).accentColor,
-                  shape: const StadiumBorder(
-                    side: BorderSide(color: Colors.white),
-                  ),
-                  onPressed: booking["status"] == "checked_in" ||
-                          booking["status"] == "cancelled"
-                      ? null
-                      : () {
-                          _statusUpdate(index, "checked_in");
-                        },
-                ),
-                MaterialButton(
-                  minWidth: 110,
-                  // disabledColor: Colors.blueGrey[100],
-                  child: Text('キャンセル',
-                      style: TextStyle(fontSize: 12, color: Colors.white)),
-                  color: Colors.redAccent,
-                  shape: const StadiumBorder(
-                    side: BorderSide(color: Colors.white),
-                  ),
-                  onPressed: DateTime.now()
-                              .isAfter(DateTime.parse(booking["expiredAt"])) &&
-                          booking["status"] == "paid"
-                      ? () {
-                          _statusUpdate(index, "cancelled");
-                        }
-                      : null,
-                ),
-              ]),
-            ),
+            // Container(
+            //   padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+            //   child: Column(children: [
+            //     MaterialButton(
+            //       minWidth: 110,
+            //       // disabledColor: Colors.blueGrey[100],
+            //       child: Text('キャンセル',
+            //           style: TextStyle(fontSize: 12, color: Colors.white)),
+            //       color: Colors.redAccent,
+            //       shape: const StadiumBorder(
+            //         side: BorderSide(color: Colors.white),
+            //       ),
+            //       onPressed: DateTime.now()
+            //                   .isBefore(DateTime.parse(booking["expiredAt"])) &&
+            //               booking["status"] == "paid"
+            //           ? () {
+            //               _statusUpdate(index, "cancelled");
+            //             }
+            //           : null,
+            //     ),
+            //   ]),
           ],
         ),
       ),

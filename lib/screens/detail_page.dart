@@ -23,7 +23,7 @@ class _DetailPageState extends State<DetailPage> {
 
   var bookedTime;
   var expireTime;
-  Map bookData = {
+  final Map bookData = {
     "action": "onBook",
     "coupon": {
       "codeForQR": "XXXXXXXX",
@@ -31,8 +31,11 @@ class _DetailPageState extends State<DetailPage> {
       "couponId": "pk_XXXXXXXXX",
       "description": "",
       "imagePath": "",
-      "title": "dummy"
+      "title": "dummy",
     },
+    "storeInfo": "",
+    "customerInfo": "",
+    "vacancyType": ""
   };
   Map shopData;
   String vacancyType;
@@ -337,7 +340,6 @@ class _DetailPageState extends State<DetailPage> {
                                       Form(
                                         key: _formKey,
                                         child: TextFormField(
-                                          // The validator receives the text that the user has entered.
                                           decoration: InputDecoration(
                                             icon: Icon(Icons.person,
                                                 color: Colors.blue[300]),
@@ -408,7 +410,10 @@ class _DetailPageState extends State<DetailPage> {
                                                       "$bookedTime",
                                                   channel.sink
                                                       .add(json.encode(bookData)),
-                                                  _goTimerPage(context),
+                                                  price == 0
+                                                  ? _goTimerPage(context)
+                                                  : _goStripePage(
+                                                      context, widget.id, price),
                                                 },
                                             }),
                                   ],
@@ -458,10 +463,12 @@ class _DetailPageState extends State<DetailPage> {
   }
 
   Future<void> _getShopData(String id) async {
+    print("_getShopData RUN!!");
     var response = await http.get(
         'https://pq3mbzzsbg.execute-api.ap-northeast-1.amazonaws.com/CaffeExpressRESTAPI/store/$id');
+    print("RESPONSE ${response.statusCode}");
     if (response.statusCode == 200) {
-      final jsonResponse = json.decode(utf8.decode(response.bodyBytes));
+      final jsonResponse = await json.decode(utf8.decode(response.bodyBytes));
       setState(() {
         shopData = jsonResponse['body'];
         vacancyType = shopData['vacancyType'];
@@ -509,6 +516,12 @@ class _DetailPageState extends State<DetailPage> {
       }
     });
     print(sheet);
+  }
+
+  void _goStripePage(BuildContext context, id, price) {
+    Navigator.pushNamed(context, StripeRoute,
+        arguments: {"id": id, "price": price});
+    print("goStripePage was triggered");
   }
 
   void _goTimerPage(BuildContext context) {
