@@ -103,7 +103,7 @@ class _UserCategoryPageState extends State<UserCategoryPage> {
         "id": userId,
         "isCustomer": isCustomer,
         "loginEmail": useremail,
-        "createdAt": DateTime.now().toString(),
+        "createdAt": DateTime.now().toString()
       }),
     );
     if (response.statusCode == 200) {
