@@ -7,6 +7,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:amplify_core/amplify_core.dart';
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class MerchantProfileSettingPage extends StatefulWidget {
   @override
@@ -17,6 +18,7 @@ class MerchantProfileSettingPage extends StatefulWidget {
 class _MerchantProfileSettingPageState
     extends State<MerchantProfileSettingPage> {
   var shopData;
+  bool stripeRegister = false;
 
   @override
   void initState() {
@@ -45,13 +47,18 @@ class _MerchantProfileSettingPageState
     }
   }
 
+//"https://pq3mbzzsbg.execute-api.ap-northeast-1.amazonaws.com/CaffeExpressRESTAPI/stripeaccount?storeStripeId=acct_1IAYF4QG0EUj44rM&storeId=near_azamino"
   Future<void> _goToStripeLink() async {
     var response = await http.post(
-      "https://pq3mbzzsbg.execute-api.ap-northeast-1.amazonaws.com/CaffeExpressRESTAPI/stripeaccount?storeStripeId=acct_1IAYF4QG0EUj44rM&storeId=near_azamino",
+      "https://pq3mbzzsbg.execute-api.ap-northeast-1.amazonaws.com/CaffeExpressRESTAPI/stripeaccount?storeStripeId=${shopData["stripeId"]}&storeId=${shopData["storeId"]}",
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
     );
+    final jsonResponse = await json.decode(utf8.decode(response.bodyBytes));
+    final myUrl = jsonDecode(jsonResponse["body"])["accountLinkURL"];
+    print(myUrl);
+    await launch("$myUrl");
   }
 
   @override
