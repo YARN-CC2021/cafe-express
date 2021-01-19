@@ -602,19 +602,29 @@ class _DetailPageState extends State<DetailPage> {
     }).catchError((e) {
       print('Errore Card: ${e.toString()}');
     });
-    paymentMethod != null
-        ? await processPaymentAsDirectCharge(paymentMethod)
-        : showDialog(
-            context: context,
-            builder: (BuildContext context) => ShowDialogToDismiss(
-                title: 'Error',
-                content:
-                    'It is not possible to pay with this card. Please try again with a different card',
-                buttonText: 'CLOSE'));
-
-    
-    // channel.sink.add(json.encode(bookData));
-    _goTimerPage(context, shopData, expireTime);
+    print("paymentMethod $paymentMethod");
+    if (paymentMethod != null) {
+      await processPaymentAsDirectCharge(paymentMethod);
+      bookedTime = DateTime.now();
+      expireTime = bookedTime.add(new Duration(minutes: 30));
+      bookData["bookedAt"] = "$bookedTime";
+      bookData["bookingId"] =
+          "${globals.userId}${bookedTime.millisecondsSinceEpoch}";
+      bookData["createdAt"] = "$bookedTime";
+      bookData["expiredAt"] = "$expireTime";
+      bookData["status"] = "paid";
+      bookData["updatedAt"] = "$bookedTime";
+      channel.sink.add(json.encode(bookData));
+      _goTimerPage(context, shopData, expireTime);
+    } else {
+      showDialog(
+          context: context,
+          builder: (BuildContext context) => ShowDialogToDismiss(
+              title: 'Error',
+              content:
+                  'It is not possible to pay with this card. Please try again with a different card',
+              buttonText: 'CLOSE'));
+    }
   }
 
   Future<void> processPaymentAsDirectCharge(PaymentMethod paymentMethod) async {
@@ -622,11 +632,15 @@ class _DetailPageState extends State<DetailPage> {
       showSpinner = true;
     });
     //step 2: request to create PaymentIntent, attempt to confirm the payment & return PaymentIntent
+    print(
+        "amount = $price, payMethod= ${paymentMethod.id} storeStripeId=${shopData["stripeId"]}");
     final http.Response response = await http.post(
         '$url?amount=$price&payMethod=${paymentMethod.id}&storeStripeId=${shopData["stripeId"]}'); // acct_1IAYF4QG0EUj44rM
-    if (response.body != null && response.body != 'error') {
+    print("decordedBody: ${jsonDecode(response.body)}");
+    if (response.body != null &&
+        response.body != 'error' &&
+        jsonDecode(response.body)["body"] != null) {
       final decordedBody = jsonDecode(response.body);
-      print("decode paymentIntentX: ${jsonDecode(decordedBody["body"])}");
       final paymentIntentX = jsonDecode(decordedBody["body"]);
       final status = paymentIntentX['paymentIntent']['status'];
       final strAccount = paymentIntentX['stripeAccount'];

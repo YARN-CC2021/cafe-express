@@ -45,13 +45,15 @@ class _MapPageState extends State<MapPage> {
   void initState() {
     super.initState();
 
+    print("initState");
+
     // 現在位置の取得
     _getLocation();
-    _getAllShopData();
+    // _getAllShopData();
 
-    _pageController = PageController(
-      viewportFraction: 0.95,
-    );
+    // _pageController = PageController(
+    //   viewportFraction: 0.95,
+    // );
     _isPageViewAnimating = false;
 
     // 現在位置の変化を監視 backgroundでも動くのかどうか
@@ -427,7 +429,8 @@ class _MapPageState extends State<MapPage> {
           );
         }).toSet(),
         onMapCreated: (GoogleMapController controller) {
-          // _getAllShopData();
+          print("MAP CREATED");
+          _getAllShopData();
           _controller.complete(controller);
         },
         myLocationEnabled: true,
@@ -504,7 +507,7 @@ class _MapPageState extends State<MapPage> {
     var response = await http.get(
         'https://pq3mbzzsbg.execute-api.ap-northeast-1.amazonaws.com/CaffeExpressRESTAPI/store');
     if (response.statusCode == 200) {
-      if (mounted) {
+      if (mounted && _yourLocation != null) {
         final jsonResponse = await json.decode(utf8.decode(response.bodyBytes));
         var filteredShops = await jsonResponse['body']
             .where((shop) => shop['lat'] != null && shop['lng'] != null)

@@ -60,7 +60,6 @@ class _TimerPageState extends State<TimerPage> {
         _yourLocation = result;
       });
 
-      print('TIME IS${widget.expireTime}');
     });
   }
 
@@ -81,6 +80,7 @@ class _TimerPageState extends State<TimerPage> {
       ),
       body: Center(
         child: Container(
+          color: Colors.greenAccent,
           child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
