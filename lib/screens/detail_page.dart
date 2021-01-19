@@ -436,8 +436,8 @@ class _DetailPageState extends State<DetailPage> {
                                                       "$bookedTime",
 
                                                   price == 0
-                                                      ? _goTimerPage(
-                                                          context, shopData)
+                                                      ? _goTimerPage(context,
+                                                          shopData, bookData)
                                                       : createPaymentMethod(
                                                           bookData),
                                                   //  _goStripePage(
@@ -567,8 +567,9 @@ class _DetailPageState extends State<DetailPage> {
     print("goStripePage was triggered");
   }
 
-  void _goTimerPage(BuildContext context, Map shopData) {
-    Navigator.pushNamed(context, TimerRoute, arguments: {"shopData": shopData});
+  void _goTimerPage(BuildContext context, Map shopData, Map bookData) {
+    Navigator.pushNamed(context, TimerRoute,
+        arguments: {"shopData": shopData, "bookData": bookData});
     print("goTimerPage was triggered");
   }
 
@@ -587,7 +588,7 @@ class _DetailPageState extends State<DetailPage> {
     if (paymentMethod != null) {
       await processPaymentAsDirectCharge(paymentMethod);
       channel.sink.add(json.encode(bookData));
-      _goTimerPage(context, shopData);
+      _goTimerPage(context, shopData, bookData);
     } else {
       showDialog(
           context: context,
