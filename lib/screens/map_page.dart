@@ -628,6 +628,7 @@ class _MapPageState extends State<MapPage> {
   }
 
   void _onTap(BuildContext context, String shopId) {
+    print("inside onTap");
     Navigator.pushNamed(context, DetailRoute, arguments: {"id": shopId});
   }
 
