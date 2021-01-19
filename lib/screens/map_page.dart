@@ -159,7 +159,7 @@ class _MapPageState extends State<MapPage> {
                                                         child: Image.network(
                                                           listOfUrl[shop["id"]],
                                                           // listOfUrl[shop["id"]],
-                                                          fit: BoxFit.cover,
+                                                          fit: BoxFit.fitWidth,
                                                           loadingBuilder: (context,
                                                               child,
                                                               loadingProgress) {
@@ -504,20 +504,20 @@ class _MapPageState extends State<MapPage> {
     var response = await http.get(
         'https://pq3mbzzsbg.execute-api.ap-northeast-1.amazonaws.com/CaffeExpressRESTAPI/store');
     if (response.statusCode == 200) {
-      final jsonResponse = await json.decode(utf8.decode(response.bodyBytes));
-      var filteredShops = await jsonResponse['body']
-          .where((shop) => shop['lat'] != null && shop['lng'] != null)
-          .toList();
-      print('filteredShopData $filteredShops');
-      setState(() {
-        shopData = filteredShops;
-        listShops = shopData;
-      });
-      await _showPic();
-      print('shopData : $shopData');
-      print("listShops [0] ${listShops[0]}");
-      _filterShop(distance, category, groupNum);
-      // selectedShop = listShops[0];
+      if (mounted) {
+        final jsonResponse = await json.decode(utf8.decode(response.bodyBytes));
+        var filteredShops = await jsonResponse['body']
+            .where((shop) => shop['lat'] != null && shop['lng'] != null)
+            .toList();
+        print('filteredShopData $filteredShops');
+        setState(() {
+          shopData = filteredShops;
+          listShops = shopData;
+        });
+        await _showPic();
+        _filterShop(distance, category, groupNum);
+        // selectedShop = listShops[0];
+      }
     } else {
       print('Request failed with status: ${response.statusCode}.');
     }

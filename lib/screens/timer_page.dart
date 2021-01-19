@@ -9,7 +9,8 @@ import 'package:url_launcher/url_launcher.dart';
 
 class TimerPage extends StatefulWidget {
   final Map shopData;
-  TimerPage(this.shopData);
+  final DateTime expireTime;
+  TimerPage(this.shopData, this.expireTime);
 
   @override
   _TimerPageState createState() => _TimerPageState();
@@ -17,7 +18,7 @@ class TimerPage extends StatefulWidget {
 
 class _TimerPageState extends State<TimerPage> {
   Timer timer;
-  int totalTime = 1800;
+  int totalTime;
   String timetodisplay = '';
   String barcode = "";
   String lockedTime = "";
@@ -38,7 +39,7 @@ class _TimerPageState extends State<TimerPage> {
 
   _scan() async {
     return FlutterBarcodeScanner.scanBarcode(
-            "#000000", "cancel", true, ScanMode.BARCODE)
+            "#000000", "cancel", true, ScanMode.QR)
         .then((value) => setState(() {
               barcode = value;
               lockedTime = timetodisplay.toString();
@@ -47,6 +48,8 @@ class _TimerPageState extends State<TimerPage> {
 
   @override
   void initState() {
+    super.initState();
+
     start();
 
     _getLocation();
@@ -56,9 +59,9 @@ class _TimerPageState extends State<TimerPage> {
       setState(() {
         _yourLocation = result;
       });
-    });
 
-    super.initState();
+      print('TIME IS${widget.expireTime}');
+    });
   }
 
   @override
@@ -89,10 +92,14 @@ class _TimerPageState extends State<TimerPage> {
                       Text(
                         "Dead Line is...",
                         style: TextStyle(
-                            fontSize: 35.0,
-                            color: Colors.redAccent[400],
-                            ),
+                          fontSize: 35.0,
+                          color: Colors.redAccent[400],
+                        ),
                       ),
+                      // Text(
+                      //   '$timetodisplay',
+                      //   style: TextStyle(fontSize: 35.0, color: Colors.black),
+                      // ),
                       Text(
                         '$timetodisplay',
                         style: TextStyle(fontSize: 35.0, color: Colors.black),
@@ -111,14 +118,14 @@ class _TimerPageState extends State<TimerPage> {
                             child: Text("Scan Barcode"),
                             onPressed: () => _scan(),
                           )),
-                      Container(
-                          padding: EdgeInsets.symmetric(
-                              vertical: 10.0, horizontal: 80.0),
-                          child: Text(barcode)),
-                      Container(
-                          padding: EdgeInsets.symmetric(
-                              vertical: 10.0, horizontal: 80.0),
-                          child: Text(lockedTime)),
+                      // Container(
+                      //     padding: EdgeInsets.symmetric(
+                      //         vertical: 10.0, horizontal: 80.0),
+                      //     child: Text(barcode)),
+                      // Container(
+                      //     padding: EdgeInsets.symmetric(
+                      //         vertical: 10.0, horizontal: 80.0),
+                      //     child: Text(lockedTime)),
                       // RaisedButton(
                       //     child: const Text(
                       //       'I Got Here!',
@@ -178,12 +185,15 @@ class _TimerPageState extends State<TimerPage> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           IconButton(
-                              icon: Icon(Icons.local_phone),
+                              icon: Icon(Icons.local_phone, size: 30.0),
                               onPressed: () {
                                 launch("tel:${widget.shopData['tel']}");
                               }),
                           IconButton(
-                              icon: Icon(Icons.mail),
+                              icon: Icon(
+                                Icons.mail,
+                                size: 30.0,
+                              ),
                               onPressed: () {
                                 launch(
                                     "mailto:${widget.shopData['contactEmail']}");
@@ -258,12 +268,12 @@ class _TimerPageState extends State<TimerPage> {
         Duration(
           seconds: 1,
         ), (Timer t) {
+      print("Start called");
       setState(() {
+        totalTime = widget.expireTime.difference(DateTime.now()).inSeconds;
         if (totalTime < 0) {
-          print('TOTAL$totalTime');
           //go fail page
           timer.cancel();
-          totalTime = 1800;
         } else if (totalTime < 3600) {
           int m = totalTime ~/ 60;
           int s = totalTime - (60 * m);
@@ -272,7 +282,7 @@ class _TimerPageState extends State<TimerPage> {
           } else {
             timetodisplay = m.toString() + ":" + s.toString();
           }
-          totalTime -= 1;
+          // totalTime -= 1;
         }
       });
     });
@@ -297,8 +307,6 @@ class _TimerPageState extends State<TimerPage> {
         polylineCoordinates.add(LatLng(point.latitude, point.longitude));
       });
     }
-
-    print(polylineCoordinates);
 
     PolylineId id = PolylineId('poly');
     Polyline polyline = Polyline(
