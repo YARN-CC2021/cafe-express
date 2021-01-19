@@ -434,12 +434,12 @@ class _DetailPageState extends State<DetailPage> {
                                                   bookData["tableType"] = seat,
                                                   bookData["updatedAt"] =
                                                       "$bookedTime",
-                                                  channel.sink.add(
-                                                      json.encode(bookData)),
+
                                                   price == 0
                                                       ? _goTimerPage(
                                                           context, shopData)
-                                                      : createPaymentMethod(),
+                                                      : createPaymentMethod(
+                                                          bookData),
                                                   //  _goStripePage(
                                                   //     context, widget.id, price),
                                                 },
@@ -572,7 +572,7 @@ class _DetailPageState extends State<DetailPage> {
     print("goTimerPage was triggered");
   }
 
-  Future<void> createPaymentMethod() async {
+  Future<void> createPaymentMethod(Map bookData) async {
     StripePayment.setStripeAccount(null);
     //step 1: add card
     PaymentMethod paymentMethod = PaymentMethod();
@@ -583,16 +583,20 @@ class _DetailPageState extends State<DetailPage> {
     }).catchError((e) {
       print('Errore Card: ${e.toString()}');
     });
-    paymentMethod != null
-        ? await processPaymentAsDirectCharge(paymentMethod)
-        : showDialog(
-            context: context,
-            builder: (BuildContext context) => ShowDialogToDismiss(
-                title: 'Error',
-                content:
-                    'It is not possible to pay with this card. Please try again with a different card',
-                buttonText: 'CLOSE'));
-    _goTimerPage(context, shopData);
+    print("paymentMethod $paymentMethod");
+    if (paymentMethod != null) {
+      await processPaymentAsDirectCharge(paymentMethod);
+      channel.sink.add(json.encode(bookData));
+      _goTimerPage(context, shopData);
+    } else {
+      showDialog(
+          context: context,
+          builder: (BuildContext context) => ShowDialogToDismiss(
+              title: 'Error',
+              content:
+                  'It is not possible to pay with this card. Please try again with a different card',
+              buttonText: 'CLOSE'));
+    }
   }
 
   Future<void> processPaymentAsDirectCharge(PaymentMethod paymentMethod) async {
@@ -600,11 +604,15 @@ class _DetailPageState extends State<DetailPage> {
       showSpinner = true;
     });
     //step 2: request to create PaymentIntent, attempt to confirm the payment & return PaymentIntent
+    print(
+        "amount = $price, payMethod= ${paymentMethod.id} storeStripeId=${shopData["stripeId"]}");
     final http.Response response = await http.post(
         '$url?amount=$price&payMethod=${paymentMethod.id}&storeStripeId=${shopData["stripeId"]}'); // acct_1IAYF4QG0EUj44rM
-    if (response.body != null && response.body != 'error') {
+    print("decordedBody: ${jsonDecode(response.body)}");
+    if (response.body != null &&
+        response.body != 'error' &&
+        jsonDecode(response.body)["body"] != null) {
       final decordedBody = jsonDecode(response.body);
-      print("decode paymentIntentX: ${jsonDecode(decordedBody["body"])}");
       final paymentIntentX = jsonDecode(decordedBody["body"]);
       final status = paymentIntentX['paymentIntent']['status'];
       final strAccount = paymentIntentX['stripeAccount'];
