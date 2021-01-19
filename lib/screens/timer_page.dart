@@ -6,11 +6,16 @@ import 'package:location/location.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:web_socket_channel/io.dart';
+import 'dart:convert';
+import '../global.dart' as globals;
 
 class TimerPage extends StatefulWidget {
   final Map shopData;
-  final DateTime expireTime;
-  TimerPage(this.shopData, this.expireTime);
+  final Map bookData;
+  TimerPage(this.shopData, this.bookData);
+  final channel = IOWebSocketChannel.connect(
+      "wss://gu2u8vdip2.execute-api.ap-northeast-1.amazonaws.com/CafeExpressWS?id=${globals.userId}");
 
   @override
   _TimerPageState createState() => _TimerPageState();
@@ -39,17 +44,27 @@ class _TimerPageState extends State<TimerPage> {
 
   _scan() async {
     return FlutterBarcodeScanner.scanBarcode(
-            "#000000", "cancel", true, ScanMode.QR)
-        .then((value) => setState(() {
-              barcode = value;
-              lockedTime = timetodisplay.toString();
-            }));
+            "#000000", "cancel", true, ScanMode.BARCODE)
+        .then((value) => {
+              setState(() {
+                widget.bookData["status"] = "checked_in";
+                barcode = value;
+                lockedTime = timetodisplay.toString();
+                timer.cancel();
+              }),
+              widget.channel.sink.add(json.encode({
+                "action": "onBookingStatusChange",
+                "bookingId": widget.bookData["bookingId"],
+                "status": widget.bookData["status"],
+                "updatedAt": DateTime.now().toString(),
+                "storeId": barcode
+              }))
+            });
   }
 
-  @override
   void initState() {
     super.initState();
-
+    print("inside timer page, print bookData: ${widget.bookData}");
     start();
 
     _getLocation();
@@ -270,7 +285,7 @@ class _TimerPageState extends State<TimerPage> {
         ), (Timer t) {
       print("Start called");
       setState(() {
-        totalTime = widget.expireTime.difference(DateTime.now()).inSeconds;
+        totalTime = widget.bookData['expiredAt'].difference(DateTime.now()).inSeconds;
         if (totalTime < 0) {
           //go fail page
           timer.cancel();

@@ -47,10 +47,7 @@ function updateBookingStatus(bodyParsed) {
   return ddb.update(params).promise();
 }
 
-
-function getCustomerConnectionId(bodyParsed) {
-  const { customerId } = bodyParsed;
-
+function getCustomerConnectionId(customerId) {
   const params = {
     TableName: "websocket",
     FilterExpression: "#id = :id",
@@ -60,25 +57,49 @@ function getCustomerConnectionId(bodyParsed) {
     ExpressionAttributeValues: {
       ":id": customerId,
     },
-  }
+  };
   return ddb.scan(params).promise();
 }
 
+function getStoreConnectionId(storeId) {
+  const params = {
+    TableName: "websocket",
+    FilterExpression: "#id = :id",
+    ExpressionAttributeNames: {
+      "#id": "id",
+    },
+    ExpressionAttributeValues: {
+      ":id": storeId,
+    },
+  };
+  return ddb.scan(params).promise();
+}
 
 exports.handler = async (event, context, sendResponse) => {
   initApiGatewayManagementApi(event);
   const bodyParsed = JSON.parse(event.body);
+  const { customerId, storeId } = bodyParsed;
 
   delete bodyParsed.action;
-
   await updateBookingStatus(bodyParsed);
-  const customers = await getCustomerConnectionId(bodyParsed);
 
-  customers.Items.forEach(function (connection) {
-    if (connection.connectionId !== "dummy") {
-      send(connection.connectionId, event.body);
-    }
-  });
+  if (customerId) {
+    const customers = await getCustomerConnectionId(customerId);
+    customers.Items.forEach(function (connection) {
+      if (connection.connectionId !== "dummy") {
+        send(connection.connectionId, event.body);
+      }
+    });
+  }
+
+  if (storeId) {
+    const store = await getStoreConnectionId(storeId);
+    store.Items.forEach(function (connection) {
+      if (connection.connectionId !== "dummy") {
+        send(connection.connectionId, event.body);
+      }
+    });
+  }
 
   sendResponse(null, { statusCode: 200 });
 };
