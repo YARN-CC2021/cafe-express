@@ -169,44 +169,6 @@ class _MapPageState extends State<MapPage> {
                                                           },
                                                         ),
                                                       )
-                                            // FutureBuilder(
-                                            //     future: _showPic(shop),
-                                            //     builder: (BuildContext context,
-                                            //         AsyncSnapshot<String> snapshot) {
-                                            //       if (snapshot.connectionState !=
-                                            //           ConnectionState.done) {
-                                            //         return CircularProgressIndicator();
-                                            //       }
-                                            //       if (snapshot.hasError) {
-                                            //         return Text(
-                                            //             snapshot.error.toString());
-                                            //       }
-                                            //       if (snapshot.hasData) {
-                                            //         return Center(
-                                            //           child: Image.network(
-                                            //             '${snapshot.data}',
-                                            //             // '${shop['imageUrl']}',
-                                            //             // listOfUrl[shop["id"]],
-                                            //             fit: BoxFit.cover,
-                                            //             loadingBuilder: (context,
-                                            //                 child, loadingProgress) {
-                                            //               if (loadingProgress == null)
-                                            //                 return child;
-                                            //               return CircularProgressIndicator();
-                                            //             },
-                                            //             errorBuilder: (BuildContext
-                                            //                     context,
-                                            //                 Object exception,
-                                            //                 StackTrace stackTrace) {
-                                            //               return Text('写真がありません');
-                                            //             },
-                                            //           ),
-                                            //         );
-                                            //       } else {
-                                            //         return Text('写真がありません');
-                                            //       }
-                                            //     }),
-                                            // imageCard(shop),
                                           ]),
                                       Positioned(
                                         left: 0,
@@ -461,27 +423,8 @@ class _MapPageState extends State<MapPage> {
     listOfUrl = urlMap;
     print("listOfUrl: $listOfUrl");
   }
-  // if (shopData["imageUrl"].length > 0) {
-  //   for (var key in shopData["imageUrl"]) {
-  //     var result =
-  //         await Amplify.Storage.getUrl(key: key, options: getUrlOptions);
-  //     var url = result.url;
-  //     listOfUrl.add(url);
-  //   }
-  // }
-  // print("List of Url: $listOfUrl");
-  // print("done getting getting image Url");
-  // setState(() {
-  //   images = listOfUrl;
-  // });
-  // print("imagesssss: $images");
-  // print("done listing");
 
   Widget imageCard(shop) {
-    // _showPic(shop);
-    print("inside image Card");
-    print("inside image Card: $listOfUrl");
-
     return Center(
       child: Image.network(
         listOfUrl[shop["id"]],
@@ -516,7 +459,6 @@ class _MapPageState extends State<MapPage> {
         });
         await _showPic();
         _filterShop(distance, category, groupNum);
-        // selectedShop = listShops[0];
       }
     } else {
       print('Request failed with status: ${response.statusCode}.');
