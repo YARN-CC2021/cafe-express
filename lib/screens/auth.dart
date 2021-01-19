@@ -77,7 +77,7 @@ class _AuthState extends State<Auth> {
         dialogType: DialogType.NO_HEADER,
         animType: AnimType.BOTTOMSLIDE,
         body: Center(
-          child: Text("Log in failed. Pleas try again."),
+          child: Text("Log in failed. Please try again."),
         ),
         btnOkOnPress: () {
           _returnWrapper(context);
