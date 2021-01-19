@@ -95,7 +95,6 @@ class _TimerPageState extends State<TimerPage> {
       ),
       body: Center(
         child: Container(
-          color: Colors.greenAccent,
           child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
@@ -111,10 +110,6 @@ class _TimerPageState extends State<TimerPage> {
                           color: Colors.redAccent[400],
                         ),
                       ),
-                      // Text(
-                      //   '$timetodisplay',
-                      //   style: TextStyle(fontSize: 35.0, color: Colors.black),
-                      // ),
                       Text(
                         '$timetodisplay',
                         style: TextStyle(fontSize: 35.0, color: Colors.black),
@@ -264,20 +259,6 @@ class _TimerPageState extends State<TimerPage> {
     }
   }
 
-  // Future<void> _getShopData(String id) async {
-  //   var response = await http.get(
-  //       'https://pq3mbzzsbg.execute-api.ap-northeast-1.amazonaws.com/CaffeExpressRESTAPI/store/$id');
-  //   print("RESPONSE ${response.statusCode}");
-  //   if (response.statusCode == 200) {
-  //     final jsonResponse = await json.decode(utf8.decode(response.bodyBytes));
-  //     setState(() {
-  //       shopData = jsonResponse['body'];
-  //     });
-  //   } else {
-  //     print('Request failed with status: ${response.statusCode}.');
-  //   }
-  // }
-
   void start() {
     timer = Timer.periodic(
         Duration(
@@ -297,7 +278,6 @@ class _TimerPageState extends State<TimerPage> {
           } else {
             timetodisplay = m.toString() + ":" + s.toString();
           }
-          // totalTime -= 1;
         }
       });
     });
@@ -311,7 +291,7 @@ class _TimerPageState extends State<TimerPage> {
       double destinationLatitude, double destinationLongitude) async {
     polylinePoints = PolylinePoints();
     PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
-      env['GOOGLE_MAP_API_KEY'], // Google Maps API Key
+      env['GOOGLE_MAP_API_KEY'],
       PointLatLng(startLatitude, startLongitude),
       PointLatLng(destinationLatitude, destinationLongitude),
       travelMode: TravelMode.transit,

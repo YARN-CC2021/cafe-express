@@ -420,11 +420,36 @@ class _DetailPageState extends State<DetailPage> {
                                                   bookData["bookName"] =
                                                       nameController.text,
                                                   price == 0
-                                                      ? _goTimerPage(context,
-                                                          shopData, bookData)
+                                                      ? {
+                                                          bookedTime =
+                                                              DateTime.now(),
+                                                          expireTime =
+                                                              bookedTime.add(
+                                                                  new Duration(
+                                                                      minutes:
+                                                                          30)),
+                                                          bookData["bookedAt"] =
+                                                              "$bookedTime",
+                                                          bookData[
+                                                                  "bookingId"] =
+                                                              "${globals.userId}${bookedTime.millisecondsSinceEpoch}",
+                                                          bookData[
+                                                                  "createdAt"] =
+                                                              "$bookedTime",
+                                                          bookData[
+                                                                  "expiredAt"] =
+                                                              "$expireTime",
+                                                          bookData["status"] =
+                                                              "paid",
+                                                          bookData[
+                                                                  "updatedAt"] =
+                                                              "$bookedTime",
+                                                          _goTimerPage(
+                                                              context,
+                                                              shopData,
+                                                              bookData)
+                                                        }
                                                       : createPaymentMethod(),
-                                                  //  _goStripePage(
-                                                  //     context, widget.id, price),
                                                 },
                                             }),
                                   ],
