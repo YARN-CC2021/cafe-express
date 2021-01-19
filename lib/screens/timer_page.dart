@@ -23,7 +23,7 @@ class TimerPage extends StatefulWidget {
 
 class _TimerPageState extends State<TimerPage> {
   Timer timer;
-  int totalTime = 1800;
+  int totalTime;
   String timetodisplay = '';
   String barcode = "";
   String lockedTime = "";
@@ -63,6 +63,7 @@ class _TimerPageState extends State<TimerPage> {
   }
 
   void initState() {
+    super.initState();
     print("inside timer page, print bookData: ${widget.bookData}");
     start();
 
@@ -73,9 +74,8 @@ class _TimerPageState extends State<TimerPage> {
       setState(() {
         _yourLocation = result;
       });
-    });
 
-    super.initState();
+    });
   }
 
   @override
@@ -128,14 +128,14 @@ class _TimerPageState extends State<TimerPage> {
                             child: Text("Scan Barcode"),
                             onPressed: () => _scan(),
                           )),
-                      Container(
-                          padding: EdgeInsets.symmetric(
-                              vertical: 10.0, horizontal: 80.0),
-                          child: Text(barcode)),
-                      Container(
-                          padding: EdgeInsets.symmetric(
-                              vertical: 10.0, horizontal: 80.0),
-                          child: Text(lockedTime)),
+                      // Container(
+                      //     padding: EdgeInsets.symmetric(
+                      //         vertical: 10.0, horizontal: 80.0),
+                      //     child: Text(barcode)),
+                      // Container(
+                      //     padding: EdgeInsets.symmetric(
+                      //         vertical: 10.0, horizontal: 80.0),
+                      //     child: Text(lockedTime)),
                       // RaisedButton(
                       //     child: const Text(
                       //       'I Got Here!',
@@ -195,12 +195,15 @@ class _TimerPageState extends State<TimerPage> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           IconButton(
-                              icon: Icon(Icons.local_phone),
+                              icon: Icon(Icons.local_phone, size: 30.0),
                               onPressed: () {
                                 launch("tel:${widget.shopData['tel']}");
                               }),
                           IconButton(
-                              icon: Icon(Icons.mail),
+                              icon: Icon(
+                                Icons.mail,
+                                size: 30.0,
+                              ),
                               onPressed: () {
                                 launch(
                                     "mailto:${widget.shopData['contactEmail']}");
@@ -256,31 +259,17 @@ class _TimerPageState extends State<TimerPage> {
     }
   }
 
-  // Future<void> _getShopData(String id) async {
-  //   var response = await http.get(
-  //       'https://pq3mbzzsbg.execute-api.ap-northeast-1.amazonaws.com/CaffeExpressRESTAPI/store/$id');
-  //   print("RESPONSE ${response.statusCode}");
-  //   if (response.statusCode == 200) {
-  //     final jsonResponse = await json.decode(utf8.decode(response.bodyBytes));
-  //     setState(() {
-  //       shopData = jsonResponse['body'];
-  //     });
-  //   } else {
-  //     print('Request failed with status: ${response.statusCode}.');
-  //   }
-  // }
-
   void start() {
     timer = Timer.periodic(
         Duration(
           seconds: 1,
         ), (Timer t) {
+      print("Start called");
       setState(() {
+        totalTime = widget.bookData['expiredAt'].difference(DateTime.now()).inSeconds;
         if (totalTime < 0) {
-          print('TOTAL$totalTime');
           //go fail page
           timer.cancel();
-          totalTime = 1800;
         } else if (totalTime < 3600) {
           int m = totalTime ~/ 60;
           int s = totalTime - (60 * m);
@@ -289,7 +278,6 @@ class _TimerPageState extends State<TimerPage> {
           } else {
             timetodisplay = m.toString() + ":" + s.toString();
           }
-          totalTime -= 1;
         }
       });
     });
@@ -303,7 +291,7 @@ class _TimerPageState extends State<TimerPage> {
       double destinationLatitude, double destinationLongitude) async {
     polylinePoints = PolylinePoints();
     PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
-      env['GOOGLE_MAP_API_KEY'], // Google Maps API Key
+      env['GOOGLE_MAP_API_KEY'],
       PointLatLng(startLatitude, startLongitude),
       PointLatLng(destinationLatitude, destinationLongitude),
       travelMode: TravelMode.transit,
@@ -314,8 +302,6 @@ class _TimerPageState extends State<TimerPage> {
         polylineCoordinates.add(LatLng(point.latitude, point.longitude));
       });
     }
-
-    print(polylineCoordinates);
 
     PolylineId id = PolylineId('poly');
     Polyline polyline = Polyline(
