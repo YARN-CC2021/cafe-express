@@ -3,6 +3,7 @@ import 'dart:async';
 import "package:flutter_barcode_scanner/flutter_barcode_scanner.dart";
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -25,7 +26,6 @@ class _TimerPageState extends State<TimerPage> {
   Timer timer;
   int totalTime = 1800;
   String timetodisplay = '';
-  String barcode = "";
   String lockedTime = "";
 
   final Completer<GoogleMapController> _controller =
@@ -46,20 +46,35 @@ class _TimerPageState extends State<TimerPage> {
     return FlutterBarcodeScanner.scanBarcode(
             "#000000", "cancel", true, ScanMode.BARCODE)
         .then((value) => {
-              setState(() {
-                widget.bookData["status"] = "checked_in";
-                barcode = value;
-                lockedTime = timetodisplay.toString();
-                timer.cancel();
-              }),
-              widget.channel.sink.add(json.encode({
-                "action": "onBookingStatusChange",
-                "bookingId": widget.bookData["bookingId"],
-                "status": widget.bookData["status"],
-                "updatedAt": DateTime.now().toString(),
-                "storeId": barcode
-              }))
+              if (value == widget.shopData["id"])
+                {
+                  setState(() {
+                    widget.bookData["status"] = "checked_in";
+                    lockedTime = timetodisplay.toString();
+                    timer.cancel();
+                  }),
+                  widget.channel.sink.add(json.encode({
+                    "action": "onBookingStatusChange",
+                    "bookingId": widget.bookData["bookingId"],
+                    "status": widget.bookData["status"],
+                    "updatedAt": DateTime.now().toString(),
+                    "storeId": value
+                  }))
+                }
             });
+  }
+
+  String _displayStatus(String status) {
+    switch (status) {
+      case "paid":
+        return "予約完了";
+      case "checked_in":
+        return "チェックイン完了";
+      case "canceled":
+        return "キャンセル済";
+      default:
+        return "";
+    }
   }
 
   void initState() {
@@ -88,132 +103,168 @@ class _TimerPageState extends State<TimerPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Cafe Express"),
-        backgroundColor: Theme.of(context).primaryColor,
-        elevation: 0.0,
-      ),
-      body: Center(
-        child: Container(
-          child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Expanded(child: _makeGoogleMap()),
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.7,
-                  child: Column(
-                    children: [
-                      Text(
-                        "Dead Line is...",
-                        style: TextStyle(
-                          fontSize: 35.0,
-                          color: Colors.redAccent[400],
-                        ),
-                      ),
-                      Text(
-                        '$timetodisplay',
-                        style: TextStyle(fontSize: 35.0, color: Colors.black),
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.7,
-                  child: Column(
-                    children: [
-                      Container(
-                          padding: EdgeInsets.symmetric(
-                              vertical: 10.0, horizontal: 80.0),
-                          child: RaisedButton(
-                            child: Text("Scan Barcode"),
-                            onPressed: () => _scan(),
-                          )),
-                      Container(
-                          padding: EdgeInsets.symmetric(
-                              vertical: 10.0, horizontal: 80.0),
-                          child: Text(barcode)),
-                      Container(
-                          padding: EdgeInsets.symmetric(
-                              vertical: 10.0, horizontal: 80.0),
-                          child: Text(lockedTime)),
-                      // RaisedButton(
-                      //     child: const Text(
-                      //       'I Got Here!',
-                      //       style: TextStyle(
-                      //         fontSize: 20.0,
-                      //         fontWeight: FontWeight.bold,
-                      //       ),
-                      //     ),
-                      //     color: Colors.lightBlue[200],
-                      //     shape: const OutlineInputBorder(
-                      //       borderRadius:
-                      //           BorderRadius.all(Radius.circular(10)),
-                      //     ),
-                      // onPressed: () {
-                      //   //dialog that user reach the shop
-                      //   showDialog(
-                      //     context: context,
-                      //     builder: (_) {
-                      //       return AlertDialog(
-                      //         title: Text(''),
-                      //         content: Text(
-                      //           'Are You Here?',
-                      //           style: TextStyle(
-                      //             fontSize: 18.0,
-                      //           ),
-                      //         ),
-                      //         actions: <Widget>[
-                      //           FlatButton(
-                      //             child: Text("No"),
-                      //             onPressed: () => Navigator.pop(context),
-                      //           ),
-                      //           FlatButton(
-                      //             child: Text("Yes"),
-                      //             onPressed: () => {
-                      //               // go back to map page? or success pages
-                      //             },
-                      //           ),
-                      //         ],
-                      //       );
-                      //     },
-                      //   );
-                      // }),
-                      Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(Icons.warning),
-                            Text(
-                              "Any Issue? Contact",
-                              style: TextStyle(
-                                fontSize: 25.0,
-                                color: Colors.amber,
-                              ),
-                            ),
-                            Icon(Icons.warning),
-                          ]),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          IconButton(
-                              icon: Icon(Icons.local_phone),
-                              onPressed: () {
-                                launch("tel:${widget.shopData['tel']}");
-                              }),
-                          IconButton(
-                              icon: Icon(Icons.mail),
-                              onPressed: () {
-                                launch(
-                                    "mailto:${widget.shopData['contactEmail']}");
-                              }),
-                        ],
-                      )
-                    ],
-                  ),
-                )
-              ]),
+        appBar: AppBar(
+          title: Text("Cafe Express"),
+          backgroundColor: Theme.of(context).primaryColor,
+          elevation: 0.0,
         ),
-      ),
-    );
+        body: StreamBuilder(
+            stream: widget.channel.stream,
+            builder: (context, snapshot) {
+              if (snapshot.hasData &&
+                  json.decode(snapshot.data)["bookingId"] ==
+                      widget.bookData["bookingId"]) {
+                print(snapshot.data);
+
+                WidgetsBinding.instance
+                    .addPostFrameCallback((_) => AwesomeDialog(
+                          context: context,
+                          customHeader: null,
+                          animType: AnimType.BOTTOMSLIDE,
+                          dialogType: DialogType.SUCCES,
+                          body: Center(
+                              child: Column(children: [
+                            Text('Booking ID: ${widget.bookData["booking"]}'),
+                            Text(
+                                'You have checked in at ${widget.shopData["name"]}'),
+                          ])),
+                          btnOkOnPress: () {},
+                          useRootNavigator: false,
+                          btnOkColor: Colors.tealAccent[400],
+                          // btnCancelOnPress: () {},
+                          btnOkText: 'OK',
+                          // btnCancelText: 'Go To\n Booking List',
+                          // btnCancelColor: Colors.blueGreyAccent[400],
+                          dismissOnTouchOutside: false,
+                          headerAnimationLoop: false,
+                          showCloseIcon: false,
+                          buttonsBorderRadius:
+                              BorderRadius.all(Radius.circular(100)),
+                        )..show());
+                setState(() {
+                  widget.bookData["status"] =
+                      json.decode(snapshot.data)["status"];
+                  lockedTime = timetodisplay.toString();
+                  timer.cancel();
+                });
+              }
+              return Center(
+                child: Container(
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Expanded(child: _makeGoogleMap()),
+                        Container(
+                          width: MediaQuery.of(context).size.width * 0.6,
+                          child: Column(
+                            children: [
+                              Text(
+                                "${_displayStatus(widget.bookData["status"])}が完了しました！",
+                                style: TextStyle(
+                                  fontSize: 30.0,
+                                  color: Colors.black,
+                                ),
+                              ),
+                              Text(
+                                'あと$timetodisplay以内にお店にチェックインしましょう。',
+                                style: TextStyle(
+                                    fontSize: 30.0,
+                                    color: widget.bookData["status"] == "paid"
+                                        ? Colors.black
+                                        : Colors.grey),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          width: MediaQuery.of(context).size.width * 0.7,
+                          child: Column(
+                            children: [
+                              Container(
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: 20.0, horizontal: 80.0),
+                                  child: RaisedButton(
+                                    child: Text("チェックインQRスキャン"),
+                                    onPressed: () => _scan(),
+                                  )),
+                              // RaisedButton(
+                              //     child: const Text(
+                              //       'I Got Here!',
+                              //       style: TextStyle(
+                              //         fontSize: 20.0,
+                              //         fontWeight: FontWeight.bold,
+                              //       ),
+                              //     ),
+                              //     color: Colors.lightBlue[200],
+                              //     shape: const OutlineInputBorder(
+                              //       borderRadius:
+                              //           BorderRadius.all(Radius.circular(10)),
+                              //     ),
+                              // onPressed: () {
+                              //   //dialog that user reach the shop
+                              //   showDialog(
+                              //     context: context,
+                              //     builder: (_) {
+                              //       return AlertDialog(
+                              //         title: Text(''),
+                              //         content: Text(
+                              //           'Are You Here?',
+                              //           style: TextStyle(
+                              //             fontSize: 18.0,
+                              //           ),
+                              //         ),
+                              //         actions: <Widget>[
+                              //           FlatButton(
+                              //             child: Text("No"),
+                              //             onPressed: () => Navigator.pop(context),
+                              //           ),
+                              //           FlatButton(
+                              //             child: Text("Yes"),
+                              //             onPressed: () => {
+                              //               // go back to map page? or success pages
+                              //             },
+                              //           ),
+                              //         ],
+                              //       );
+                              //     },
+                              //   );
+                              // }),
+                              Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(Icons.warning),
+                                    Text(
+                                      "Any Issue? Contact",
+                                      style: TextStyle(
+                                        fontSize: 20.0,
+                                        color: Colors.amber,
+                                      ),
+                                    ),
+                                    Icon(Icons.warning),
+                                  ]),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  IconButton(
+                                      icon: Icon(Icons.local_phone),
+                                      onPressed: () {
+                                        launch("tel:${widget.shopData['tel']}");
+                                      }),
+                                  IconButton(
+                                      icon: Icon(Icons.mail),
+                                      onPressed: () {
+                                        launch(
+                                            "mailto:${widget.shopData['contactEmail']}");
+                                      }),
+                                ],
+                              )
+                            ],
+                          ),
+                        )
+                      ]),
+                ),
+              );
+            }));
   }
 
   Widget _makeGoogleMap() {
