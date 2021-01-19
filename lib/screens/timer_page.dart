@@ -6,10 +6,16 @@ import 'package:location/location.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:web_socket_channel/io.dart';
+import 'dart:convert';
+import '../global.dart' as globals;
 
 class TimerPage extends StatefulWidget {
   final Map shopData;
-  TimerPage(this.shopData);
+  final Map bookData;
+  TimerPage(this.shopData, this.bookData);
+  final channel = IOWebSocketChannel.connect(
+      "wss://gu2u8vdip2.execute-api.ap-northeast-1.amazonaws.com/CafeExpressWS?id=${globals.userId}");
 
   @override
   _TimerPageState createState() => _TimerPageState();
@@ -39,14 +45,25 @@ class _TimerPageState extends State<TimerPage> {
   _scan() async {
     return FlutterBarcodeScanner.scanBarcode(
             "#000000", "cancel", true, ScanMode.BARCODE)
-        .then((value) => setState(() {
-              barcode = value;
-              lockedTime = timetodisplay.toString();
-            }));
+        .then((value) => {
+              setState(() {
+                widget.bookData["status"] = "checked_in";
+                barcode = value;
+                lockedTime = timetodisplay.toString();
+                timer.cancel();
+              }),
+              widget.channel.sink.add(json.encode({
+                "action": "onBookingStatusChange",
+                "bookingId": widget.bookData["bookingId"],
+                "status": widget.bookData["status"],
+                "updatedAt": DateTime.now().toString(),
+                "storeId": barcode
+              }))
+            });
   }
 
-  @override
   void initState() {
+    print("inside timer page, print bookData: ${widget.bookData}");
     start();
 
     _getLocation();
@@ -89,9 +106,9 @@ class _TimerPageState extends State<TimerPage> {
                       Text(
                         "Dead Line is...",
                         style: TextStyle(
-                            fontSize: 35.0,
-                            color: Colors.redAccent[400],
-                            ),
+                          fontSize: 35.0,
+                          color: Colors.redAccent[400],
+                        ),
                       ),
                       Text(
                         '$timetodisplay',
