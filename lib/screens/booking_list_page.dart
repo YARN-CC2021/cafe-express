@@ -68,8 +68,12 @@ class _BookingPageState extends State<BookingPage> {
                 if (snapshot.hasData &&
                     json.decode(snapshot.data)["bookingId"] != bookingId) {
                   print(snapshot.data);
-                  _insertBooking(json.decode(snapshot.data));
-                  bookingId = json.decode(snapshot.data)["bookingId"];
+                  if (json.decode(snapshot.data)["status"] == "checked_in") {
+                    _statusUpdateFromCustomer(json.decode(snapshot.data));
+                  } else {
+                    _insertBooking(json.decode(snapshot.data));
+                    bookingId = json.decode(snapshot.data)["bookingId"];
+                  }
                 }
                 return buildListView();
               }),
@@ -160,6 +164,18 @@ class _BookingPageState extends State<BookingPage> {
             DateTime.parse(v2["bookedAt"]).millisecondsSinceEpoch -
             DateTime.parse(v1["bookedAt"]).millisecondsSinceEpoch);
     });
+  }
+
+  void _statusUpdateFromCustomer(snapShot) {
+    for (var aBooking in bookingData) {
+      if (aBooking["bookingId"] == snapShot["bookingId"]) {
+        setState(() {
+          aBooking["status"] = snapShot["status"];
+          aBooking["updatedAt"] = snapShot["updatedAt"];
+        });
+        break;
+      }
+    }
   }
 
   void _statusUpdate(int index, String status) {

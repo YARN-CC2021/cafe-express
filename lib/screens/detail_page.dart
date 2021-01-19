@@ -420,41 +420,8 @@ class _DetailPageState extends State<DetailPage> {
                                                   bookData["bookName"] =
                                                       nameController.text,
                                                   price == 0
-                                                      ? {
-                                                          print("freee!"),
-                                                          bookedTime =
-                                                              DateTime.now(),
-                                                          expireTime =
-                                                              bookedTime.add(
-                                                                  new Duration(
-                                                                      minutes:
-                                                                          30)),
-                                                          bookData["bookedAt"] =
-                                                              "$bookedTime",
-                                                          bookData[
-                                                                  "bookingId"] =
-                                                              "${globals.userId}${bookedTime.millisecondsSinceEpoch}",
-                                                          bookData[
-                                                                  "createdAt"] =
-                                                              "$bookedTime",
-                                                          bookData[
-                                                                  "expiredAt"] =
-                                                              "$expireTime",
-                                                          bookData["status"] =
-                                                              "paid",
-                                                          bookData[
-                                                                  "updatedAt"] =
-                                                              "$bookedTime",
-                                                          print(
-                                                              'DETAILTIME:$expireTime'),
-                                                          // channel.sink.add(
-                                                          //     json.encode(
-                                                          //         bookData)),
-                                                          _goTimerPage(
-                                                              context,
-                                                              shopData,
-                                                              expireTime)
-                                                        }
+                                                      ? _goTimerPage(context,
+                                                          shopData, bookData)
                                                       : createPaymentMethod(),
                                                   //  _goStripePage(
                                                   //     context, widget.id, price),
@@ -585,9 +552,9 @@ class _DetailPageState extends State<DetailPage> {
     print("goStripePage was triggered");
   }
 
-  void _goTimerPage(BuildContext context, Map shopData, DateTime expireTime) {
+  void _goTimerPage(BuildContext context, Map shopData, Map bookData) {
     Navigator.pushNamed(context, TimerRoute,
-        arguments: {"shopData": shopData, "expireTime": expireTime});
+        arguments: {"shopData": shopData, "bookData": bookData});
     print("goTimerPage was triggered");
   }
 
@@ -615,7 +582,7 @@ class _DetailPageState extends State<DetailPage> {
       bookData["status"] = "paid";
       bookData["updatedAt"] = "$bookedTime";
       channel.sink.add(json.encode(bookData));
-      _goTimerPage(context, shopData, expireTime);
+      _goTimerPage(context, shopData, bookData);
     } else {
       showDialog(
           context: context,

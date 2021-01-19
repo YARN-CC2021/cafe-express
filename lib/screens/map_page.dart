@@ -44,9 +44,6 @@ class _MapPageState extends State<MapPage> {
   @override
   void initState() {
     super.initState();
-
-    print("initState");
-
     // 現在位置の取得
     _getLocation();
     // _getAllShopData();
