@@ -106,7 +106,8 @@ class MyApp extends StatelessWidget {
           screen = MerchantCalendarPage();
           break;
         case TimerRoute:
-          screen = TimerPage(arguments['shopData'], arguments['bookData']);
+          // screen = TimerPage(arguments['shopData'], arguments['bookData']);
+          screen = TimerPage();
           break;
         case QrRoute:
           screen = QrPage();
