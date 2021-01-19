@@ -9,6 +9,8 @@ import '../app.dart';
 import 'package:web_socket_channel/io.dart';
 import '../global.dart' as globals;
 import 'package:flutter/cupertino.dart';
+import 'package:amplify_storage_s3/amplify_storage_s3.dart';
+import 'package:amplify_core/amplify_core.dart';
 
 class DetailPage extends StatefulWidget {
   final String id;
@@ -58,6 +60,7 @@ class _DetailPageState extends State<DetailPage> {
 
   @override
   void initState() {
+    print("inside details page");
     super.initState();
     // print(MediaQuery.of(context).size.width);
     // print(MediaQuery.of(context).size.height);
@@ -470,20 +473,42 @@ class _DetailPageState extends State<DetailPage> {
     return Text('$first:$last');
   }
 
+  var mainPhotoUrl;
+
+  Future<void> _showPic() async {
+    final getUrlOptions = GetUrlOptions(
+      accessLevel: StorageAccessLevel.guest,
+    );
+
+    if (shopData["imageUrl"] != null && shopData["imageUrl"].length > 0) {
+      String key = shopData["imageUrl"][0];
+      var result =
+          await Amplify.Storage.getUrl(key: key, options: getUrlOptions);
+      setState(() {
+        mainPhotoUrl = result.url;
+      });
+    } else {
+      mainPhotoUrl = null;
+    }
+    print("listOfUrl: $mainPhotoUrl");
+  }
+
   Widget imageCard() {
     return Card(
-      child: Image.network(
-        '${shopData['imagePaths'][0]}',
-        fit: BoxFit.contain,
-        loadingBuilder: (context, child, loadingProgress) {
-          if (loadingProgress == null) return child;
-          return Center(child: LinearProgressIndicator());
-        },
-        errorBuilder:
-            (BuildContext context, Object exception, StackTrace stackTrace) {
-          return Text('No Image or Loading Error');
-        },
-      ),
+      child: mainPhotoUrl == null
+          ? Center(child: CircularProgressIndicator())
+          : Image.network(
+              mainPhotoUrl,
+              fit: BoxFit.contain,
+              loadingBuilder: (context, child, loadingProgress) {
+                if (loadingProgress == null) return child;
+                return Center(child: LinearProgressIndicator());
+              },
+              errorBuilder: (BuildContext context, Object exception,
+                  StackTrace stackTrace) {
+                return Text('No Image or Loading Error');
+              },
+            ),
     );
   }
 
@@ -493,6 +518,7 @@ class _DetailPageState extends State<DetailPage> {
     if (response.statusCode == 200) {
       final jsonResponse = await json.decode(utf8.decode(response.bodyBytes));
       shopData = jsonResponse['body'];
+      await _showPic();
       print("shopdata in _getShopData $shopData");
       vacancyType = shopData['vacancyType'];
       availableSeats = shopData['vacancy']['$vacancyType']
