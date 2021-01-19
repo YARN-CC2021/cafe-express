@@ -45,14 +45,13 @@ class _MapPageState extends State<MapPage> {
   @override
   void initState() {
     super.initState();
-
     // 現在位置の取得
     _getLocation();
-    _getAllShopData();
+    // _getAllShopData();
 
-    _pageController = PageController(
-      viewportFraction: 0.95,
-    );
+    // _pageController = PageController(
+    //   viewportFraction: 0.95,
+    // );
     _isPageViewAnimating = false;
 
     // 現在位置の変化を監視 backgroundでも動くのかどうか
@@ -156,44 +155,6 @@ class _MapPageState extends State<MapPage> {
                                                                   },
                                                                 ),
                                                               )
-                                                    // FutureBuilder(
-                                                    //     future: _showPic(shop),
-                                                    //     builder: (BuildContext context,
-                                                    //         AsyncSnapshot<String> snapshot) {
-                                                    //       if (snapshot.connectionState !=
-                                                    //           ConnectionState.done) {
-                                                    //         return CircularProgressIndicator();
-                                                    //       }
-                                                    //       if (snapshot.hasError) {
-                                                    //         return Text(
-                                                    //             snapshot.error.toString());
-                                                    //       }
-                                                    //       if (snapshot.hasData) {
-                                                    //         return Center(
-                                                    //           child: Image.network(
-                                                    //             '${snapshot.data}',
-                                                    //             // '${shop['imageUrl']}',
-                                                    //             // listOfUrl[shop["id"]],
-                                                    //             fit: BoxFit.cover,
-                                                    //             loadingBuilder: (context,
-                                                    //                 child, loadingProgress) {
-                                                    //               if (loadingProgress == null)
-                                                    //                 return child;
-                                                    //               return CircularProgressIndicator();
-                                                    //             },
-                                                    //             errorBuilder: (BuildContext
-                                                    //                     context,
-                                                    //                 Object exception,
-                                                    //                 StackTrace stackTrace) {
-                                                    //               return Text('写真がありません');
-                                                    //             },
-                                                    //           ),
-                                                    //         );
-                                                    //       } else {
-                                                    //         return Text('写真がありません');
-                                                    //       }
-                                                    //     }),
-                                                    // imageCard(shop),
                                                   ]),
                                               Positioned(
                                                 left: 0,
@@ -447,7 +408,8 @@ class _MapPageState extends State<MapPage> {
           );
         }).toSet(),
         onMapCreated: (GoogleMapController controller) {
-          // _getAllShopData();
+          print("MAP CREATED");
+          _getAllShopData();
           _controller.complete(controller);
         },
         myLocationEnabled: true,
@@ -481,27 +443,8 @@ class _MapPageState extends State<MapPage> {
     listOfUrl = urlMap;
     print("listOfUrl: $listOfUrl");
   }
-  // if (shopData["imageUrl"].length > 0) {
-  //   for (var key in shopData["imageUrl"]) {
-  //     var result =
-  //         await Amplify.Storage.getUrl(key: key, options: getUrlOptions);
-  //     var url = result.url;
-  //     listOfUrl.add(url);
-  //   }
-  // }
-  // print("List of Url: $listOfUrl");
-  // print("done getting getting image Url");
-  // setState(() {
-  //   images = listOfUrl;
-  // });
-  // print("imagesssss: $images");
-  // print("done listing");
 
   Widget imageCard(shop) {
-    // _showPic(shop);
-    print("inside image Card");
-    print("inside image Card: $listOfUrl");
-
     return Center(
       child: Image.network(
         listOfUrl[shop["id"]],
@@ -524,20 +467,19 @@ class _MapPageState extends State<MapPage> {
     var response = await http.get(
         'https://pq3mbzzsbg.execute-api.ap-northeast-1.amazonaws.com/CaffeExpressRESTAPI/store');
     if (response.statusCode == 200) {
-      final jsonResponse = await json.decode(utf8.decode(response.bodyBytes));
-      var filteredShops = await jsonResponse['body']
-          .where((shop) => shop['lat'] != null && shop['lng'] != null)
-          .toList();
-      print('filteredShopData $filteredShops');
-      setState(() {
-        shopData = filteredShops;
-        listShops = shopData;
-      });
-      await _showPic();
-      print('shopData : $shopData');
-      print("listShops [0] ${listShops[0]}");
-      _filterShop(distance, category, groupNum);
-      // selectedShop = listShops[0];
+      if (mounted && _yourLocation != null) {
+        final jsonResponse = await json.decode(utf8.decode(response.bodyBytes));
+        var filteredShops = await jsonResponse['body']
+            .where((shop) => shop['lat'] != null && shop['lng'] != null)
+            .toList();
+        print('filteredShopData $filteredShops');
+        setState(() {
+          shopData = filteredShops;
+          listShops = shopData;
+        });
+        await _showPic();
+        _filterShop(distance, category, groupNum);
+      }
     } else {
       print('Request failed with status: ${response.statusCode}.');
     }
