@@ -87,7 +87,7 @@ class _MapPageState extends State<MapPage> {
           // ]
         ),
         body: _yourLocation == null && listOfUrl == null
-            ? CircularProgressIndicator()
+            ? Center(child: CircularProgressIndicator())
             : CircularMenu(
                 alignment: Alignment.topLeft,
                 radius: 100,
@@ -308,7 +308,7 @@ class _MapPageState extends State<MapPage> {
                           // callback
                         }),
                     CircularMenuItem(
-                        icon: Icons.history_edu,
+                        icon: Icons.assignment,
                         onTap: () {
                           _changePage(context, BookingHistoryRoute);
                           //callback

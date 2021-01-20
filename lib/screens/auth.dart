@@ -106,6 +106,7 @@ class _AuthState extends State<Auth> {
       ResetPasswordResult result = await Amplify.Auth.resetPassword(
         username: name,
       );
+      print(result);
       print(result.isPasswordReset);
       if (!result.isPasswordReset) {
         _goResetPassword(context, name);
@@ -140,7 +141,8 @@ class _AuthState extends State<Auth> {
   }
 
   void _goResetPassword(BuildContext context, String email) {
-    Navigator.pushNamed(context, ValidationRoute, arguments: {"email": email});
+    Navigator.pushNamed(context, PasswordResetRoute,
+        arguments: {"email": email});
     print("new login move to user type page");
   }
 }
