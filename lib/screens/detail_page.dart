@@ -446,7 +446,8 @@ class _DetailPageState extends State<DetailPage> {
                                                               "$bookedTime",
                                                           _goTimerPage(
                                                             context,
-                                                          )
+                                                          ),
+                                                          _sendEmail()
                                                         }
                                                       : createPaymentMethod(),
                                                 },
@@ -581,6 +582,19 @@ class _DetailPageState extends State<DetailPage> {
     print("goTimerPage was triggered");
   }
 
+  Future<void> _sendEmail() async {
+    Map sendBody = bookData;
+    sendBody["contactEmail"] = shopData['contactEmail'];
+    sendBody["price"] = price;
+    var response = await http.post(
+      "https://pq3mbzzsbg.execute-api.ap-northeast-1.amazonaws.com/CaffeExpressRESTAPI/email",
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(sendBody),
+    );
+  }
+
   Future<void> createPaymentMethod() async {
     StripePayment.setStripeAccount(null);
     //step 1: add card
@@ -605,6 +619,7 @@ class _DetailPageState extends State<DetailPage> {
       bookData["status"] = "paid";
       bookData["updatedAt"] = "$bookedTime";
       channel.sink.add(json.encode(bookData));
+      _sendEmail();
       _goTimerPage(context);
     } else {
       showDialog(
