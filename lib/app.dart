@@ -18,6 +18,7 @@ import 'screens/booking_history_page.dart';
 import 'screens/merchant_profile_setting_page.dart';
 import 'screens/stripe.dart';
 import 'services/stored_cards.dart';
+import 'screens/PasswordReset.dart';
 import 'package:amplify_core/amplify_core.dart';
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:flutter/services.dart';
@@ -32,7 +33,8 @@ const MerchantRoute = "/merchant_settings";
 const MerchantFlexRoute = "/merchant_settings_flex";
 const MerchantStrictRoute = "/merchant_settings_strict";
 const UserCategoryRoute = "/user_category";
-const ValidationRoute = "validation";
+const ValidationRoute = "/validation";
+const PasswordResetRoute = "/password_reset";
 const MerchantProfileRoute = "/merchant_profile";
 const MerchantCalendarRoute = "/merchant_calendar";
 const TimerRoute = "/timer";
@@ -146,6 +148,9 @@ class MyApp extends StatelessWidget {
           break;
         case ValidationRoute:
           screen = Validation(arguments['email'], arguments['passcode']);
+          break;
+        case PasswordResetRoute:
+          screen = PasswordReset(arguments['email']);
           break;
         case MerchantProfileRoute:
           screen = MerchantProfilePage();

@@ -49,9 +49,6 @@ class _MapPageState extends State<MapPage> {
     _getLocation();
     // _getAllShopData();
 
-    // _pageController = PageController(
-    //   viewportFraction: 0.95,
-    // );
     _isPageViewAnimating = false;
 
     // 現在位置の変化を監視 backgroundでも動くのかどうか
@@ -86,8 +83,8 @@ class _MapPageState extends State<MapPage> {
           //       })
           // ]
         ),
-        body: _yourLocation == null
-            ? CircularProgressIndicator()
+        body: _yourLocation == null && listOfUrl == null
+            ? Center(child: CircularProgressIndicator())
             : CircularMenu(
                 alignment: Alignment.topLeft,
                 radius: 100,
@@ -122,40 +119,54 @@ class _MapPageState extends State<MapPage> {
                                                 Radius.circular(16.0)),
                                           ),
                                           child: Stack(
+                                            fit: StackFit.loose,
                                             children: <Widget>[
-                                              Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceEvenly,
-                                                  children: [
-                                                    shop["imageUrl"].length == 0
-                                                        ? Center(
-                                                            child: Text(
-                                                                "写真がありません"))
-                                                        : listOfUrl == null
-                                                            ? Center(
-                                                                child:
-                                                                    CircularProgressIndicator())
-                                                            : Center(
-                                                                child: Image
-                                                                    .network(
-                                                                  listOfUrl[shop[
-                                                                      "id"]],
-                                                                  // listOfUrl[shop["id"]],
+                                              Center(
+                                                  child: shop["imageUrl"]
+                                                              .length ==
+                                                          0
+                                                      ? Text("写真がありません")
+                                                      : listOfUrl == null
+                                                          ? CircularProgressIndicator()
+                                                          : Container(
+                                                              constraints:
+                                                                  BoxConstraints
+                                                                      .expand(),
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                image:
+                                                                    DecorationImage(
+                                                                  onError: (error,
+                                                                      stackTrace) {
+                                                                    return Text(
+                                                                        "写真がありません");
+                                                                  },
                                                                   fit: BoxFit
                                                                       .cover,
-                                                                  loadingBuilder:
-                                                                      (context,
-                                                                          child,
-                                                                          loadingProgress) {
-                                                                    if (loadingProgress ==
-                                                                        null)
-                                                                      return child;
-                                                                    return CircularProgressIndicator();
-                                                                  },
+                                                                  image: NetworkImage(
+                                                                      listOfUrl[
+                                                                          shop[
+                                                                              "id"]]),
                                                                 ),
-                                                              )
-                                                  ]),
+                                                              ),
+                                                              // child: FadeInImage(placeholder: null, image: null)
+                                                              // child: Image
+                                                              //     .network(
+                                                              //   listOfUrl[shop[
+                                                              //       "id"]],
+                                                              //   fit: BoxFit
+                                                              //       .cover,
+                                                              //   loadingBuilder:
+                                                              //       (context,
+                                                              //           child,
+                                                              //           loadingProgress) {
+                                                              //     if (loadingProgress ==
+                                                              //         null)
+                                                              //       return child;
+                                                              //     return CircularProgressIndicator();
+                                                              //   },
+                                                              // ),
+                                                            )),
                                               Positioned(
                                                 left: 0,
                                                 right: 0,
@@ -308,7 +319,7 @@ class _MapPageState extends State<MapPage> {
                           // callback
                         }),
                     CircularMenuItem(
-                        icon: Icons.history_edu,
+                        icon: Icons.assignment,
                         onTap: () {
                           _changePage(context, BookingHistoryRoute);
                           //callback
@@ -447,7 +458,7 @@ class _MapPageState extends State<MapPage> {
   }
 
   Widget imageCard(shop) {
-    return Center(
+    return Expanded(
       child: Image.network(
         listOfUrl[shop["id"]],
         // listOfUrl[shop["id"]],
