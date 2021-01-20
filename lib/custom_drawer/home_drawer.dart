@@ -1,5 +1,15 @@
 import '../app_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:amplify_core/amplify_core.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:amplify_storage_s3/amplify_storage_s3.dart';
+import '../global.dart' as globals;
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:awesome_dialog/awesome_dialog.dart';
+import '../app.dart';
+import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 
 class HomeDrawer extends StatefulWidget {
   const HomeDrawer(
@@ -19,9 +29,14 @@ class HomeDrawer extends StatefulWidget {
 
 class _HomeDrawerState extends State<HomeDrawer> {
   List<DrawerList> drawerList;
+  var shopData;
+  bool stripeRegister = false;
+  var images;
+
   @override
   void initState() {
     setDrawerListArray();
+    _getShopData();
     super.initState();
   }
 
@@ -52,6 +67,65 @@ class _HomeDrawerState extends State<HomeDrawer> {
         icon: Icon(Icons.qr_code),
       ),
     ];
+  }
+
+  Future<void> _showPic() async {
+    print("inside showpic");
+    final getUrlOptions = GetUrlOptions(
+      accessLevel: StorageAccessLevel.guest,
+    );
+    var listOfUrl = [];
+    print("shopData: ${shopData["imageUrl"]}");
+    if (shopData["imageUrl"].length > 0) {
+      var result = await Amplify.Storage.getUrl(
+          key: shopData["imageUrl"][0], options: getUrlOptions);
+      var url = result.url;
+      listOfUrl.add(url);
+    }
+    print("List of Url: $listOfUrl");
+    print("done getting getting image Url");
+    setState(() {
+      images = listOfUrl;
+    });
+    print("imagesssss: $images");
+    print("done listing");
+  }
+
+  Future<void> _getShopData() async {
+    print("Inside Merchant Strict: ${globals.userId}");
+    var response = await http.get(
+        'https://pq3mbzzsbg.execute-api.ap-northeast-1.amazonaws.com/CaffeExpressRESTAPI/store/${globals.userId}');
+    final jsonResponse = await json.decode(utf8.decode(response.bodyBytes));
+
+    if (response.statusCode == 200) {
+      setState(() {
+        shopData = jsonResponse['body'];
+      });
+      await _showPic();
+      print("This is ShopData: $shopData");
+    } else {
+      print('Request failed with status: ${response.statusCode}.');
+    }
+  }
+
+  Future<void> _goToStripeLink() async {
+    var response = await http.post(
+      "https://pq3mbzzsbg.execute-api.ap-northeast-1.amazonaws.com/CaffeExpressRESTAPI/stripeaccount?storeStripeId=${shopData["stripeId"]}&storeId=${shopData["storeId"]}",
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+
+    final jsonResponse = await json.decode(utf8.decode(response.bodyBytes));
+    final clientStripeConnectUrl =
+        await jsonDecode(jsonResponse["body"])["accountLinkURL"];
+    print(clientStripeConnectUrl);
+    await launch("$clientStripeConnectUrl");
+  }
+
+  void _changePage(BuildContext context, String route) {
+    Navigator.pushNamed(context, route);
+    print("Going to $route was triggered");
   }
 
   @override
@@ -102,7 +176,28 @@ class _HomeDrawerState extends State<HomeDrawer> {
                             child: ClipRRect(
                               borderRadius:
                                   const BorderRadius.all(Radius.circular(60.0)),
-                              child: Text(""),
+                              child: Image.network(
+                                images[0],
+                                width: 100,
+                                height: 100,
+                                fit: BoxFit.cover,
+                                loadingBuilder: (BuildContext context,
+                                    Widget child,
+                                    ImageChunkEvent loadingProgress) {
+                                  if (loadingProgress == null) return child;
+                                  return Center(
+                                    child: CircularProgressIndicator(
+                                      value: loadingProgress
+                                                  .expectedTotalBytes !=
+                                              null
+                                          ? loadingProgress
+                                                  .cumulativeBytesLoaded /
+                                              loadingProgress.expectedTotalBytes
+                                          : null,
+                                    ),
+                                  );
+                                },
+                              ),
                             ),
                           ),
                         ),
@@ -110,9 +205,9 @@ class _HomeDrawerState extends State<HomeDrawer> {
                     },
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(top: 8, left: 4),
+                    padding: const EdgeInsets.only(top: 8, left: 8),
                     child: Text(
-                      'Chris Hemsworth',
+                      '${shopData["name"]}',
                       style: TextStyle(
                         fontWeight: FontWeight.w600,
                         color: Theme.of(context).focusColor,
@@ -141,6 +236,32 @@ class _HomeDrawerState extends State<HomeDrawer> {
               },
             ),
           ),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 12.0, left: 12),
+            child: Row(children: [
+              Column(children: [
+                SizedBox(
+                    width: 100, height: 25, child: Center(child: Text("口座設定"))),
+                ButtonTheme(
+                  minWidth: 100,
+                  child: RaisedButton(
+                    color: Theme.of(context).primaryColor,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5.0),
+                    ),
+                    child: Row(children: [
+                      FaIcon(FontAwesomeIcons.stripe,
+                          color: Colors.white, size: 40),
+                      // Text("へ行く",
+                      //     style: TextStyle(fontSize: 13, color: Colors.white)),
+                    ]),
+                    onPressed: _goToStripeLink,
+                  ),
+                )
+              ]),
+              Expanded(child: SizedBox()),
+            ]),
+          ),
           Divider(
             height: 1,
             color: Theme.of(context).focusColor.withOpacity(0.6),
@@ -148,21 +269,52 @@ class _HomeDrawerState extends State<HomeDrawer> {
           Column(
             children: <Widget>[
               ListTile(
-                title: Text(
-                  'ログアウト',
-                  style: TextStyle(
-                    fontFamily: 'WorkSans',
-                    fontWeight: FontWeight.w600,
-                    fontSize: 16,
-                    color: CafeExpressTheme.darkText,
+                title: Row(children: [
+                  Icon(
+                    Icons.power_settings_new,
+                    color: Theme.of(context).selectedRowColor,
                   ),
-                  textAlign: TextAlign.left,
-                ),
-                trailing: Icon(
-                  Icons.power_settings_new,
-                  color: Colors.red,
-                ),
-                onTap: () {},
+                  SizedBox(width: 5),
+                  Text(
+                    'ログアウト',
+                    style: TextStyle(
+                      fontFamily: 'WorkSans',
+                      fontWeight: FontWeight.w600,
+                      fontSize: 16,
+                      color: CafeExpressTheme.darkText,
+                    ),
+                    textAlign: TextAlign.left,
+                  ),
+                ]),
+                onTap: () {
+                  AwesomeDialog(
+                    context: context,
+                    customHeader: null,
+                    dialogType: DialogType.NO_HEADER,
+                    animType: AnimType.BOTTOMSLIDE,
+                    body: Center(
+                      child: Text('本当にログアウトしますか？'),
+                    ),
+                    btnOkOnPress: () {
+                      try {
+                        Amplify.Auth.signOut();
+                        _changePage(context, AuthRoute);
+                      } on AuthError catch (e) {
+                        print(e);
+                      }
+                    },
+                    useRootNavigator: false,
+                    btnOkColor: Colors.tealAccent[400],
+                    btnCancelOnPress: () {},
+                    btnOkText: 'ログアウト',
+                    btnCancelText: 'キャンセル',
+                    btnCancelColor: Colors.blueGrey[400],
+                    dismissOnTouchOutside: false,
+                    headerAnimationLoop: false,
+                    showCloseIcon: false,
+                    buttonsBorderRadius: BorderRadius.all(Radius.circular(100)),
+                  )..show();
+                },
               ),
               SizedBox(
                 height: MediaQuery.of(context).padding.bottom,
@@ -213,12 +365,12 @@ class _HomeDrawerState extends State<HomeDrawer> {
                           height: 24,
                           child: Image.asset(listData.imageName,
                               color: widget.screenIndex == listData.index
-                                  ? Colors.blue
+                                  ? Theme.of(context).primaryColor
                                   : CafeExpressTheme.nearlyBlack),
                         )
                       : Icon(listData.icon.icon,
                           color: widget.screenIndex == listData.index
-                              ? Colors.blue
+                              ? Theme.of(context).primaryColor
                               : CafeExpressTheme.nearlyBlack),
                   const Padding(
                     padding: EdgeInsets.all(4.0),
@@ -229,7 +381,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
                       fontWeight: FontWeight.w500,
                       fontSize: 16,
                       color: widget.screenIndex == listData.index
-                          ? Colors.blue
+                          ? Theme.of(context).primaryColor
                           : CafeExpressTheme.nearlyBlack,
                     ),
                     textAlign: TextAlign.left,
@@ -256,7 +408,9 @@ class _HomeDrawerState extends State<HomeDrawer> {
                                 MediaQuery.of(context).size.width * 0.75 - 64,
                             height: 46,
                             decoration: BoxDecoration(
-                              color: Colors.blue.withOpacity(0.2),
+                              color: Theme.of(context)
+                                  .primaryColor
+                                  .withOpacity(0.2),
                               borderRadius: new BorderRadius.only(
                                 topLeft: Radius.circular(0),
                                 topRight: Radius.circular(28),

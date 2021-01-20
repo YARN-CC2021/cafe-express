@@ -6,6 +6,7 @@ import '../global.dart' as globals;
 import 'package:http/http.dart' as http;
 import 'package:web_socket_channel/io.dart';
 import '../app.dart';
+import '../app_theme.dart';
 
 class BookingListPage extends StatefulWidget {
   @override
@@ -55,10 +56,11 @@ class _BookingPageState extends State<BookingPage> {
             textAlign: TextAlign.center,
             style: TextStyle(
               fontWeight: FontWeight.bold,
+              color: Colors.black,
             )),
         centerTitle: true,
-        backgroundColor: Theme.of(context).primaryColor,
-        elevation: 0.0,
+        backgroundColor: CafeExpressTheme.buildLightTheme().backgroundColor,
+        elevation: 3.0,
       ),
       body: bookingData == null
           ? Center(child: CircularProgressIndicator())
@@ -173,7 +175,7 @@ class _BookingPageState extends State<BookingPage> {
                     child: Text(
                       dateString,
                       style: Theme.of(context).textTheme.subtitle2.copyWith(
-                            color: Theme.of(context).accentColor,
+                            color: Theme.of(context).primaryColor,
                             fontWeight: FontWeight.bold,
                           ),
                     ),
@@ -197,7 +199,7 @@ class _BookingPageState extends State<BookingPage> {
           Container(
               alignment: Alignment.centerLeft,
               padding: EdgeInsets.symmetric(horizontal: 12, vertical: 16),
-              // color: Theme.of(context).accentColor,
+              // color: Theme.of(context).primaryColor,
               child: Column(children: [
                 Padding(
                   padding: EdgeInsets.only(right: 26),
@@ -252,22 +254,22 @@ class _BookingPageState extends State<BookingPage> {
   }
 
   _changeCardColor(Map booking) {
-    if (booking["status"] == "expired") {
-      return LinearGradient(colors: [Colors.redAccent[400], Colors.red[900]]);
-    } else if (booking["status"] == "paid" &&
+    if (booking["status"] == "paid" &&
         DateTime.now().isAfter(DateTime.parse(booking["expiredAt"]))) {
       return LinearGradient(
-          colors: [Colors.amberAccent[100], Colors.amberAccent]);
+          colors: [Colors.yellow.withOpacity(0.8), Colors.yellow]);
     } else if (booking["status"] == "paid") {
       return LinearGradient(colors: [Colors.white, Colors.white]);
     } else if (booking["status"] == "checked_in") {
       return LinearGradient(colors: [
+        Theme.of(context).primaryColor.withOpacity(0.5),
         Theme.of(context).primaryColor,
-        Colors.greenAccent[400],
       ]);
     } else if (booking["status"] == "cancelled") {
-      return LinearGradient(
-          colors: [Colors.blueGrey[100], Colors.blueGrey[300]]);
+      return LinearGradient(colors: [
+        Colors.blueGrey[100].withOpacity(0.8),
+        Colors.blueGrey[100]
+      ]);
     }
   }
 
@@ -277,6 +279,13 @@ class _BookingPageState extends State<BookingPage> {
       child: Container(
         decoration: BoxDecoration(
           gradient: _changeCardColor(booking),
+          boxShadow: <BoxShadow>[
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.6),
+              offset: const Offset(4, 4),
+              blurRadius: 30,
+            ),
+          ],
         ),
         child: Row(
           children: <Widget>[
@@ -317,7 +326,7 @@ class _BookingPageState extends State<BookingPage> {
                   minWidth: 110,
                   child: Text('チェックイン',
                       style: TextStyle(fontSize: 12, color: Colors.white)),
-                  color: Theme.of(context).accentColor,
+                  color: Theme.of(context).primaryColor,
                   shape: const StadiumBorder(
                     side: BorderSide(color: Colors.white),
                   ),
@@ -333,7 +342,7 @@ class _BookingPageState extends State<BookingPage> {
                   // disabledColor: Colors.blueGrey[100],
                   child: Text('キャンセル',
                       style: TextStyle(fontSize: 12, color: Colors.white)),
-                  color: Colors.redAccent,
+                  color: Theme.of(context).selectedRowColor,
                   shape: const StadiumBorder(
                     side: BorderSide(color: Colors.white),
                   ),
@@ -362,20 +371,20 @@ class _BookingPageState extends State<BookingPage> {
             flex: 1,
             child: Container(
               width: 2,
-              color: Theme.of(context).accentColor,
+              color: Theme.of(context).primaryColor,
             ),
           ),
           Container(
             width: 6,
             height: 6,
             decoration: BoxDecoration(
-                color: Theme.of(context).accentColor, shape: BoxShape.circle),
+                color: Theme.of(context).primaryColor, shape: BoxShape.circle),
           ),
           Expanded(
             flex: 1,
             child: Container(
               width: 2,
-              color: Theme.of(context).accentColor,
+              color: Theme.of(context).primaryColor,
             ),
           ),
         ],
