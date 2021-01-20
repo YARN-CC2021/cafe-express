@@ -6,6 +6,7 @@ const moment = require("moment");
 const createHTML = (body) => {
   const {
     price,
+    bookingId,
     bookName,
     storeInfo,
     tableType,
@@ -13,8 +14,13 @@ const createHTML = (body) => {
     bookedAt,
     expiredAt,
   } = body;
-  const bookedTime = moment(`${bookedAt}`).format("MMMM Do YYYY, h:mm:ss a");
-  const expiredTime = moment(`${expiredAt}`).format("MMMM Do YYYY, h:mm:ss a");
+  moment.locale("ja");
+  const bookedTime = moment(`${bookedAt}`).format(
+    "YYYY年MM月DD日（ddd）HH時mm分"
+  );
+  const expiredTime = moment(`${expiredAt}`).format(
+    "YYYY年MM月DD日（ddd）HH時mm分"
+  );
 
   return `
           <!DOCTYPE html>
@@ -342,9 +348,9 @@ const createHTML = (body) => {
                         <tr>
                           <td style="text-align: center;">
                             <div class="text-author">
-                              <img src=https://res.cloudinary.com/hbej35zod/image/upload/v1609217715/magnets/_IMG_E3629_nmrd4m.jpg alt="" style="width: 100px; max-width: 600px; height: auto; margin: auto; display: block;">
                               <h3 class="name">店名：${storeInfo.name}</h3>
-                              <h3>予約名：${bookName}さん</h3>
+                              <h3 class="name">予約名：${bookName}さん</h3>
+                              <p class="position for-space">予約番号：${bookingId}</p>
                               <p class="position for-space">人数：${partySize}人、予約席：${tableType.label}</p>
                               <p class="position for-space">予約時刻：${bookedTime}</p>
                               <p class="position for-space">予約期限：${expiredTime}</p>
