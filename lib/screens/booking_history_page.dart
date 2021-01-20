@@ -43,19 +43,25 @@ class _BookingHistoryPageState extends State<BookingHistoryPage> {
           style: TextStyle(color: Theme.of(context).primaryColor),
         ),
       ),
-      body: StreamBuilder(
-          stream: channel.stream,
-          builder: (context, snapshot) {
-            if (snapshot.hasData &&
-                json.decode(snapshot.data)["bookingId"] != bookingId) {
-              print("SNAPSHOT DATA in Stream, History Page ${snapshot.data}");
-              // _insertBooking(json.decode(snapshot.data));
-              _statusUpdate(json.decode(snapshot.data)["bookingId"],
-                  json.decode(snapshot.data)["status"]);
-              bookingId = json.decode(snapshot.data)["bookingId"];
-            }
-            return buildListView();
-          }),
+      body: bookingData == null
+          ? Center(child: CircularProgressIndicator())
+          : bookingData.length == 0
+              ? Center(
+                  child: Text("予約情報がありません", style: TextStyle(fontSize: 20)))
+              : StreamBuilder(
+                  stream: channel.stream,
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData &&
+                        json.decode(snapshot.data)["bookingId"] != bookingId) {
+                      print(
+                          "SNAPSHOT DATA in Stream, History Page ${snapshot.data}");
+                      // _insertBooking(json.decode(snapshot.data));
+                      _statusUpdate(json.decode(snapshot.data)["bookingId"],
+                          json.decode(snapshot.data)["status"]);
+                      bookingId = json.decode(snapshot.data)["bookingId"];
+                    }
+                    return buildListView();
+                  }),
       bottomNavigationBar: BottomAppBar(
         child: new Row(
           mainAxisSize: MainAxisSize.max,
