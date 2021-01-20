@@ -101,12 +101,29 @@ class _AuthState extends State<Auth> {
     }
   }
 
+  Future<String> recoverPassword(String name) async {
+    try {
+      ResetPasswordResult result = await Amplify.Auth.resetPassword(
+        username: name,
+      );
+      print(result);
+      print(result.isPasswordReset);
+      if (!result.isPasswordReset) {
+        _goResetPassword(context, name);
+      } else {
+        return 'Sign up error';
+      }
+    } on AuthError catch (e) {
+      print(e);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return FlutterLogin(
         onLogin: logIn,
         onSignup: signUp,
-        onRecoverPassword: (_) => null,
+        onRecoverPassword: recoverPassword,
         title: 'Cafe Express',
         theme: LoginTheme(primaryColor: Colors.teal));
   }
@@ -120,6 +137,12 @@ class _AuthState extends State<Auth> {
   void _goToValidation(BuildContext context, String email, String passcode) {
     Navigator.pushNamed(context, ValidationRoute,
         arguments: {"email": email, "passcode": passcode});
+    print("new login move to user type page");
+  }
+
+  void _goResetPassword(BuildContext context, String email) {
+    Navigator.pushNamed(context, PasswordResetRoute,
+        arguments: {"email": email});
     print("new login move to user type page");
   }
 }
