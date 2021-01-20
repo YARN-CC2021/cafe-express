@@ -90,8 +90,8 @@ class PasswordReset extends StatelessWidget {
     //}
   }
 
-  void _goToUserCategory(BuildContext context) {
-    Navigator.pushNamed(context, UserCategoryRoute);
+  void _goToWrapper(BuildContext context) {
+    Navigator.pushNamed(context, WrapperRoute);
     print("new login move to user type page");
   }
 
@@ -102,7 +102,7 @@ class PasswordReset extends StatelessWidget {
       if (result.isSignedIn) {
         globals.firstSignIn = true;
         print("First Sign In!!! : ${globals.firstSignIn}");
-        _goToUserCategory(aContext);
+        _goToWrapper(aContext);
         print(result.isSignedIn);
       }
     } catch (e) {
