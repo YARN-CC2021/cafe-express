@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:amplify_core/amplify_core.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
+import '../app_theme.dart';
 
 class MerchantCalendarPage extends StatefulWidget {
   @override
@@ -147,10 +148,12 @@ class _MerchantCalendarPageState extends State<MerchantCalendarPage> {
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
+                    color: Colors.black,
                   )),
               centerTitle: true,
-              backgroundColor: Theme.of(context).primaryColor,
-              elevation: 0.0,
+              backgroundColor:
+                  CafeExpressTheme.buildLightTheme().backgroundColor,
+              elevation: 3.0,
             ),
             body: Center(
               child: new ListView(
@@ -505,10 +508,10 @@ class _MerchantCalendarPageState extends State<MerchantCalendarPage> {
                         SizedBox(width: 100),
                         Expanded(
                             child: MaterialButton(
-                          color: Colors.lightBlue,
+                          color: Theme.of(context).primaryColor,
                           shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(5.0),
-                              side: BorderSide(color: Colors.lightBlue)),
+                            borderRadius: BorderRadius.circular(5.0),
+                          ),
                           onPressed: () {
                             try {
                               assignNewHours();

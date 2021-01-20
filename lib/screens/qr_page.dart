@@ -4,6 +4,7 @@ import 'package:qr_flutter/qr_flutter.dart';
 import 'package:amplify_core/amplify_core.dart';
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:cafeexpress/global.dart' as globals;
+import '../app_theme.dart';
 
 class QrPage extends StatefulWidget {
   @override
@@ -28,24 +29,27 @@ class _QrPageState extends State<QrPage> {
   Widget build(BuildContext context) {
     //return either a strict or flex control panel page
     return Scaffold(
-      appBar: AppBar(
-        leading: new Container(),
-        title: Text("QRコード",
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-            )),
-        centerTitle: true,
-        backgroundColor: Theme.of(context).primaryColor,
-        elevation: 0.0,
-      ),
-      body: Center(
-        child: QrImage(
-          data: shopID,
-          version: QrVersions.auto,
-          size: 200.0,
+        appBar: AppBar(
+          leading: new Container(),
+          title: Text("QRコード",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+              )),
+          centerTitle: true,
+          backgroundColor: CafeExpressTheme.buildLightTheme().backgroundColor,
+          elevation: 3.0,
         ),
-      ),
-    );
+        body: shopID != null || globals.userId == null
+            ? Center(
+                child: QrImage(
+                  data: shopID,
+                  version: QrVersions.auto,
+                  size: 200.0,
+                ),
+              )
+            : Center(child: CircularProgressIndicator()));
   }
 
   void _changePage(BuildContext context, String route) {

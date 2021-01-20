@@ -7,6 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:badges/badges.dart';
 import '../app.dart';
+import '../app_theme.dart';
 
 class MerchantStrict extends StatefulWidget {
   final channel = IOWebSocketChannel.connect(
@@ -154,10 +155,11 @@ class _MerchantStrictState extends State<MerchantStrict> {
             textAlign: TextAlign.center,
             style: TextStyle(
               fontWeight: FontWeight.bold,
+              color: Colors.black,
             )),
         centerTitle: true,
-        backgroundColor: Theme.of(context).primaryColor,
-        elevation: 0.0,
+        backgroundColor: CafeExpressTheme.buildLightTheme().backgroundColor,
+        elevation: 3.0,
       ),
       body: shopData == null
           ? Center(child: CircularProgressIndicator())
@@ -325,8 +327,7 @@ class _MerchantStrictState extends State<MerchantStrict> {
                                                 child: vacancyInfo[0]
                                                         ["isVacant"]
                                                     ? Icon(Icons.check_circle,
-                                                        color: Theme.of(context)
-                                                            .accentColor,
+                                                        color: Colors.teal,
                                                         size: 32.0,
                                                         key: UniqueKey())
                                                     : Icon(
@@ -425,9 +426,7 @@ class _MerchantStrictState extends State<MerchantStrict> {
                                                   child: vacancyInfo[1]
                                                           ["isVacant"]
                                                       ? Icon(Icons.check_circle,
-                                                          color:
-                                                              Theme.of(context)
-                                                                  .accentColor,
+                                                          color: Colors.teal,
                                                           size: 32.0,
                                                           key: UniqueKey())
                                                       : Icon(
@@ -526,9 +525,7 @@ class _MerchantStrictState extends State<MerchantStrict> {
                                                   child: vacancyInfo[2]
                                                           ["isVacant"]
                                                       ? Icon(Icons.check_circle,
-                                                          color:
-                                                              Theme.of(context)
-                                                                  .accentColor,
+                                                          color: Colors.teal,
                                                           size: 32.0,
                                                           key: UniqueKey())
                                                       : Icon(
@@ -627,9 +624,7 @@ class _MerchantStrictState extends State<MerchantStrict> {
                                                   child: vacancyInfo[3]
                                                           ["isVacant"]
                                                       ? Icon(Icons.check_circle,
-                                                          color:
-                                                              Theme.of(context)
-                                                                  .accentColor,
+                                                          color: Colors.teal,
                                                           size: 32.0,
                                                           key: UniqueKey())
                                                       : Icon(
@@ -728,9 +723,7 @@ class _MerchantStrictState extends State<MerchantStrict> {
                                                   child: vacancyInfo[4]
                                                           ["isVacant"]
                                                       ? Icon(Icons.check_circle,
-                                                          color:
-                                                              Theme.of(context)
-                                                                  .accentColor,
+                                                          color: Colors.teal,
                                                           size: 32.0,
                                                           key: UniqueKey())
                                                       : Icon(
@@ -829,9 +822,7 @@ class _MerchantStrictState extends State<MerchantStrict> {
                                                   child: vacancyInfo[5]
                                                           ["isVacant"]
                                                       ? Icon(Icons.check_circle,
-                                                          color:
-                                                              Theme.of(context)
-                                                                  .accentColor,
+                                                          color: Colors.teal,
                                                           size: 32.0,
                                                           key: UniqueKey())
                                                       : Icon(
@@ -930,9 +921,7 @@ class _MerchantStrictState extends State<MerchantStrict> {
                                                   child: vacancyInfo[6]
                                                           ["isVacant"]
                                                       ? Icon(Icons.check_circle,
-                                                          color:
-                                                              Theme.of(context)
-                                                                  .accentColor,
+                                                          color: Colors.teal,
                                                           size: 32.0,
                                                           key: UniqueKey())
                                                       : Icon(
@@ -1031,9 +1020,7 @@ class _MerchantStrictState extends State<MerchantStrict> {
                                                   child: vacancyInfo[7]
                                                           ["isVacant"]
                                                       ? Icon(Icons.check_circle,
-                                                          color:
-                                                              Theme.of(context)
-                                                                  .accentColor,
+                                                          color: Colors.teal,
                                                           size: 32.0,
                                                           key: UniqueKey())
                                                       : Icon(
@@ -1132,9 +1119,7 @@ class _MerchantStrictState extends State<MerchantStrict> {
                                                   child: vacancyInfo[8]
                                                           ["isVacant"]
                                                       ? Icon(Icons.check_circle,
-                                                          color:
-                                                              Theme.of(context)
-                                                                  .accentColor,
+                                                          color: Colors.teal,
                                                           size: 32.0,
                                                           key: UniqueKey())
                                                       : Icon(
@@ -1233,9 +1218,7 @@ class _MerchantStrictState extends State<MerchantStrict> {
                                                   child: vacancyInfo[9]
                                                           ["isVacant"]
                                                       ? Icon(Icons.check_circle,
-                                                          color:
-                                                              Theme.of(context)
-                                                                  .accentColor,
+                                                          color: Colors.teal,
                                                           size: 32.0,
                                                           key: UniqueKey())
                                                       : Icon(
@@ -1334,9 +1317,7 @@ class _MerchantStrictState extends State<MerchantStrict> {
                                                   child: vacancyInfo[10]
                                                           ["isVacant"]
                                                       ? Icon(Icons.check_circle,
-                                                          color:
-                                                              Theme.of(context)
-                                                                  .accentColor,
+                                                          color: Colors.teal,
                                                           size: 32.0,
                                                           key: UniqueKey())
                                                       : Icon(
@@ -1435,9 +1416,7 @@ class _MerchantStrictState extends State<MerchantStrict> {
                                                   child: vacancyInfo[11]
                                                           ["isVacant"]
                                                       ? Icon(Icons.check_circle,
-                                                          color:
-                                                              Theme.of(context)
-                                                                  .accentColor,
+                                                          color: Colors.teal,
                                                           size: 32.0,
                                                           key: UniqueKey())
                                                       : Icon(

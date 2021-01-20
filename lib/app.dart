@@ -91,6 +91,7 @@ class MyApp extends StatelessWidget {
             indicatorColor: Colors.white,
             splashColor: Colors.white24,
             splashFactory: InkRipple.splashFactory,
+            selectedRowColor: HexColor('#FA7D82'),
             accentColor: secondaryColor,
             canvasColor: Colors.white,
             focusColor: const Color(0xFF3A5160),
@@ -99,7 +100,7 @@ class MyApp extends StatelessWidget {
             errorColor: const Color(0xFFB00020),
             buttonTheme: ButtonThemeData(
               colorScheme: colorScheme,
-              textTheme: ButtonTextTheme.primary,
+              textTheme: ButtonTextTheme.normal,
             ),
             textTheme: _buildTextTheme(base.textTheme),
             primaryTextTheme: _buildTextTheme(base.primaryTextTheme),
