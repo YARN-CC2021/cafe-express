@@ -86,7 +86,7 @@ class _MapPageState extends State<MapPage> {
           //       })
           // ]
         ),
-        body: _yourLocation == null && listOfUrl == null
+        body: _yourLocation == null
             ? CircularProgressIndicator()
             : CircularMenu(
                 alignment: Alignment.topLeft,

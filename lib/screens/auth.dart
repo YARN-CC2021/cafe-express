@@ -108,7 +108,7 @@ class _AuthState extends State<Auth> {
         onSignup: signUp,
         onRecoverPassword: (_) => null,
         title: 'Cafe Express',
-        theme: LoginTheme(primaryColor: Colors.teal));
+        theme: LoginTheme(primaryColor: Theme.of(context).primaryColor));
   }
 
   void _returnWrapper(BuildContext context) {

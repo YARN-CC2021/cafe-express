@@ -7,6 +7,7 @@ import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'global.dart' as globals;
+import 'custom_drawer/navigation_home_screen.dart';
 
 class Wrapper extends StatefulWidget {
   @override
@@ -41,7 +42,7 @@ class _WrapperState extends State<Wrapper> {
     } else {
       print("Fetch Session $status");
       print("Fetch UserType $userType");
-      return MerchantPage();
+      return NavigationHomeScreen();
     }
   }
 
