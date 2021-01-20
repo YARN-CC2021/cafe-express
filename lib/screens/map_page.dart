@@ -318,7 +318,7 @@ class _MapPageState extends State<MapPage> {
                           // callback
                         }),
                     CircularMenuItem(
-                        icon: Icons.history_edu,
+                        icon: Icons.assignment,
                         onTap: () {
                           _changePage(context, BookingHistoryRoute);
                           //callback

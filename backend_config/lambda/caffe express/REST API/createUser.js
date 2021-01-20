@@ -60,14 +60,14 @@ const createStore = (body) => {
       statistics: {
         rating: 0,
         category: {
-            WithNoWait:0,
-            With10minWait: 0,
-            With30minWait: 0,
-            Morethan1hourWait: 0,
-            WasNotAbletoGetIn: 0
+          WithNoWait: 0,
+          With10minWait: 0,
+          With30minWait: 0,
+          Morethan1hourWait: 0,
+          WasNotAbletoGetIn: 0,
         },
-        bookingCount: 0
-    },
+        bookingCount: 0,
+      },
       hours: {
         Sun: {
           open: "0000",
@@ -219,42 +219,42 @@ const createStore = (body) => {
             Min: 1,
             Max: 2,
             isVacant: false,
-            cancelFee: 0
+            cancelFee: 0,
           },
           {
             label: "３～４人席",
             Min: 3,
             Max: 4,
             isVacant: false,
-            cancelFee: 0
+            cancelFee: 0,
           },
           {
             label: "５～６人席",
             Min: 5,
             Max: 6,
             isVacant: false,
-            cancelFee: 0
+            cancelFee: 0,
           },
           {
             label: "７～８人席",
             Min: 7,
             Max: 8,
             isVacant: false,
-            cancelFee: 0
+            cancelFee: 0,
           },
           {
             label: "９～１０人席",
             Min: 9,
             Max: 10,
             isVacant: false,
-            cancelFee: 0
+            cancelFee: 0,
           },
           {
             label: "１１～１２人席",
             Min: 11,
             Max: 12,
             isVacant: false,
-            cancelFee: 0
+            cancelFee: 0,
           },
         ],
         custom: [
@@ -263,14 +263,14 @@ const createStore = (body) => {
             Min: 1,
             Max: 5,
             isVacant: false,
-            cancelFee: 0
+            cancelFee: 0,
           },
           {
             label: "1-5 Seat Table",
             Min: 1,
             Max: 5,
             isVacant: false,
-            cancelFee: 0
+            cancelFee: 0,
           },
         ],
       },
@@ -289,7 +289,7 @@ exports.handler = async (event, context) => {
   let message = "";
 
   const body = event.body;
-  const {isCustomer} = body;
+  const { isCustomer } = body;
 
   try {
     await setUserCategory(body);
