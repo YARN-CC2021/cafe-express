@@ -359,9 +359,9 @@ class _TimerPageState extends State<TimerPage> {
                                   //callback
                                 }),
                             CircularMenuItem(
-                                icon: Icons.timer,
+                                icon: Icons.map,
                                 onTap: () {
-                                  _changePage(context, TimerRoute);
+                                  _changePage(context, MapSearchRoute);
                                 }),
                             // CircularMenuItem(icon: Icons.star, onTap: () {
                             //   //callback
