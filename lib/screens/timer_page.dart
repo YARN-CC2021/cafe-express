@@ -247,51 +247,9 @@ class _TimerPageState extends State<TimerPage> {
                                           padding: EdgeInsets.symmetric(
                                               vertical: 20.0, horizontal: 80.0),
                                           child: RaisedButton(
-                                            child: Text("チェックインQRスキャン"),
+                                            child: Text("QRコードでチェックイン"),
                                             onPressed: () => _scan(),
                                           )),
-                                      // RaisedButton(
-                                      //     child: const Text(
-                                      //       'I Got Here!',
-                                      //       style: TextStyle(
-                                      //         fontSize: 20.0,
-                                      //         fontWeight: FontWeight.bold,
-                                      //       ),
-                                      //     ),
-                                      //     color: Colors.lightBlue[200],
-                                      //     shape: const OutlineInputBorder(
-                                      //       borderRadius:
-                                      //           BorderRadius.all(Radius.circular(10)),
-                                      //     ),
-                                      // onPressed: () {
-                                      //   //dialog that user reach the shop
-                                      //   showDialog(
-                                      //     context: context,
-                                      //     builder: (_) {
-                                      //       return AlertDialog(
-                                      //         title: Text(''),
-                                      //         content: Text(
-                                      //           'Are You Here?',
-                                      //           style: TextStyle(
-                                      //             fontSize: 18.0,
-                                      //           ),
-                                      //         ),
-                                      //         actions: <Widget>[
-                                      //           FlatButton(
-                                      //             child: Text("No"),
-                                      //             onPressed: () => Navigator.pop(context),
-                                      //           ),
-                                      //           FlatButton(
-                                      //             child: Text("Yes"),
-                                      //             onPressed: () => {
-                                      //               // go back to map page? or success pages
-                                      //             },
-                                      //           ),
-                                      //         ],
-                                      //       );
-                                      //     },
-                                      //   );
-                                      // }),
                                       Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.center,
@@ -386,7 +344,7 @@ class _TimerPageState extends State<TimerPage> {
           } else if (totalTime < 3600) {
             int m = totalTime ~/ 60;
             int s = totalTime - (60 * m);
-            if (s == 0) {
+            if (s < 10) {
               timetodisplay = m.toString() + ":" + "0" + s.toString();
             } else {
               timetodisplay = m.toString() + ":" + s.toString();
@@ -420,9 +378,9 @@ class _TimerPageState extends State<TimerPage> {
     PolylineId id = PolylineId('poly');
     Polyline polyline = Polyline(
       polylineId: id,
-      color: Colors.red,
+      color: Theme.of(context).primaryColor,
       points: polylineCoordinates,
-      width: 3,
+      width: 5,
     );
     polylines[id] = polyline;
   }
