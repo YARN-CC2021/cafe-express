@@ -309,13 +309,13 @@ class _DetailPageState extends State<DetailPage> {
                             setState(() {
                               groupNum = newValue;
                               detectSeat(groupNum);
-                              (() {
+                              // (() {
                                 if (seat == null) {
                                   price = 0;
                                 } else {
                                   price = seat['cancelFee'];
                                 }
-                              })();
+                              // })();
                               print('PRICE:$price');
                             });
                           },
@@ -339,7 +339,7 @@ class _DetailPageState extends State<DetailPage> {
                             );
                           }).toList(),
                         ),
-                        Text('Deposit : $price Yen'),
+                        Text('頭金 : $price Yen'),
                       ],
                     ),
                   ),
@@ -374,14 +374,14 @@ class _DetailPageState extends State<DetailPage> {
                                           controller: nameController,
                                           validator: (value) {
                                             if (value.isEmpty) {
-                                              return 'Please enter some text';
+                                              return '名前を入れてください';
                                             }
                                             return null;
                                           },
                                         ),
                                       ),
                                       Text(
-                                        '人数:$groupNum人',
+                                        '人数:$groupNum 人',
                                         style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                         ),
@@ -402,11 +402,11 @@ class _DetailPageState extends State<DetailPage> {
                                   ),
                                   actions: <Widget>[
                                     FlatButton(
-                                      child: Text("Cancel"),
+                                      child: Text("キャンセル"),
                                       onPressed: () => Navigator.pop(context),
                                     ),
                                     FlatButton(
-                                        child: Text("Go Payment"),
+                                        child: Text("予約する！"),
                                         onPressed: () => {
                                               if (_formKey.currentState
                                                   .validate())
