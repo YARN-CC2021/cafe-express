@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:amplify_core/amplify_core.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
+import '../app_theme.dart';
 
 class MerchantCalendarPage extends StatefulWidget {
   @override
@@ -147,10 +148,12 @@ class _MerchantCalendarPageState extends State<MerchantCalendarPage> {
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
+                    color: Colors.black,
                   )),
               centerTitle: true,
-              backgroundColor: Theme.of(context).primaryColor,
-              elevation: 0.0,
+              backgroundColor:
+                  CafeExpressTheme.buildLightTheme().backgroundColor,
+              elevation: 3.0,
             ),
             body: Center(
               child: new ListView(
@@ -505,10 +508,10 @@ class _MerchantCalendarPageState extends State<MerchantCalendarPage> {
                         SizedBox(width: 100),
                         Expanded(
                             child: MaterialButton(
-                          color: Colors.lightBlue,
+                          color: Theme.of(context).primaryColor,
                           shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(5.0),
-                              side: BorderSide(color: Colors.lightBlue)),
+                            borderRadius: BorderRadius.circular(5.0),
+                          ),
                           onPressed: () {
                             try {
                               assignNewHours();
@@ -547,66 +550,6 @@ class _MerchantCalendarPageState extends State<MerchantCalendarPage> {
                       ],
                     )),
                   ]),
-            ),
-            bottomNavigationBar: BottomAppBar(
-              child: new Row(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  SizedBox(width: 7),
-                  IconButton(
-                    icon: Icon(
-                      Icons.qr_code_rounded,
-                      size: 24.0,
-                    ),
-                    color: Colors.black,
-                    onPressed: () => {_changePage(context, QrRoute)},
-                  ),
-                  IconButton(
-                    icon: Icon(
-                      Icons.calendar_today_rounded,
-                      size: 24.0,
-                    ),
-                    color: Colors.black,
-                    onPressed: () =>
-                        {_changePage(context, MerchantCalendarRoute)},
-                  ),
-                  Container(
-                    width: 24.0,
-                    height: 10,
-                  ),
-                  IconButton(
-                    icon: Icon(
-                      Icons.assignment,
-                      size: 24.0,
-                    ),
-                    color: Colors.black,
-                    onPressed: () => {_changePage(context, BookingListRoute)},
-                  ),
-                  IconButton(
-                    icon: Icon(
-                      Icons.account_circle,
-                      size: 24.0,
-                    ),
-                    color: Colors.black,
-                    onPressed: () =>
-                        {_changePage(context, MerchantProfileSettingRoute)},
-                  ),
-                  SizedBox(width: 7),
-                ],
-              ),
-              color: Theme.of(context).primaryColor,
-              shape: CircularNotchedRectangle(),
-            ),
-            floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,
-            floatingActionButtonLocation:
-                FloatingActionButtonLocation.centerDocked,
-            floatingActionButton: FloatingActionButton(
-              elevation: 4.0,
-              child: Icon(
-                Icons.videogame_asset,
-              ),
-              onPressed: () => {_changePage(context, MerchantRoute)},
             ),
           );
   }

@@ -9,6 +9,7 @@ import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:amplify_storage_s3/amplify_storage_s3.dart';
+import '../app_theme.dart';
 
 class MerchantProfileSettingPage extends StatefulWidget {
   @override
@@ -71,12 +72,14 @@ class _MerchantProfileSettingPageState
       accessLevel: StorageAccessLevel.guest,
     );
     var listOfUrl = [];
-    print("shopData: ${shopData["imageUrl"]}");
-    if (shopData["imageUrl"].length > 0) {
-      var result = await Amplify.Storage.getUrl(
-          key: shopData["imageUrl"][0], options: getUrlOptions);
-      var url = result.url;
-      listOfUrl.add(url);
+    print("shopData Image URL: ${shopData["imageUrl"]}");
+    if (shopData["imageUrl"] != null && shopData["imageUrl"].length > 0) {
+      for (var key in shopData["imageUrl"]) {
+        var result =
+            await Amplify.Storage.getUrl(key: key, options: getUrlOptions);
+        var url = result.url;
+        listOfUrl.add(url);
+      }
     }
     print("List of Url: $listOfUrl");
     print("done getting getting image Url");
@@ -91,165 +94,226 @@ class _MerchantProfileSettingPageState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: Container(),
+        leading: new Container(),
         title: Text("アカウント管理",
             textAlign: TextAlign.center,
             style: TextStyle(
               fontWeight: FontWeight.bold,
+              color: Colors.black,
             )),
         centerTitle: true,
-        backgroundColor: Theme.of(context).primaryColor,
-        elevation: 0.0,
+        backgroundColor: CafeExpressTheme.buildLightTheme().backgroundColor,
+        elevation: 3.0,
       ),
       body: shopData == null && images == null
           ? Center(child: CircularProgressIndicator())
           : Padding(
-              padding: EdgeInsets.only(
-                  top: 10.0, left: 10.0, right: 10.0, bottom: 10.0),
+              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               child: ListView(
                 children: <Widget>[
-                  Row(
-                    children: <Widget>[
-                      images != null && images.length > 0
-                          ? Padding(
-                              padding: EdgeInsets.only(
-                                  left: 3.0, right: 3.0, bottom: 10),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(8.0),
-                                child: Image.network(
-                                  images[0],
-                                  width: 100,
-                                  height: 100,
-                                  fit: BoxFit.cover,
-                                  loadingBuilder: (BuildContext context,
-                                      Widget child,
-                                      ImageChunkEvent loadingProgress) {
-                                    if (loadingProgress == null) return child;
-                                    return Center(
-                                        child: SizedBox(
-                                      width: 100,
-                                      height: 100,
-                                      child: CircularProgressIndicator(
-                                        value: loadingProgress
-                                                    .expectedTotalBytes !=
-                                                null
-                                            ? loadingProgress
-                                                    .cumulativeBytesLoaded /
-                                                loadingProgress
-                                                    .expectedTotalBytes
-                                            : null,
-                                      ),
-                                    ));
-                                  },
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 3, vertical: 3),
+                    child: Row(
+                      children: <Widget>[
+                        images != null && images.length > 0
+                            ? Padding(
+                                padding: EdgeInsets.only(left: 3.0, right: 3.0),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(8.0),
+                                  child: Image.network(
+                                    images[0],
+                                    width: 83,
+                                    height: 83,
+                                    fit: BoxFit.cover,
+                                    loadingBuilder: (BuildContext context,
+                                        Widget child,
+                                        ImageChunkEvent loadingProgress) {
+                                      if (loadingProgress == null) return child;
+                                      return Center(
+                                          child: SizedBox(
+                                        width: 83,
+                                        height: 83,
+                                        child: CircularProgressIndicator(
+                                          value: loadingProgress
+                                                      .expectedTotalBytes !=
+                                                  null
+                                              ? loadingProgress
+                                                      .cumulativeBytesLoaded /
+                                                  loadingProgress
+                                                      .expectedTotalBytes
+                                              : null,
+                                        ),
+                                      ));
+                                    },
+                                  ),
+                                ))
+                            : Padding(
+                                padding: EdgeInsets.only(
+                                  left: 3.0,
+                                  right: 3.0,
                                 ),
-                              ))
-                          : Padding(
-                              padding: EdgeInsets.only(
-                                  left: 3.0, right: 3.0, bottom: 10),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(8.0),
-                                child: Container(
-                                    width: 100,
-                                    height: 100,
-                                    color: Colors.grey[300],
-                                    child: IconButton(
-                                      // Use the FaIcon Widget + FontAwesomeIcons class for the IconData
-                                      iconSize: 35,
-                                      color: Colors.grey,
-                                      icon: FaIcon(FontAwesomeIcons.camera),
-                                      onPressed: () {},
-                                    )),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(8.0),
+                                  child: Container(
+                                    width: 83,
+                                    height: 83,
+                                    color: Colors.transparent,
+                                  ),
+                                ),
                               ),
-                            ),
-                      Padding(
-                        padding: EdgeInsets.only(left: 5, bottom: 10),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Row(
-                              children: <Widget>[
-                                Text(
-                                  "ユーザー名",
-                                  style: TextStyle(
-                                    fontSize: 20.0,
-                                    fontWeight: FontWeight.bold,
+                        images != null && images.length >= 2
+                            ? Padding(
+                                padding: EdgeInsets.only(
+                                  left: 3.0,
+                                  right: 3.0,
+                                ),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(8.0),
+                                  child: Image.network(
+                                    images[1],
+                                    width: 83,
+                                    height: 83,
+                                    fit: BoxFit.cover,
+                                    loadingBuilder: (BuildContext context,
+                                        Widget child,
+                                        ImageChunkEvent loadingProgress) {
+                                      if (loadingProgress == null) return child;
+                                      return Center(
+                                          child: SizedBox(
+                                        width: 83,
+                                        height: 83,
+                                        child: CircularProgressIndicator(
+                                          value: loadingProgress
+                                                      .expectedTotalBytes !=
+                                                  null
+                                              ? loadingProgress
+                                                      .cumulativeBytesLoaded /
+                                                  loadingProgress
+                                                      .expectedTotalBytes
+                                              : null,
+                                        ),
+                                      ));
+                                    },
+                                  ),
+                                ))
+                            : Padding(
+                                padding: EdgeInsets.only(
+                                  left: 3.0,
+                                  right: 3.0,
+                                ),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(8.0),
+                                  child: Container(
+                                    width: 83,
+                                    height: 83,
+                                    color: Colors.transparent,
                                   ),
                                 ),
-                                MaterialButton(
-                                  child: Text(
-                                      shopData["vacancyType"] == "strict"
-                                          ? "テーブル設定：固定モード"
-                                          : "テーブル設定：範囲モード",
-                                      style: TextStyle(fontSize: 11)),
-                                  onPressed: null,
-                                )
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: <Widget>[
-                                Text(
-                                  shopData["loginEmail"],
-                                  style: TextStyle(
-                                    fontSize: 14.0,
-                                    fontWeight: FontWeight.bold,
+                              ),
+                        images != null && images.length >= 3
+                            ? Padding(
+                                padding: EdgeInsets.only(
+                                  left: 3.0,
+                                  right: 3.0,
+                                ),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(8.0),
+                                  child: Image.network(
+                                    images[2],
+                                    width: 83,
+                                    height: 83,
+                                    fit: BoxFit.cover,
+                                    loadingBuilder: (BuildContext context,
+                                        Widget child,
+                                        ImageChunkEvent loadingProgress) {
+                                      if (loadingProgress == null) return child;
+                                      return Center(
+                                          child: SizedBox(
+                                        width: 83,
+                                        height: 83,
+                                        child: CircularProgressIndicator(
+                                          value: loadingProgress
+                                                      .expectedTotalBytes !=
+                                                  null
+                                              ? loadingProgress
+                                                      .cumulativeBytesLoaded /
+                                                  loadingProgress
+                                                      .expectedTotalBytes
+                                              : null,
+                                        ),
+                                      ));
+                                    },
+                                  ),
+                                ))
+                            : Padding(
+                                padding: EdgeInsets.only(
+                                  left: 3.0,
+                                  right: 3.0,
+                                ),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(8.0),
+                                  child: Container(
+                                    width: 83,
+                                    height: 83,
+                                    color: Colors.transparent,
                                   ),
                                 ),
-                              ],
-                            ),
-                            SizedBox(height: 10.0),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: <Widget>[
-                                InkWell(
-                                  onTap: () {
-                                    AwesomeDialog(
-                                      context: context,
-                                      customHeader: null,
-                                      dialogType: DialogType.NO_HEADER,
-                                      animType: AnimType.BOTTOMSLIDE,
-                                      body: Center(
-                                        child: Text('本当にログアウトしますか？'),
-                                      ),
-                                      btnOkOnPress: () {
-                                        try {
-                                          Amplify.Auth.signOut();
-                                          _changePage(context, AuthRoute);
-                                        } on AuthError catch (e) {
-                                          print(e);
-                                        }
-                                      },
-                                      useRootNavigator: false,
-                                      btnOkColor: Colors.tealAccent[400],
-                                      btnCancelOnPress: () {},
-                                      btnOkText: 'ログアウト',
-                                      btnCancelText: 'キャンセル',
-                                      btnCancelColor: Colors.blueGrey[400],
-                                      dismissOnTouchOutside: false,
-                                      headerAnimationLoop: false,
-                                      showCloseIcon: false,
-                                      buttonsBorderRadius: BorderRadius.all(
-                                          Radius.circular(100)),
-                                    )..show();
-                                  },
-                                  child: Text(
-                                    "ログアウト",
-                                    style: TextStyle(
-                                      fontSize: 18.0,
-                                      fontWeight: FontWeight.w400,
-                                      color: Theme.of(context).accentColor,
-                                    ),
-                                    overflow: TextOverflow.ellipsis,
+                              ),
+                        images != null && images.length >= 4
+                            ? Padding(
+                                padding: EdgeInsets.only(
+                                  left: 3.0,
+                                  right: 3.0,
+                                ),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(8.0),
+                                  child: Image.network(
+                                    images[3],
+                                    width: 83,
+                                    height: 83,
+                                    fit: BoxFit.cover,
+                                    loadingBuilder: (BuildContext context,
+                                        Widget child,
+                                        ImageChunkEvent loadingProgress) {
+                                      if (loadingProgress == null) return child;
+                                      return Center(
+                                          child: SizedBox(
+                                        width: 83,
+                                        height: 83,
+                                        child: CircularProgressIndicator(
+                                          value: loadingProgress
+                                                      .expectedTotalBytes !=
+                                                  null
+                                              ? loadingProgress
+                                                      .cumulativeBytesLoaded /
+                                                  loadingProgress
+                                                      .expectedTotalBytes
+                                              : null,
+                                        ),
+                                      ));
+                                    },
+                                  ),
+                                ))
+                            : Padding(
+                                padding: EdgeInsets.only(
+                                  left: 3.0,
+                                  right: 3.0,
+                                ),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(8.0),
+                                  child: Container(
+                                    width: 83,
+                                    height: 83,
+                                    color: Colors.transparent,
                                   ),
                                 ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
+                              ),
+                      ],
+                    ),
                   ),
-                  Divider(),
+                  Divider(
+                    thickness: 1,
+                  ),
                   Padding(
                       padding: EdgeInsets.only(left: 5.0, right: 5.0),
                       child: Row(children: [
@@ -267,6 +331,14 @@ class _MerchantProfileSettingPageState
                             _changePage(context, MerchantProfileRoute);
                           },
                           tooltip: "掲載情報の編集",
+                        ),
+                        MaterialButton(
+                          child: Text(
+                              shopData["vacancyType"] == "strict"
+                                  ? "テーブル設定：固定モード"
+                                  : "テーブル設定：範囲モード",
+                              style: TextStyle(fontSize: 11)),
+                          onPressed: null,
                         )
                       ])),
                   Container(
@@ -374,89 +446,9 @@ class _MerchantProfileSettingPageState
                       ),
                     ),
                   ),
-                  Center(
-                      child: Row(
-                    children: [
-                      SizedBox(width: 125),
-                      Expanded(
-                        child: ButtonTheme(
-                          minWidth: 50,
-                          child: RaisedButton(
-                            color: Colors.lightBlue,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(5.0),
-                                side: BorderSide(color: Colors.lightBlue)),
-                            child: Text("Stripeへ行く",
-                                style: TextStyle(
-                                    fontSize: 13, color: Colors.white)),
-                            onPressed: _goToStripeLink,
-                          ),
-                        ),
-                      ),
-                      SizedBox(width: 125),
-                    ],
-                  )),
                 ],
               ),
             ),
-      bottomNavigationBar: BottomAppBar(
-        child: new Row(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            SizedBox(width: 7),
-            IconButton(
-              icon: Icon(
-                Icons.qr_code_rounded,
-                size: 24.0,
-              ),
-              color: Colors.black,
-              onPressed: () => {_changePage(context, QrRoute)},
-            ),
-            IconButton(
-              icon: Icon(
-                Icons.calendar_today_rounded,
-                size: 24.0,
-              ),
-              color: Colors.black,
-              onPressed: () => {_changePage(context, MerchantCalendarRoute)},
-            ),
-            Container(
-              width: 24.0,
-              height: 10,
-            ),
-            IconButton(
-              icon: Icon(
-                Icons.assignment,
-                size: 24.0,
-              ),
-              color: Colors.black,
-              onPressed: () => {_changePage(context, BookingListRoute)},
-            ),
-            IconButton(
-              icon: Icon(
-                Icons.account_circle,
-                size: 24.0,
-              ),
-              color: Colors.black,
-              onPressed: () =>
-                  {_changePage(context, MerchantProfileSettingRoute)},
-            ),
-            SizedBox(width: 7),
-          ],
-        ),
-        color: Theme.of(context).primaryColor,
-        shape: CircularNotchedRectangle(),
-      ),
-      floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: FloatingActionButton(
-        elevation: 4.0,
-        child: Icon(
-          Icons.videogame_asset,
-        ),
-        onPressed: () => {_changePage(context, MerchantRoute)},
-      ),
     );
   }
 
