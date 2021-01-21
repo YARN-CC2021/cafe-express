@@ -21,6 +21,9 @@ import 'services/stored_cards.dart';
 import 'screens/PasswordReset.dart';
 import 'package:amplify_core/amplify_core.dart';
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
+import 'package:flutter/services.dart';
+import 'app_theme.dart';
+import 'custom_drawer/navigation_home_screen.dart';
 
 const WrapperRoute = "/";
 const AuthRoute = "/auth";
@@ -41,6 +44,34 @@ const BookingHistoryRoute = "/booking_history_route";
 const MerchantProfileSettingRoute = "/merchant_profile_setting";
 const StripeRoute = "/stripe";
 const StoredCardsRoute = "/stored_cards";
+const NavigateMerchantRoute = "/navigate_merchant";
+
+final Color primaryColor = HexColor('#54D3C2');
+final Color secondaryColor = HexColor('#54D3C2');
+final ColorScheme colorScheme = const ColorScheme.light().copyWith(
+  primary: primaryColor,
+  secondary: secondaryColor,
+);
+final ThemeData base = ThemeData.light();
+
+TextTheme _buildTextTheme(TextTheme base) {
+  const String fontName = 'WorkSans';
+  return base.copyWith(
+    headline1: base.headline1.copyWith(fontFamily: fontName),
+    headline2: base.headline2.copyWith(fontFamily: fontName),
+    headline3: base.headline3.copyWith(fontFamily: fontName),
+    headline4: base.headline4.copyWith(fontFamily: fontName),
+    headline5: base.headline5.copyWith(fontFamily: fontName),
+    headline6: base.headline6.copyWith(fontFamily: fontName),
+    button: base.button.copyWith(fontFamily: fontName),
+    caption: base.caption.copyWith(fontFamily: fontName),
+    bodyText1: base.bodyText1.copyWith(fontFamily: fontName),
+    bodyText2: base.bodyText2.copyWith(fontFamily: fontName),
+    subtitle1: base.subtitle1.copyWith(fontFamily: fontName),
+    subtitle2: base.subtitle2.copyWith(fontFamily: fontName),
+    overline: base.overline.copyWith(fontFamily: fontName),
+  );
+}
 
 class MyApp extends StatelessWidget {
   static init() {
@@ -50,19 +81,40 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(
-          primaryColor: Colors.greenAccent,
-          accentColor: Colors.teal[600],
-          fontFamily: 'Faster One',
-          textTheme: TextTheme(
-            headline1: TextStyle(fontSize: 72.0, fontWeight: FontWeight.bold),
-            headline6: TextStyle(fontSize: 36.0, fontStyle: FontStyle.italic),
-            bodyText2: TextStyle(fontSize: 14.0, fontFamily: 'Hind'),
-          )),
-      onGenerateRoute: _routes(),
-      home: Wrapper(),
-    );
+    return Theme(
+        data: CafeExpressTheme.buildLightTheme(),
+        child: MaterialApp(
+          theme: ThemeData(
+            colorScheme: colorScheme,
+            primaryColor: primaryColor,
+            buttonColor: primaryColor,
+            indicatorColor: Colors.white,
+            splashColor: Colors.white24,
+            splashFactory: InkRipple.splashFactory,
+            selectedRowColor: HexColor('#FA7D82'),
+            accentColor: secondaryColor,
+            canvasColor: Colors.white,
+            focusColor: const Color(0xFF3A5160),
+            backgroundColor: const Color(0xFFFFFFFF),
+            scaffoldBackgroundColor: const Color(0xFFF6F6F6),
+            errorColor: const Color(0xFFB00020),
+            buttonTheme: ButtonThemeData(
+              colorScheme: colorScheme,
+              textTheme: ButtonTextTheme.normal,
+            ),
+            textTheme: _buildTextTheme(base.textTheme),
+            primaryTextTheme: _buildTextTheme(base.primaryTextTheme),
+            accentTextTheme: _buildTextTheme(base.accentTextTheme),
+          ),
+          // textTheme: TextTheme(
+          //   headline1: TextStyle(fontSize: 72.0, fontWeight: FontWeight.bold),
+          //   headline6: TextStyle(fontSize: 36.0, fontStyle: FontStyle.italic),
+          //   bodyText2: TextStyle(fontSize: 14.0, fontFamily: 'Hind'),
+          // )),
+          debugShowCheckedModeBanner: false,
+          onGenerateRoute: _routes(),
+          home: Wrapper(),
+        ));
   }
 
   RouteFactory _routes() {
@@ -134,5 +186,17 @@ class MyApp extends StatelessWidget {
       }
       return MaterialPageRoute(builder: (BuildContext context) => screen);
     };
+  }
+}
+
+class HexColor extends Color {
+  HexColor(final String hexColor) : super(_getColorFromHex(hexColor));
+
+  static int _getColorFromHex(String hexColor) {
+    hexColor = hexColor.toUpperCase().replaceAll('#', '');
+    if (hexColor.length == 6) {
+      hexColor = 'FF' + hexColor;
+    }
+    return int.parse(hexColor, radix: 16);
   }
 }

@@ -11,6 +11,7 @@ import 'package:web_socket_channel/io.dart';
 import 'dart:convert';
 import '../global.dart' as globals;
 import 'package:http/http.dart' as http;
+import '../app_theme.dart';
 
 class TimerPage extends StatefulWidget {
   final channel = IOWebSocketChannel.connect(
@@ -143,9 +144,13 @@ class _TimerPageState extends State<TimerPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("Cafe Express"),
-          backgroundColor: Theme.of(context).primaryColor,
-          elevation: 0.0,
+          title: Text("タイマーページ",
+              textAlign: TextAlign.center,
+              style:
+                  TextStyle(fontWeight: FontWeight.bold, color: Colors.black)),
+          centerTitle: true,
+          backgroundColor: CafeExpressTheme.buildLightTheme().backgroundColor,
+          elevation: 3.0,
         ),
         body: _yourLocation == null ||
                 bookingData == null ||
@@ -200,6 +205,9 @@ class _TimerPageState extends State<TimerPage> {
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: [
                                 Expanded(child: _makeGoogleMap()),
+                                Divider(
+                                  thickness: 1,
+                                ),
                                 Container(
                                   width:
                                       MediaQuery.of(context).size.width * 0.7,

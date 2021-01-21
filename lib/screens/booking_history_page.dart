@@ -6,6 +6,7 @@ import '../global.dart' as globals;
 import 'package:http/http.dart' as http;
 import 'package:web_socket_channel/io.dart';
 import '../app.dart';
+import '../app_theme.dart';
 
 class BookingHistoryPage extends StatefulWidget {
   @override
@@ -35,13 +36,15 @@ class _BookingHistoryPageState extends State<BookingHistoryPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).cardColor,
-        brightness: Theme.of(context).brightness,
-        iconTheme: Theme.of(context).iconTheme,
-        title: Text(
-          "Booking History",
-          style: TextStyle(color: Theme.of(context).primaryColor),
-        ),
+        title: Text("予約履歴",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+            )),
+        centerTitle: true,
+        backgroundColor: CafeExpressTheme.buildLightTheme().backgroundColor,
+        elevation: 3.0,
       ),
       body: bookingData == null
           ? Center(child: CircularProgressIndicator())
@@ -62,50 +65,6 @@ class _BookingHistoryPageState extends State<BookingHistoryPage> {
                     }
                     return buildListView();
                   }),
-      bottomNavigationBar: BottomAppBar(
-        child: new Row(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            SizedBox(width: 7),
-            IconButton(
-              ///Timer
-              icon: Icon(
-                Icons.qr_code_rounded,
-                size: 24.0,
-              ),
-              color: Colors.black,
-              onPressed: () => {_changePage(context, QrRoute)},
-            ),
-            Container(
-              width: 56.0,
-              height: 10,
-            ),
-            IconButton(
-              /// booking history
-              icon: Icon(
-                Icons.assignment,
-                size: 24.0,
-              ),
-              color: Colors.black,
-              onPressed: () => {_changePage(context, BookingHistoryRoute)},
-            ),
-            SizedBox(width: 7),
-          ],
-        ),
-        color: Theme.of(context).primaryColor,
-        shape: CircularNotchedRectangle(),
-      ),
-      floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: FloatingActionButton(
-        elevation: 4.0,
-        child: Icon(
-          ///map search
-          Icons.videogame_asset,
-        ),
-        onPressed: () => {_changePage(context, MapSearchRoute)},
-      ),
     );
   }
 
