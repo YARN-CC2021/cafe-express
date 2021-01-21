@@ -70,248 +70,245 @@ class _MapPageState extends State<MapPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text("Cafe Express"),
-          backgroundColor: Theme.of(context).primaryColor,
-          elevation: 0.0,
-          // actions: <Widget>[
-          //   FlatButton.icon(
-          //       icon: Icon(Icons.person),
-          //       label: Text("ログアウト"),
-          //       onPressed: () {
-          //         _logOut();
-          //       })
-          // ]
-        ),
         body: _yourLocation == null && listOfUrl == null
             ? Center(child: CircularProgressIndicator())
-            : CircularMenu(
-                alignment: Alignment.topLeft,
-                radius: 100,
-                backgroundWidget: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Expanded(
-                        child: Stack(
-                          fit: StackFit.loose,
-                          overflow: Overflow.visible,
-                          children: [
-                            _makeGoogleMap(),
-                            Align(
-                              alignment: Alignment.bottomCenter,
-                              child: Container(
-                                height: 150,
-                                child: PageView(
-                                  controller: _pageController,
-                                  children: listShops.map<Widget>((shop) {
-                                    return Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 10.0),
-                                      child: GestureDetector(
-                                        onTap: () {
-                                          _onTap(context, shop['id']);
-                                        },
-                                        child: Card(
-                                          clipBehavior: Clip.antiAlias,
-                                          margin: EdgeInsets.zero,
-                                          shape: const RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(16.0)),
+            : SafeArea(
+                child: CircularMenu(
+                    alignment: Alignment.topLeft,
+                    radius: 100,
+                    backgroundWidget: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            child: Stack(
+                              fit: StackFit.loose,
+                              overflow: Overflow.visible,
+                              children: [
+                                _makeGoogleMap(),
+                                Align(
+                                  alignment: Alignment.bottomCenter,
+                                  child: Container(
+                                    height: 150,
+                                    child: PageView(
+                                      controller: _pageController,
+                                      children: listShops.map<Widget>((shop) {
+                                        return Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 10.0),
+                                          child: GestureDetector(
+                                            onTap: () {
+                                              _onTap(context, shop['id']);
+                                            },
+                                            child: Card(
+                                              clipBehavior: Clip.antiAlias,
+                                              margin: EdgeInsets.zero,
+                                              shape:
+                                                  const RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(16.0)),
+                                              ),
+                                              child: Stack(
+                                                fit: StackFit.loose,
+                                                children: <Widget>[
+                                                  Center(
+                                                      child: shop["imageUrl"]
+                                                                  .length ==
+                                                              0
+                                                          ? Text("写真がありません")
+                                                          : listOfUrl == null
+                                                              ? CircularProgressIndicator()
+                                                              : Container(
+                                                                  constraints:
+                                                                      BoxConstraints
+                                                                          .expand(),
+                                                                  decoration:
+                                                                      BoxDecoration(
+                                                                    image:
+                                                                        DecorationImage(
+                                                                      onError:
+                                                                          (error,
+                                                                              stackTrace) {
+                                                                        return Text(
+                                                                            "写真がありません");
+                                                                      },
+                                                                      fit: BoxFit
+                                                                          .cover,
+                                                                      image: NetworkImage(
+                                                                          listOfUrl[
+                                                                              shop["id"]]),
+                                                                    ),
+                                                                  ),
+                                                                  // child: FadeInImage(placeholder: null, image: null)
+                                                                  // child: Image
+                                                                  //     .network(
+                                                                  //   listOfUrl[shop[
+                                                                  //       "id"]],
+                                                                  //   fit: BoxFit
+                                                                  //       .cover,
+                                                                  //   loadingBuilder:
+                                                                  //       (context,
+                                                                  //           child,
+                                                                  //           loadingProgress) {
+                                                                  //     if (loadingProgress ==
+                                                                  //         null)
+                                                                  //       return child;
+                                                                  //     return CircularProgressIndicator();
+                                                                  //   },
+                                                                  // ),
+                                                                )),
+                                                  Positioned(
+                                                    left: 0,
+                                                    right: 0,
+                                                    bottom: 0,
+                                                    child: Container(
+                                                      child: Text(shop['name'],
+                                                          style: TextStyle(
+                                                              color: Colors
+                                                                  .white)),
+                                                      decoration:
+                                                          const BoxDecoration(
+                                                              color: Color
+                                                                  .fromARGB(
+                                                                      0x99,
+                                                                      0,
+                                                                      0,
+                                                                      0)),
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              8),
+                                                    ),
+                                                  )
+                                                ],
+                                              ),
+                                            ),
                                           ),
-                                          child: Stack(
-                                            fit: StackFit.loose,
-                                            children: <Widget>[
-                                              Center(
-                                                  child: shop["imageUrl"]
-                                                              .length ==
-                                                          0
-                                                      ? Text("写真がありません")
-                                                      : listOfUrl == null
-                                                          ? CircularProgressIndicator()
-                                                          : Container(
-                                                              constraints:
-                                                                  BoxConstraints
-                                                                      .expand(),
-                                                              decoration:
-                                                                  BoxDecoration(
-                                                                image:
-                                                                    DecorationImage(
-                                                                  onError: (error,
-                                                                      stackTrace) {
-                                                                    return Text(
-                                                                        "写真がありません");
-                                                                  },
-                                                                  fit: BoxFit
-                                                                      .cover,
-                                                                  image: NetworkImage(
-                                                                      listOfUrl[
-                                                                          shop[
-                                                                              "id"]]),
-                                                                ),
-                                                              ),
-                                                              // child: FadeInImage(placeholder: null, image: null)
-                                                              // child: Image
-                                                              //     .network(
-                                                              //   listOfUrl[shop[
-                                                              //       "id"]],
-                                                              //   fit: BoxFit
-                                                              //       .cover,
-                                                              //   loadingBuilder:
-                                                              //       (context,
-                                                              //           child,
-                                                              //           loadingProgress) {
-                                                              //     if (loadingProgress ==
-                                                              //         null)
-                                                              //       return child;
-                                                              //     return CircularProgressIndicator();
-                                                              //   },
-                                                              // ),
-                                                            )),
-                                              Positioned(
-                                                left: 0,
-                                                right: 0,
-                                                bottom: 0,
-                                                child: Container(
-                                                  child: Text(shop['name'],
-                                                      style: TextStyle(
-                                                          color: Colors.white)),
-                                                  decoration:
-                                                      const BoxDecoration(
-                                                          color: Color.fromARGB(
-                                                              0x99, 0, 0, 0)),
-                                                  padding:
-                                                      const EdgeInsets.all(8),
-                                                ),
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    );
-                                  }).toList(),
-                                  onPageChanged: (int page) {
-                                    if (_isPageViewAnimating) {
-                                      return;
-                                    }
-                                    _updateSelectedShopForPage(page);
-                                  },
+                                        );
+                                      }).toList(),
+                                      onPageChanged: (int page) {
+                                        if (_isPageViewAnimating) {
+                                          return;
+                                        }
+                                        _updateSelectedShopForPage(page);
+                                      },
+                                    ),
+                                    decoration: BoxDecoration(
+                                        color: Colors.transparent),
+                                  ),
                                 ),
-                                decoration:
-                                    BoxDecoration(color: Colors.transparent),
-                              ),
+                              ],
                             ),
-                          ],
-                        ),
-                      ),
-                      Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Column(children: [
-                              Text("距離"),
-                              DropdownButton<String>(
-                                value: distance,
-                                icon: Icon(Icons.arrow_drop_down),
-                                iconSize: 24,
-                                elevation: 16,
-                                style: TextStyle(color: Colors.deepPurple),
-                                underline: Container(
-                                  height: 2,
-                                  color: Colors.deepPurpleAccent,
-                                ),
-                                onChanged: (String newValue) {
-                                  setState(() {
-                                    distance = newValue;
-                                    _filterShop(distance, category, groupNum);
-                                  });
-                                },
-                                items: <String>[
-                                  '100m',
-                                  '500m',
-                                  '1km',
-                                  '2km'
-                                ].map<DropdownMenuItem<String>>((String value) {
-                                  return DropdownMenuItem<String>(
-                                    value: value,
-                                    child: Text(value),
-                                  );
-                                }).toList(),
-                              ),
-                            ]),
-                            Column(children: [
-                              Text("カテゴリー"),
-                              DropdownButton<String>(
-                                value: category,
-                                icon: Icon(Icons.arrow_drop_down),
-                                iconSize: 24,
-                                elevation: 16,
-                                style: TextStyle(color: Colors.deepPurple),
-                                underline: Container(
-                                  height: 2,
-                                  color: Colors.deepPurpleAccent,
-                                ),
-                                onChanged: (String newValue) {
-                                  setState(() {
-                                    category = newValue;
-                                    _filterShop(distance, category, groupNum);
-                                  });
-                                },
-                                items: <String>[
-                                  'All',
-                                  'カフェ',
-                                  'レストラン',
-                                  'バー'
-                                ].map<DropdownMenuItem<String>>((String value) {
-                                  return DropdownMenuItem<String>(
-                                    value: value,
-                                    child: Text(value),
-                                  );
-                                }).toList(),
-                              ),
-                            ]),
-                            Column(children: [
-                              Text("人数"),
-                              DropdownButton<String>(
-                                value: groupNum,
-                                icon: Icon(Icons.arrow_drop_down),
-                                iconSize: 24,
-                                elevation: 16,
-                                style: TextStyle(color: Colors.deepPurple),
-                                underline: Container(
-                                  height: 2,
-                                  color: Colors.deepPurpleAccent,
-                                ),
-                                onChanged: (String newValue) {
-                                  setState(() {
-                                    groupNum = newValue;
-                                    _filterShop(distance, category, groupNum);
-                                  });
-                                },
-                                items: <String>[
-                                  'All',
-                                  '1',
-                                  '2',
-                                  '3',
-                                  '4',
-                                  '5',
-                                  '6',
-                                  '7',
-                                  '8',
-                                  '9',
-                                  '10',
-                                  '11',
-                                  '12'
-                                ].map<DropdownMenuItem<String>>((String value) {
-                                  return DropdownMenuItem<String>(
-                                    value: value,
-                                    child: Text(value),
-                                  );
-                                }).toList(),
-                              ),
-                            ]),
-                          ]),
-                    ]),
-                items: [
+                          ),
+                          Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Column(children: [
+                                  Text("距離"),
+                                  DropdownButton<String>(
+                                    value: distance,
+                                    icon: Icon(Icons.arrow_drop_down),
+                                    iconSize: 24,
+                                    elevation: 16,
+                                    style: TextStyle(color: Colors.deepPurple),
+                                    underline: Container(
+                                      height: 2,
+                                      color: Colors.deepPurpleAccent,
+                                    ),
+                                    onChanged: (String newValue) {
+                                      setState(() {
+                                        distance = newValue;
+                                        _filterShop(
+                                            distance, category, groupNum);
+                                      });
+                                    },
+                                    items: <String>[
+                                      '100m',
+                                      '500m',
+                                      '1km',
+                                      '2km'
+                                    ].map<DropdownMenuItem<String>>(
+                                        (String value) {
+                                      return DropdownMenuItem<String>(
+                                        value: value,
+                                        child: Text(value),
+                                      );
+                                    }).toList(),
+                                  ),
+                                ]),
+                                Column(children: [
+                                  Text("カテゴリー"),
+                                  DropdownButton<String>(
+                                    value: category,
+                                    icon: Icon(Icons.arrow_drop_down),
+                                    iconSize: 24,
+                                    elevation: 16,
+                                    style: TextStyle(color: Colors.deepPurple),
+                                    underline: Container(
+                                      height: 2,
+                                      color: Colors.deepPurpleAccent,
+                                    ),
+                                    onChanged: (String newValue) {
+                                      setState(() {
+                                        category = newValue;
+                                        _filterShop(
+                                            distance, category, groupNum);
+                                      });
+                                    },
+                                    items: <String>['All', 'カフェ', 'レストラン', 'バー']
+                                        .map<DropdownMenuItem<String>>(
+                                            (String value) {
+                                      return DropdownMenuItem<String>(
+                                        value: value,
+                                        child: Text(value),
+                                      );
+                                    }).toList(),
+                                  ),
+                                ]),
+                                Column(children: [
+                                  Text("人数"),
+                                  DropdownButton<String>(
+                                    value: groupNum,
+                                    icon: Icon(Icons.arrow_drop_down),
+                                    iconSize: 24,
+                                    elevation: 16,
+                                    style: TextStyle(color: Colors.deepPurple),
+                                    underline: Container(
+                                      height: 2,
+                                      color: Colors.deepPurpleAccent,
+                                    ),
+                                    onChanged: (String newValue) {
+                                      setState(() {
+                                        groupNum = newValue;
+                                        _filterShop(
+                                            distance, category, groupNum);
+                                      });
+                                    },
+                                    items: <String>[
+                                      'All',
+                                      '1',
+                                      '2',
+                                      '3',
+                                      '4',
+                                      '5',
+                                      '6',
+                                      '7',
+                                      '8',
+                                      '9',
+                                      '10',
+                                      '11',
+                                      '12'
+                                    ].map<DropdownMenuItem<String>>(
+                                        (String value) {
+                                      return DropdownMenuItem<String>(
+                                        value: value,
+                                        child: Text(value),
+                                      );
+                                    }).toList(),
+                                  ),
+                                ]),
+                              ]),
+                        ]),
+                    items: [
                     CircularMenuItem(
                         icon: Icons.logout,
                         onTap: () {
@@ -325,7 +322,7 @@ class _MapPageState extends State<MapPage> {
                           //callback
                         }),
                     CircularMenuItem(
-                        icon: Icons.assignment,
+                        icon: Icons.timer,
                         onTap: () {
                           _changePage(context, TimerRoute);
                         }),
@@ -336,51 +333,51 @@ class _MapPageState extends State<MapPage> {
                     //   //callback
                     // }),
                   ])
-        // bottomNavigationBar: BottomAppBar(
-        //   child: new Row(
-        //     mainAxisSize: MainAxisSize.max,
-        //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        //     children: <Widget>[
-        //       SizedBox(width: 7),
-        //       IconButton(
-        //         ///Timer
-        //         icon: Icon(
-        //           Icons.qr_code_rounded,
-        //           size: 24.0,
-        //         ),
-        //         color: Colors.black,
-        //         onPressed: () => {_changePage(context, QrRoute)},
-        //       ),
-        //       Container(
-        //         width: 56.0,
-        //         height: 10,
-        //       ),
-        //       IconButton(
-        //         /// booking history
-        //         icon: Icon(
-        //           Icons.assignment,
-        //           size: 24.0,
-        //         ),
-        //         color: Colors.black,
-        //         onPressed: () => {_changePage(context, BookingHistoryRoute)},
-        //       ),
-        //       SizedBox(width: 7),
-        //     ],
-        //   ),
-        //   color: Theme.of(context).primaryColor,
-        //   shape: CircularNotchedRectangle(),
-        // ),
-        // floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,
-        // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        // floatingActionButton: FloatingActionButton(
-        //   elevation: 4.0,
-        //   child: Icon(
-        //     ///map search
-        //     Icons.videogame_asset,
-        //   ),
-        //   onPressed: () => {_changePage(context, MerchantRoute)},
-        // ),
-        );
+                // bottomNavigationBar: BottomAppBar(
+                //   child: new Row(
+                //     mainAxisSize: MainAxisSize.max,
+                //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //     children: <Widget>[
+                //       SizedBox(width: 7),
+                //       IconButton(
+                //         ///Timer
+                //         icon: Icon(
+                //           Icons.qr_code_rounded,
+                //           size: 24.0,
+                //         ),
+                //         color: Colors.black,
+                //         onPressed: () => {_changePage(context, QrRoute)},
+                //       ),
+                //       Container(
+                //         width: 56.0,
+                //         height: 10,
+                //       ),
+                //       IconButton(
+                //         /// booking history
+                //         icon: Icon(
+                //           Icons.assignment,
+                //           size: 24.0,
+                //         ),
+                //         color: Colors.black,
+                //         onPressed: () => {_changePage(context, BookingHistoryRoute)},
+                //       ),
+                //       SizedBox(width: 7),
+                //     ],
+                //   ),
+                //   color: Theme.of(context).primaryColor,
+                //   shape: CircularNotchedRectangle(),
+                // ),
+                // floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,
+                // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+                // floatingActionButton: FloatingActionButton(
+                //   elevation: 4.0,
+                //   child: Icon(
+                //     ///map search
+                //     Icons.videogame_asset,
+                //   ),
+                //   onPressed: () => {_changePage(context, MerchantRoute)},
+                // ),
+                ));
   }
 
   void _changePage(BuildContext context, String route) {
@@ -399,7 +396,7 @@ class _MapPageState extends State<MapPage> {
           target: LatLng(_yourLocation.latitude, _yourLocation.longitude),
           zoom: 18.0,
         ),
-        padding: EdgeInsets.only(bottom: 150.0),
+        padding: EdgeInsets.only(bottom: 180.0),
         markers: listShops.map((shop) {
           return Marker(
             markerId: MarkerId(shop['id']),
