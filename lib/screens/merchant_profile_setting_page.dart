@@ -112,7 +112,7 @@ class _MerchantProfileSettingPageState
               child: ListView(
                 children: <Widget>[
                   Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                    padding: EdgeInsets.symmetric(horizontal: 3, vertical: 3),
                     child: Row(
                       children: <Widget>[
                         images != null && images.length > 0
