@@ -12,6 +12,9 @@ import 'dart:convert';
 import '../global.dart' as globals;
 import 'package:http/http.dart' as http;
 import '../app_theme.dart';
+import 'package:circular_menu/circular_menu.dart';
+import '../app.dart';
+import 'package:amplify_core/amplify_core.dart';
 
 class TimerPage extends StatefulWidget {
   final channel = IOWebSocketChannel.connect(
@@ -143,15 +146,15 @@ class _TimerPageState extends State<TimerPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text("タイマーページ",
-              textAlign: TextAlign.center,
-              style:
-                  TextStyle(fontWeight: FontWeight.bold, color: Colors.black)),
-          centerTitle: true,
-          backgroundColor: CafeExpressTheme.buildLightTheme().backgroundColor,
-          elevation: 3.0,
-        ),
+        // appBar: AppBar(
+        //   title: Text("タイマーページ",
+        //       textAlign: TextAlign.center,
+        //       style:
+        //           TextStyle(fontWeight: FontWeight.bold, color: Colors.black)),
+        //   centerTitle: true,
+        //   backgroundColor: CafeExpressTheme.buildLightTheme().backgroundColor,
+        //   elevation: 3.0,
+        // ),
         body: _yourLocation == null ||
                 bookingData == null ||
                 shopingData == null
@@ -199,137 +202,174 @@ class _TimerPageState extends State<TimerPage> {
                         lockedTime = timetodisplay.toString();
                         timer.cancel();
                       }
-                      return Center(
-                        child: Container(
-                          child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                Expanded(child: _makeGoogleMap()),
-                                Divider(
-                                  thickness: 1,
-                                ),
-                                Container(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.7,
+                      return SafeArea(
+                          child: CircularMenu(
+                              alignment: Alignment.topLeft,
+                              radius: 100,
+                              backgroundWidget: Center(
+                                child: Container(
                                   child: Column(
-                                    children: [
-                                      bookingData["status"] == "checked_in" ||
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceAround,
+                                      children: [
+                                        Expanded(child: _makeGoogleMap()),
+                                        Divider(
+                                          thickness: 1,
+                                        ),
+                                        Container(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.7,
+                                          child: Column(
+                                            children: [
                                               bookingData["status"] ==
-                                                  "cancelled"
-                                          ? Center(
-                                              child: Column(children: [
-                                              Text(
-                                                  '予約番号: ${bookingData["bookingId"]}'),
-                                              Text(
-                                                  '${shopingData["name"]}での${_displayStatus(bookingData["status"])}が完了しました！'),
-                                              Text(
-                                                  '${_displayStatus(bookingData["status"])}時間：${bookingData["updatedAt"]}'),
-                                            ]))
-                                          : Text(
-                                              'あと$timetodisplay以内にお店にチェックインしましょう。',
-                                              style: TextStyle(
-                                                  fontSize: 25.0,
-                                                  color:
+                                                          "checked_in" ||
                                                       bookingData["status"] ==
-                                                              "paid"
-                                                          ? Colors.black
-                                                          : Colors.grey),
-                                            ),
-                                    ],
-                                  ),
+                                                          "cancelled"
+                                                  ? Center(
+                                                      child: Column(children: [
+                                                      Text(
+                                                          '予約番号: ${bookingData["bookingId"]}'),
+                                                      Text(
+                                                          '${shopingData["name"]}での${_displayStatus(bookingData["status"])}が完了しました！'),
+                                                      Text(
+                                                          '${_displayStatus(bookingData["status"])}時間：${bookingData["updatedAt"]}'),
+                                                    ]))
+                                                  : Text(
+                                                      'あと$timetodisplay以内にお店にチェックインしましょう。',
+                                                      style: TextStyle(
+                                                          fontSize: 25.0,
+                                                          color: bookingData[
+                                                                      "status"] ==
+                                                                  "paid"
+                                                              ? Colors.black
+                                                              : Colors.grey),
+                                                    ),
+                                            ],
+                                          ),
+                                        ),
+                                        Container(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.7,
+                                          child: Column(
+                                            children: [
+                                              Container(
+                                                  padding: EdgeInsets.symmetric(
+                                                      vertical: 20.0,
+                                                      horizontal: 80.0),
+                                                  child: RaisedButton(
+                                                    child: Text("チェックインQRスキャン"),
+                                                    onPressed: () => _scan(),
+                                                  )),
+                                              // RaisedButton(
+                                              //     child: const Text(
+                                              //       'I Got Here!',
+                                              //       style: TextStyle(
+                                              //         fontSize: 20.0,
+                                              //         fontWeight: FontWeight.bold,
+                                              //       ),
+                                              //     ),
+                                              //     color: Colors.lightBlue[200],
+                                              //     shape: const OutlineInputBorder(
+                                              //       borderRadius:
+                                              //           BorderRadius.all(Radius.circular(10)),
+                                              //     ),
+                                              // onPressed: () {
+                                              //   //dialog that user reach the shop
+                                              //   showDialog(
+                                              //     context: context,
+                                              //     builder: (_) {
+                                              //       return AlertDialog(
+                                              //         title: Text(''),
+                                              //         content: Text(
+                                              //           'Are You Here?',
+                                              //           style: TextStyle(
+                                              //             fontSize: 18.0,
+                                              //           ),
+                                              //         ),
+                                              //         actions: <Widget>[
+                                              //           FlatButton(
+                                              //             child: Text("No"),
+                                              //             onPressed: () => Navigator.pop(context),
+                                              //           ),
+                                              //           FlatButton(
+                                              //             child: Text("Yes"),
+                                              //             onPressed: () => {
+                                              //               // go back to map page? or success pages
+                                              //             },
+                                              //           ),
+                                              //         ],
+                                              //       );
+                                              //     },
+                                              //   );
+                                              // }),
+                                              Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    Icon(Icons.warning),
+                                                    Text(
+                                                      "Any Issue? Contact",
+                                                      style: TextStyle(
+                                                        fontSize: 20.0,
+                                                        color: Colors.amber,
+                                                      ),
+                                                    ),
+                                                    Icon(Icons.warning),
+                                                  ]),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  IconButton(
+                                                      icon: Icon(
+                                                          Icons.local_phone),
+                                                      onPressed: () {
+                                                        launch(
+                                                            "tel:${shopingData['tel']}");
+                                                      }),
+                                                  IconButton(
+                                                      icon: Icon(Icons.mail),
+                                                      onPressed: () {
+                                                        launch(
+                                                            "mailto:${shopingData['contactEmail']}");
+                                                      }),
+                                                ],
+                                              )
+                                            ],
+                                          ),
+                                        )
+                                      ]),
                                 ),
-                                Container(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.7,
-                                  child: Column(
-                                    children: [
-                                      Container(
-                                          padding: EdgeInsets.symmetric(
-                                              vertical: 20.0, horizontal: 80.0),
-                                          child: RaisedButton(
-                                            child: Text("チェックインQRスキャン"),
-                                            onPressed: () => _scan(),
-                                          )),
-                                      // RaisedButton(
-                                      //     child: const Text(
-                                      //       'I Got Here!',
-                                      //       style: TextStyle(
-                                      //         fontSize: 20.0,
-                                      //         fontWeight: FontWeight.bold,
-                                      //       ),
-                                      //     ),
-                                      //     color: Colors.lightBlue[200],
-                                      //     shape: const OutlineInputBorder(
-                                      //       borderRadius:
-                                      //           BorderRadius.all(Radius.circular(10)),
-                                      //     ),
-                                      // onPressed: () {
-                                      //   //dialog that user reach the shop
-                                      //   showDialog(
-                                      //     context: context,
-                                      //     builder: (_) {
-                                      //       return AlertDialog(
-                                      //         title: Text(''),
-                                      //         content: Text(
-                                      //           'Are You Here?',
-                                      //           style: TextStyle(
-                                      //             fontSize: 18.0,
-                                      //           ),
-                                      //         ),
-                                      //         actions: <Widget>[
-                                      //           FlatButton(
-                                      //             child: Text("No"),
-                                      //             onPressed: () => Navigator.pop(context),
-                                      //           ),
-                                      //           FlatButton(
-                                      //             child: Text("Yes"),
-                                      //             onPressed: () => {
-                                      //               // go back to map page? or success pages
-                                      //             },
-                                      //           ),
-                                      //         ],
-                                      //       );
-                                      //     },
-                                      //   );
-                                      // }),
-                                      Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Icon(Icons.warning),
-                                            Text(
-                                              "Any Issue? Contact",
-                                              style: TextStyle(
-                                                fontSize: 20.0,
-                                                color: Colors.amber,
-                                              ),
-                                            ),
-                                            Icon(Icons.warning),
-                                          ]),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          IconButton(
-                                              icon: Icon(Icons.local_phone),
-                                              onPressed: () {
-                                                launch(
-                                                    "tel:${shopingData['tel']}");
-                                              }),
-                                          IconButton(
-                                              icon: Icon(Icons.mail),
-                                              onPressed: () {
-                                                launch(
-                                                    "mailto:${shopingData['contactEmail']}");
-                                              }),
-                                        ],
-                                      )
-                                    ],
-                                  ),
-                                )
-                              ]),
-                        ),
-                      );
+                              ),
+                              items: [
+                            CircularMenuItem(
+                                icon: Icons.logout,
+                                onTap: () {
+                                  _logOut();
+                                  // callback
+                                }),
+                            CircularMenuItem(
+                                icon: Icons.assignment,
+                                onTap: () {
+                                  _changePage(context, BookingHistoryRoute);
+                                  //callback
+                                }),
+                            CircularMenuItem(
+                                icon: Icons.timer,
+                                onTap: () {
+                                  _changePage(context, TimerRoute);
+                                }),
+                            // CircularMenuItem(icon: Icons.star, onTap: () {
+                            //   //callback
+                            // }),
+                            // CircularMenuItem(icon: Icons.pages, onTap: () {
+                            //   //callback
+                            // }),
+                          ]));
                     }));
   }
 
@@ -425,5 +465,44 @@ class _TimerPageState extends State<TimerPage> {
       width: 3,
     );
     polylines[id] = polyline;
+  }
+
+  void _logOut() {
+    AwesomeDialog(
+      context: context,
+      customHeader: null,
+      dialogType: DialogType.NO_HEADER,
+      animType: AnimType.BOTTOMSLIDE,
+      body: Center(
+        child: Text('本当にログアウトしますか？'),
+      ),
+      btnOkOnPress: () {
+        try {
+          Amplify.Auth.signOut();
+          _changePage(context, AuthRoute);
+        } on Error catch (e) {
+          print(e);
+        }
+      },
+      useRootNavigator: false,
+      btnOkColor: Colors.tealAccent[400],
+      btnCancelOnPress: () {},
+      btnOkText: 'ログアウト',
+      btnCancelText: 'キャンセル',
+      btnCancelColor: Colors.blueGrey[400],
+      dismissOnTouchOutside: false,
+      headerAnimationLoop: false,
+      showCloseIcon: false,
+      buttonsBorderRadius: BorderRadius.all(Radius.circular(100)),
+    )..show();
+    // Amplify.Auth.signOut();
+    // Navigator.pushNamed(context, AuthRoute);
+
+    print("triggered");
+  }
+
+  void _changePage(BuildContext context, String route) {
+    Navigator.pushNamed(context, route);
+    print("Going to $route was triggered");
   }
 }
