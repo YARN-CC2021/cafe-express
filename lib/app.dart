@@ -104,9 +104,10 @@ class MyApp extends StatelessWidget {
               colorScheme: colorScheme,
               textTheme: ButtonTextTheme.normal,
             ),
-            textTheme: _buildTextTheme(base.textTheme),
-            primaryTextTheme: _buildTextTheme(base.primaryTextTheme),
-            accentTextTheme: _buildTextTheme(base.accentTextTheme),
+            fontFamily: 'NotoSansJP',
+            // textTheme: _buildTextTheme(base.textTheme),
+            // primaryTextTheme: _buildTextTheme(base.primaryTextTheme),
+            // accentTextTheme: _buildTextTheme(base.accentTextTheme),
           ),
           locale: locale,
           localizationsDelegates: const [
