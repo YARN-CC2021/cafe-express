@@ -170,33 +170,35 @@ class _TimerPageState extends State<TimerPage> {
                               bookingData["bookingId"] &&
                           bookingData["status"] == "paid") {
                         print("snapshot.data ${snapshot.data}");
-                        WidgetsBinding.instance
-                            .addPostFrameCallback((_) => AwesomeDialog(
-                                  context: context,
-                                  customHeader: null,
-                                  animType: AnimType.BOTTOMSLIDE,
-                                  dialogType: DialogType.SUCCES,
-                                  body: Center(
-                                      child: Column(children: [
-                                    Text('予約番号: ${bookingData["bookingId"]}'),
-                                    Text(
-                                        '${shopingData["name"]}での${_displayStatus(json.decode(snapshot.data)["status"])}が完了しました！'),
-                                    Text(
-                                        '${_displayStatus(json.decode(snapshot.data)["status"])}時間：${json.decode(snapshot.data)["updatedAt"]}'),
-                                  ])),
-                                  btnOkOnPress: () {},
-                                  useRootNavigator: false,
-                                  btnOkColor: Colors.tealAccent[400],
-                                  // btnCancelOnPress: () {},
-                                  btnOkText: 'OK',
-                                  // btnCancelText: 'Go To\n Booking List',
-                                  // btnCancelColor: Colors.blueGreyAccent[400],
-                                  dismissOnTouchOutside: false,
-                                  headerAnimationLoop: false,
-                                  showCloseIcon: false,
-                                  buttonsBorderRadius:
-                                      BorderRadius.all(Radius.circular(100)),
-                                )..show());
+                        WidgetsBinding.instance.addPostFrameCallback((_) =>
+                            AwesomeDialog(
+                              context: context,
+                              customHeader: null,
+                              animType: AnimType.BOTTOMSLIDE,
+                              dialogType: DialogType.SUCCES,
+                              body: Center(
+                                  child: Column(children: [
+                                Text('名前: ${bookingData["bookName"]} さん'),
+                                Text('予約したお店: ${shopingData["name"]} さん'),
+                                Text('予約番号: ${bookingData["bookingId"]}'),
+                                Text(
+                                    '${_displayStatus(json.decode(snapshot.data)["status"])}が完了しました！'),
+                                Text(
+                                    '${_displayStatus(json.decode(snapshot.data)["status"])}時間：${json.decode(snapshot.data)["updatedAt"]}'),
+                              ])),
+                              btnOkOnPress: () {},
+                              useRootNavigator: false,
+                              btnOkColor: Colors.tealAccent[400],
+                              // btnCancelOnPress: () {},
+                              btnOkText: 'OK',
+                              // btnCancelText: 'Go To\n Booking List',
+                              // btnCancelColor: Colors.blueGreyAccent[400],
+                              dismissOnTouchOutside: false,
+                              headerAnimationLoop: false,
+                              showCloseIcon: false,
+                              buttonsBorderRadius:
+                                  BorderRadius.all(Radius.circular(100)),
+                            )..show());
                         bookingData["status"] =
                             json.decode(snapshot.data)["status"];
                         lockedTime = timetodisplay.toString();
@@ -236,94 +238,47 @@ class _TimerPageState extends State<TimerPage> {
                                                       Text(
                                                           '${_displayStatus(bookingData["status"])}時間：${bookingData["updatedAt"]}'),
                                                     ]))
-                                                  : Text(
-                                                      'あと$timetodisplay以内にお店にチェックインしましょう。',
-                                                      style: TextStyle(
-                                                          fontSize: 25.0,
-                                                          color: bookingData[
-                                                                      "status"] ==
-                                                                  "paid"
-                                                              ? Colors.black
-                                                              : Colors.grey),
+                                                  : Center(
+                                                      child: Column(
+                                                        children: [
+                                                          Text(
+                                                              '${bookingData["bookName"]} さん'),
+                                                          Text(
+                                                            '$timetodisplay\n以内にお店にチェックインしましょう。',
+                                                            style: TextStyle(
+                                                                fontSize: 25.0,
+                                                                color: bookingData[
+                                                                            "status"] ==
+                                                                        "paid"
+                                                                    ? Colors
+                                                                        .black
+                                                                    : Colors
+                                                                        .grey),
+                                                          ),
+                                                        ],
+                                                      ),
                                                     ),
                                             ],
                                           ),
                                         ),
-                                        Container(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.7,
-                                          child: Column(
-                                            children: [
-                                              Container(
-                                                  padding: EdgeInsets.symmetric(
-                                                      vertical: 20.0,
-                                                      horizontal: 80.0),
-                                                  child: RaisedButton(
-                                                    child: Text("チェックインQRスキャン"),
-                                                    onPressed: () => _scan(),
-                                                  )),
-                                              // RaisedButton(
-                                              //     child: const Text(
-                                              //       'I Got Here!',
-                                              //       style: TextStyle(
-                                              //         fontSize: 20.0,
-                                              //         fontWeight: FontWeight.bold,
-                                              //       ),
-                                              //     ),
-                                              //     color: Colors.lightBlue[200],
-                                              //     shape: const OutlineInputBorder(
-                                              //       borderRadius:
-                                              //           BorderRadius.all(Radius.circular(10)),
-                                              //     ),
-                                              // onPressed: () {
-                                              //   //dialog that user reach the shop
-                                              //   showDialog(
-                                              //     context: context,
-                                              //     builder: (_) {
-                                              //       return AlertDialog(
-                                              //         title: Text(''),
-                                              //         content: Text(
-                                              //           'Are You Here?',
-                                              //           style: TextStyle(
-                                              //             fontSize: 18.0,
-                                              //           ),
-                                              //         ),
-                                              //         actions: <Widget>[
-                                              //           FlatButton(
-                                              //             child: Text("No"),
-                                              //             onPressed: () => Navigator.pop(context),
-                                              //           ),
-                                              //           FlatButton(
-                                              //             child: Text("Yes"),
-                                              //             onPressed: () => {
-                                              //               // go back to map page? or success pages
-                                              //             },
-                                              //           ),
-                                              //         ],
-                                              //       );
-                                              //     },
-                                              //   );
-                                              // }),
-                                              Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
+                                        Column(
+                                          children: [
+                                            Container(
+                                                padding: EdgeInsets.symmetric(
+                                                    vertical: 20.0,
+                                                    horizontal: 80.0),
+                                                child: RaisedButton(
+                                                  child: Text("QRコードでチェックイン"),
+                                                  onPressed: () => _scan(),
+                                                )),
+                                            Text("お店に連絡したいならアイコンをタップ"),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceAround,
+                                              children: [
+                                                Column(
+                                                  mainAxisAlignment: MainAxisAlignment.center,
                                                   children: [
-                                                    Icon(Icons.warning),
-                                                    Text(
-                                                      "Any Issue? Contact",
-                                                      style: TextStyle(
-                                                        fontSize: 20.0,
-                                                        color: Colors.amber,
-                                                      ),
-                                                    ),
-                                                    Icon(Icons.warning),
-                                                  ]),
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: [
                                                   IconButton(
                                                       icon: Icon(
                                                           Icons.local_phone),
@@ -331,16 +286,23 @@ class _TimerPageState extends State<TimerPage> {
                                                         launch(
                                                             "tel:${shopingData['tel']}");
                                                       }),
-                                                  IconButton(
-                                                      icon: Icon(Icons.mail),
-                                                      onPressed: () {
-                                                        launch(
-                                                            "mailto:${shopingData['contactEmail']}");
-                                                      }),
-                                                ],
-                                              )
-                                            ],
-                                          ),
+                                                  Text("電話"),
+                                                ]),
+                                                Column(
+                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                  children: [
+                                                    IconButton(
+                                                        icon: Icon(Icons.mail),
+                                                        onPressed: () {
+                                                          launch(
+                                                              "mailto:${shopingData['contactEmail']}");
+                                                        }),
+                                                    Text("メール"),
+                                                  ],
+                                                ),
+                                              ],
+                                            )
+                                          ],
                                         )
                                       ]),
                                 ),
@@ -426,7 +388,7 @@ class _TimerPageState extends State<TimerPage> {
           } else if (totalTime < 3600) {
             int m = totalTime ~/ 60;
             int s = totalTime - (60 * m);
-            if (s == 0) {
+            if (s < 10) {
               timetodisplay = m.toString() + ":" + "0" + s.toString();
             } else {
               timetodisplay = m.toString() + ":" + s.toString();
@@ -460,9 +422,9 @@ class _TimerPageState extends State<TimerPage> {
     PolylineId id = PolylineId('poly');
     Polyline polyline = Polyline(
       polylineId: id,
-      color: Colors.red,
+      color: Theme.of(context).primaryColor,
       points: polylineCoordinates,
-      width: 3,
+      width: 5,
     );
     polylines[id] = polyline;
   }
