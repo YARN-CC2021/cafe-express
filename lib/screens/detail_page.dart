@@ -130,22 +130,22 @@ class _DetailPageState extends State<DetailPage> {
                                 fontSize: 20.0,
                               ),
                             ),
-                            RichText(
-                              textAlign: TextAlign.end,
-                              text: TextSpan(
-                                text: "URL",
-                                style: TextStyle(color: Colors.lightBlue),
-                                recognizer: TapGestureRecognizer()
-                                  ..onTap = () async {
-                                    final url = shopData['storeURL'];
-                                    if (await canLaunch(url)) {
-                                      await launch(url);
-                                    } else {
-                                      return Text('有効なURLがありません');
-                                    }
-                                  },
-                              ),
-                            ),
+                            // RichText(
+                            //   textAlign: TextAlign.end,
+                            //   text: TextSpan(
+                            //     text: "URL",
+                            //     style: TextStyle(color: Colors.lightBlue),
+                            //     recognizer: TapGestureRecognizer()
+                            //       ..onTap = () async {
+                            //         final url = shopData['storeURL'];
+                            //         if (await canLaunch(url)) {
+                            //           await launch(url);
+                            //         } else {
+                            //           return Text('有効なURLがありません');
+                            //         }
+                            //       },
+                            //   ),
+                            // ),
                           ],
                         ),
                       ],
@@ -309,13 +309,11 @@ class _DetailPageState extends State<DetailPage> {
                             setState(() {
                               groupNum = newValue;
                               detectSeat(groupNum);
-                              // (() {
                                 if (seat == null) {
                                   price = 0;
                                 } else {
                                   price = seat['cancelFee'];
                                 }
-                              // })();
                               print('PRICE:$price');
                             });
                           },
@@ -339,7 +337,7 @@ class _DetailPageState extends State<DetailPage> {
                             );
                           }).toList(),
                         ),
-                        Text('頭金 : $price Yen'),
+                        Text('デポジット : $price 円'),
                       ],
                     ),
                   ),
@@ -387,7 +385,7 @@ class _DetailPageState extends State<DetailPage> {
                                         ),
                                       ),
                                       Text(
-                                        '頭金:$price 円',
+                                        'デポジット:$price 円',
                                         style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                         ),
