@@ -309,11 +309,11 @@ class _DetailPageState extends State<DetailPage> {
                             setState(() {
                               groupNum = newValue;
                               detectSeat(groupNum);
-                                if (seat == null) {
-                                  price = 0;
-                                } else {
-                                  price = seat['cancelFee'];
-                                }
+                              if (seat == null) {
+                                price = 0;
+                              } else {
+                                price = seat['cancelFee'];
+                              }
                               print('PRICE:$price');
                             });
                           },
@@ -442,10 +442,13 @@ class _DetailPageState extends State<DetailPage> {
                                                           bookData[
                                                                   "updatedAt"] =
                                                               "$bookedTime",
+                                                          channel.sink.add(
+                                                              json.encode(
+                                                                  bookData)),
+                                                          _sendEmail(),
                                                           _goTimerPage(
                                                             context,
                                                           ),
-                                                          _sendEmail()
                                                         }
                                                       : createPaymentMethod(),
                                                 },
@@ -569,11 +572,11 @@ class _DetailPageState extends State<DetailPage> {
     print("Seat in detectSeat $seat");
   }
 
-  void _goStripePage(BuildContext context, String id, int price) {
-    Navigator.pushNamed(context, StripeRoute,
-        arguments: {"id": id, "price": price});
-    print("goStripePage was triggered");
-  }
+  // void _goStripePage(BuildContext context, String id, int price) {
+  //   Navigator.pushNamed(context, StripeRoute,
+  //       arguments: {"id": id, "price": price});
+  //   print("goStripePage was triggered");
+  // }
 
   void _goTimerPage(BuildContext context) {
     Navigator.pushNamed(context, TimerRoute);

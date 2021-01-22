@@ -121,8 +121,8 @@ class _AuthState extends State<Auth> {
   @override
   Widget build(BuildContext context) {
     return FlutterLogin(
-      title: 'VACANSEAT',
-      logo: 'assets/images/logo_green.png',
+      title: null,
+      logo: 'assets/logo_green.png',
       onLogin: logIn,
       onSignup: signUp,
       onRecoverPassword: recoverPassword,
