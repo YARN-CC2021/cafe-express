@@ -122,7 +122,7 @@ class _AuthState extends State<Auth> {
   Widget build(BuildContext context) {
     return FlutterLogin(
       title: null,
-      logo: 'assets/logo_green.png',
+      logo: 'assets/images/logo_green.png',
       onLogin: logIn,
       onSignup: signUp,
       onRecoverPassword: recoverPassword,
@@ -134,7 +134,7 @@ class _AuthState extends State<Auth> {
         loginButton: 'ログイン',
         signupButton: '新規登録',
         forgotPasswordButton: 'パスワードを忘れた場合',
-        recoverPasswordIntro: "パスワードをリセットしてください。",
+        recoverPasswordIntro: "パスワードがリセットされます。",
         recoverPasswordButton: 'パスワードリセット',
         goBackButton: '戻る',
         // confirmPasswordError: 'Not match!',

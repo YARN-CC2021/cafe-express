@@ -24,6 +24,7 @@ import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:flutter/services.dart';
 import 'app_theme.dart';
 import 'custom_drawer/navigation_home_screen.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 const WrapperRoute = "/";
 const AuthRoute = "/auth";
@@ -81,6 +82,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    const locale = Locale("ja", "JP");
     return Theme(
         data: CafeExpressTheme.buildLightTheme(),
         child: MaterialApp(
@@ -102,10 +104,20 @@ class MyApp extends StatelessWidget {
               colorScheme: colorScheme,
               textTheme: ButtonTextTheme.normal,
             ),
-            textTheme: _buildTextTheme(base.textTheme),
-            primaryTextTheme: _buildTextTheme(base.primaryTextTheme),
-            accentTextTheme: _buildTextTheme(base.accentTextTheme),
+            fontFamily: 'NotoSansJP',
+            // textTheme: _buildTextTheme(base.textTheme),
+            // primaryTextTheme: _buildTextTheme(base.primaryTextTheme),
+            // accentTextTheme: _buildTextTheme(base.accentTextTheme),
           ),
+          locale: locale,
+          localizationsDelegates: const [
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          supportedLocales: const [
+            locale,
+          ],
           debugShowCheckedModeBanner: false,
           onGenerateRoute: _routes(),
           home: Wrapper(),
