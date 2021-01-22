@@ -1,15 +1,20 @@
-import 'package:cafeexpress/screens/booking_list_page.dart';
 import "package:flutter/material.dart";
 import '../global.dart' as globals;
 import 'package:web_socket_channel/io.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:awesome_dialog/awesome_dialog.dart';
-import 'package:badges/badges.dart';
 import '../app.dart';
 import '../app_theme.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class MerchantStrict extends StatefulWidget {
+  final AnimationController animationController;
+  final Animation animation;
+
+  MerchantStrict({Key key, this.animationController, this.animation})
+      : super(key: key);
+
   final channel = IOWebSocketChannel.connect(
       "wss://gu2u8vdip2.execute-api.ap-northeast-1.amazonaws.com/CafeExpressWS?id=${globals.userId}");
 
@@ -30,74 +35,11 @@ class _MerchantStrictState extends State<MerchantStrict> {
     super.dispose();
   }
 
-  final TextEditingController table1Controller = TextEditingController();
-  final TextEditingController table2Controller = TextEditingController();
-  final TextEditingController table3Controller = TextEditingController();
-  final TextEditingController table4Controller = TextEditingController();
-  final TextEditingController table5Controller = TextEditingController();
-  final TextEditingController table6Controller = TextEditingController();
-  final TextEditingController table7Controller = TextEditingController();
-  final TextEditingController table8Controller = TextEditingController();
-  final TextEditingController table9Controller = TextEditingController();
-  final TextEditingController table10Controller = TextEditingController();
-  final TextEditingController table11Controller = TextEditingController();
-  final TextEditingController table12Controller = TextEditingController();
+  final TextEditingController cancelFeeController = TextEditingController();
 
   var shopData;
+  var bookingId;
   List vacancyInfo;
-
-  void toggleButton(int index) {
-    setState(() {
-      vacancyInfo[index]["isVacant"] = !vacancyInfo[index]["isVacant"];
-      switch (index) {
-        case 0:
-          vacancyInfo[index]["cancelFee"] = int.parse(table1Controller.text);
-          break;
-        case 1:
-          vacancyInfo[index]["cancelFee"] = int.parse(table2Controller.text);
-          break;
-        case 2:
-          vacancyInfo[index]["cancelFee"] = int.parse(table3Controller.text);
-          break;
-        case 3:
-          vacancyInfo[index]["cancelFee"] = int.parse(table4Controller.text);
-          break;
-        case 4:
-          vacancyInfo[index]["cancelFee"] = int.parse(table5Controller.text);
-          break;
-        case 5:
-          vacancyInfo[index]["cancelFee"] = int.parse(table6Controller.text);
-          break;
-        case 6:
-          vacancyInfo[index]["cancelFee"] = int.parse(table7Controller.text);
-          break;
-        case 7:
-          vacancyInfo[index]["cancelFee"] = int.parse(table8Controller.text);
-          break;
-        case 8:
-          vacancyInfo[index]["cancelFee"] = int.parse(table9Controller.text);
-          break;
-        case 9:
-          vacancyInfo[index]["cancelFee"] = int.parse(table10Controller.text);
-          break;
-        case 10:
-          vacancyInfo[index]["cancelFee"] = int.parse(table11Controller.text);
-          break;
-        case 11:
-          vacancyInfo[index]["cancelFee"] = int.parse(table12Controller.text);
-          break;
-      }
-    });
-
-    widget.channel.sink.add(json.encode({
-      "action": "onVacancyChange",
-      "storeId": globals.userId,
-      "index": index,
-      "vacancyType": shopData["vacancyType"],
-      "isVacant": vacancyInfo[index]["isVacant"],
-      "cancelFee": vacancyInfo[index]["cancelFee"]
-    }));
-  }
 
   Future<void> _getShopData() async {
     var response = await http.get(
@@ -116,177 +58,318 @@ class _MerchantStrictState extends State<MerchantStrict> {
 
   void _mapMountedVacancyInfo() {
     vacancyInfo = shopData["vacancy"][shopData["vacancyType"]];
-    table1Controller.text =
-        shopData["vacancy"][shopData["vacancyType"]][0]["cancelFee"].toString();
-    table2Controller.text =
-        shopData["vacancy"][shopData["vacancyType"]][1]["cancelFee"].toString();
-    table3Controller.text =
-        shopData["vacancy"][shopData["vacancyType"]][2]["cancelFee"].toString();
-    table4Controller.text =
-        shopData["vacancy"][shopData["vacancyType"]][3]["cancelFee"].toString();
-    table5Controller.text =
-        shopData["vacancy"][shopData["vacancyType"]][4]["cancelFee"].toString();
-    table6Controller.text =
-        shopData["vacancy"][shopData["vacancyType"]][5]["cancelFee"].toString();
-    table7Controller.text =
-        shopData["vacancy"][shopData["vacancyType"]][6]["cancelFee"].toString();
-    table8Controller.text =
-        shopData["vacancy"][shopData["vacancyType"]][7]["cancelFee"].toString();
-    table9Controller.text =
-        shopData["vacancy"][shopData["vacancyType"]][8]["cancelFee"].toString();
-    table10Controller.text =
-        shopData["vacancy"][shopData["vacancyType"]][9]["cancelFee"].toString();
-    table11Controller.text = shopData["vacancy"][shopData["vacancyType"]][10]
-            ["cancelFee"]
-        .toString();
-    table12Controller.text = shopData["vacancy"][shopData["vacancyType"]][11]
-            ["cancelFee"]
-        .toString();
   }
 
-  var bookingId;
+  void toggleButton(int index) {
+    setState(() {
+      vacancyInfo[index]["isVacant"] = !vacancyInfo[index]["isVacant"];
+    });
+
+    widget.channel.sink.add(json.encode({
+      "action": "onVacancyChange",
+      "storeId": globals.userId,
+      "index": index,
+      "vacancyType": shopData["vacancyType"],
+      "isVacant": vacancyInfo[index]["isVacant"],
+      "cancelFee": vacancyInfo[index]["cancelFee"]
+    }));
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: new Container(),
-        title: Text("空席管理",
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
-            )),
-        centerTitle: true,
-        backgroundColor: CafeExpressTheme.buildLightTheme().backgroundColor,
-        elevation: 3.0,
-      ),
-      body: shopData == null
-          ? Center(child: CircularProgressIndicator())
-          : StreamBuilder(
-              stream: widget.channel.stream,
-              builder: (context, snapshot) {
-                if (snapshot.hasData &&
-                    json.decode(snapshot.data)["bookingId"] != bookingId) {
-                  print(snapshot.data);
-                  WidgetsBinding.instance
-                      .addPostFrameCallback((_) => AwesomeDialog(
-                            context: context,
-                            customHeader: null,
-                            animType: AnimType.LEFTSLIDE,
-                            dialogType: DialogType.SUCCES,
-                            body: Center(
-                                child: Column(children: [
-                              Text(
-                                  '人数: ${json.decode(snapshot.data)["partySize"]}'),
-                              Text(
-                                  '予約時間: ${json.decode(snapshot.data)["bookedAt"]}'),
-                              Text(
-                                  '到着締切: ${json.decode(snapshot.data)["expiredAt"]}'),
-                              Text(
-                                  'キャンセル料: ${json.decode(snapshot.data)["depositAmount"]}円'),
-                            ])),
-                            btnOkOnPress: () {
-                              _changePage(context, BookingListRoute);
-                            },
-                            useRootNavigator: false,
-                            btnOkColor: Colors.tealAccent[400],
-                            // btnCancelOnPress: () {},
-                            btnOkText: '予約リストを開く',
-                            // btnCancelText: 'Go To\n Booking List',
-                            // btnCancelColor: Colors.blueGreyAccent[400],
-                            dismissOnTouchOutside: false,
-                            headerAnimationLoop: false,
-                            showCloseIcon: true,
-                            buttonsBorderRadius:
-                                BorderRadius.all(Radius.circular(100)),
-                          )..show());
-                  bookingId = json.decode(snapshot.data)["bookingId"];
-                  vacancyInfo[json.decode(snapshot.data)["index"]]["isVacant"] =
-                      false;
+        appBar: AppBar(
+          leading: new Container(),
+          title: Text("空席管理",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+              )),
+          centerTitle: true,
+          backgroundColor: CafeExpressTheme.buildLightTheme().backgroundColor,
+          elevation: 3.0,
+        ),
+        body: shopData == null
+            ? Center(child: CircularProgressIndicator())
+            : StreamBuilder(
+                stream: widget.channel.stream,
+                builder: (context, snapshot) {
+                  if (snapshot.hasData &&
+                      json.decode(snapshot.data)["bookingId"] != bookingId) {
+                    print(snapshot.data);
+                    WidgetsBinding.instance
+                        .addPostFrameCallback((_) => AwesomeDialog(
+                              context: context,
+                              customHeader: null,
+                              animType: AnimType.LEFTSLIDE,
+                              dialogType: DialogType.SUCCES,
+                              body: Center(
+                                  child: Column(children: [
+                                Text(
+                                    '人数: ${json.decode(snapshot.data)["partySize"]}'),
+                                Text(
+                                    '予約時間: ${json.decode(snapshot.data)["bookedAt"]}'),
+                                Text(
+                                    '到着締切: ${json.decode(snapshot.data)["expiredAt"]}'),
+                                Text(
+                                    'キャンセル料: ${json.decode(snapshot.data)["depositAmount"]}円'),
+                              ])),
+                              btnOkOnPress: () {
+                                _changePage(context, BookingListRoute);
+                              },
+                              useRootNavigator: false,
+                              btnOkColor: Colors.tealAccent[400],
+                              // btnCancelOnPress: () {},
+                              btnOkText: '予約リストを開く',
+                              // btnCancelText: 'Go To\n Booking List',
+                              // btnCancelColor: Colors.blueGreyAccent[400],
+                              dismissOnTouchOutside: false,
+                              headerAnimationLoop: false,
+                              showCloseIcon: true,
+                              buttonsBorderRadius:
+                                  BorderRadius.all(Radius.circular(100)),
+                            )..show());
+                    bookingId = json.decode(snapshot.data)["bookingId"];
+                    vacancyInfo[json.decode(snapshot.data)["index"]]
+                        ["isVacant"] = false;
+                  }
+                  return SingleChildScrollView(
+                      padding: EdgeInsets.symmetric(vertical: 10),
+                      child: Column(children: createListOfVacancyCard()));
+                }));
+  }
+
+  void _changePage(BuildContext context, String route) {
+    widget.channel.sink.close();
+    Navigator.pushNamed(context, route);
+    print("Going to $route was triggered");
+  }
+
+  createListOfVacancyCard() {
+    var listOfTables = <Widget>[];
+    for (var i = 0; i < vacancyInfo.length; i++) {
+      listOfTables.add(createSingleVacancyCard(i));
+    }
+    return listOfTables;
+  }
+
+  void showDialogForCancelFee(index) {
+    cancelFeeController.text = vacancyInfo[index]["cancelFee"].toString();
+    AwesomeDialog(
+      context: context,
+      customHeader: null,
+      animType: AnimType.LEFTSLIDE,
+      dialogType: DialogType.NO_HEADER,
+      body: Center(
+          child: Column(children: [
+        Container(
+            padding: EdgeInsets.only(bottom: 20),
+            width: 150,
+            height: 60,
+            child: TextFormField(
+              // The validator receives the text that the user has entered.
+              textAlign: TextAlign.center,
+              decoration: InputDecoration(
+                labelText: "Deposit金額(円)",
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                  borderSide: BorderSide(
+                    color: Colors.blue,
+                  ),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                  borderSide: BorderSide(
+                    color: Colors.red,
+                    width: 2.0,
+                  ),
+                ),
+              ),
+              controller: cancelFeeController,
+              validator: (value) {
+                if (int.parse(value) <= 50) {
+                  return '50円未満は設定できません';
                 }
-                return ListView(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 30.0, vertical: 15.0),
-                    children: [
-                      Container(
-                          width: 300,
-                          height: 50,
-                          child: Container(
-                              child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                Card(
-                                  child: Center(
-                                    child: Container(
-                                        width: 80,
-                                        height: 20,
-                                        child: Text("人数",
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(fontSize: 15))),
-                                  ),
-                                ),
-                                Card(
-                                  child: Center(
-                                    child: Container(
-                                        width: 110,
-                                        height: 20,
-                                        child: Text("キャンセル料",
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(fontSize: 15))),
-                                  ),
-                                ),
-                                Card(
-                                    child: Center(
-                                  child: Container(
-                                      width: 70,
-                                      height: 20,
-                                      child: Text("空 / 満",
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(fontSize: 15))),
-                                ))
-                              ]))),
-                      Card(
-                        child: Container(
-                            width: 300,
-                            height: 70,
+                return null;
+              },
+            )),
+        Text("${vacancyInfo[index]["label"]}のDeposit金額を入力してください")
+      ])),
+      btnOkOnPress: () {
+        _cancelFeeUpdate(index);
+      },
+      useRootNavigator: false,
+      btnOkColor: Colors.tealAccent[400],
+      btnCancelOnPress: () {},
+      btnOkText: '保存',
+      btnCancelText: 'キャンセル',
+      btnCancelColor: Colors.blueGrey[400],
+      dismissOnTouchOutside: false,
+      headerAnimationLoop: false,
+      showCloseIcon: true,
+      buttonsBorderRadius: BorderRadius.all(Radius.circular(100)),
+    )..show();
+  }
+
+  void _cancelFeeUpdate(int index) {
+    setState(() {
+      switch (index) {
+        case 0:
+          vacancyInfo[index]["cancelFee"] = int.parse(cancelFeeController.text);
+          break;
+        case 1:
+          vacancyInfo[index]["cancelFee"] = int.parse(cancelFeeController.text);
+          break;
+        case 2:
+          vacancyInfo[index]["cancelFee"] = int.parse(cancelFeeController.text);
+          break;
+        case 3:
+          vacancyInfo[index]["cancelFee"] = int.parse(cancelFeeController.text);
+          break;
+        case 4:
+          vacancyInfo[index]["cancelFee"] = int.parse(cancelFeeController.text);
+          break;
+        case 5:
+          vacancyInfo[index]["cancelFee"] = int.parse(cancelFeeController.text);
+          break;
+        case 6:
+          vacancyInfo[index]["cancelFee"] = int.parse(cancelFeeController.text);
+          break;
+        case 7:
+          vacancyInfo[index]["cancelFee"] = int.parse(cancelFeeController.text);
+          break;
+        case 8:
+          vacancyInfo[index]["cancelFee"] = int.parse(cancelFeeController.text);
+          break;
+        case 9:
+          vacancyInfo[index]["cancelFee"] = int.parse(cancelFeeController.text);
+          break;
+        case 10:
+          vacancyInfo[index]["cancelFee"] = int.parse(cancelFeeController.text);
+          break;
+        case 11:
+          vacancyInfo[index]["cancelFee"] = int.parse(cancelFeeController.text);
+          break;
+      }
+    });
+
+    widget.channel.sink.add(json.encode({
+      "action": "onVacancyChange",
+      "storeId": globals.userId,
+      "index": index,
+      "vacancyType": shopData["vacancyType"],
+      "isVacant": vacancyInfo[index]["isVacant"],
+      "cancelFee": vacancyInfo[index]["cancelFee"]
+    }));
+  }
+
+  Widget createSingleVacancyCard(index) {
+    return Column(
+      children: <Widget>[
+        Padding(
+          padding:
+              const EdgeInsets.only(left: 24, right: 24, top: 0, bottom: 0),
+          child: Stack(
+            overflow: Overflow.visible,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(top: 5, bottom: 5),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: CafeExpressTheme.white,
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(8.0),
+                        bottomLeft: Radius.circular(8.0),
+                        bottomRight: Radius.circular(8.0),
+                        topRight: Radius.circular(8.0)),
+                    boxShadow: <BoxShadow>[
+                      BoxShadow(
+                          color: CafeExpressTheme.grey.withOpacity(0.4),
+                          offset: Offset(1.1, 1.1),
+                          blurRadius: 10.0),
+                    ],
+                  ),
+                  child: Stack(
+                    alignment: Alignment.topLeft,
+                    children: <Widget>[
+                      ClipRRect(
+                        borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                        child: SizedBox(
+                          height: 74,
+                          child: AspectRatio(
+                            aspectRatio: 0.7,
+                          ),
+                        ),
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Center(
                             child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  Container(
-                                      width: 90,
-                                      child: Badge(
-                                        toAnimate: false,
-                                        shape: BadgeShape.square,
-                                        badgeColor: Colors.grey[100],
-                                        borderRadius: BorderRadius.circular(8),
-                                        badgeContent: Container(
-                                            width: 90,
-                                            child: Text('1人席',
-                                                textAlign: TextAlign.center,
-                                                style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 20,
-                                                ))),
-                                      )),
-                                  Container(
-                                      width: 70,
-                                      child: TextFormField(
-                                        // The validator receives the text that the user has entered.
-                                        decoration: InputDecoration(
-                                          hintText: '0',
-                                        ),
-                                        controller: table1Controller,
-                                        validator: (value) {
-                                          if (value.isEmpty) {
-                                            return 'Input Cancel Fee.';
-                                          }
-                                          return null;
-                                        },
-                                      )),
-                                  Center(
+                              children: <Widget>[
+                                Center(
+                                    child: Column(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                        top: 16,
+                                        left: 68,
+                                        right: 10,
+                                      ),
+                                      child: SizedBox(
+                                        width: 80,
+                                        child: Text("Table",
+                                            textAlign: TextAlign.left,
+                                            style: TextStyle(fontSize: 12)),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                        left: 60,
+                                        right: 10,
+                                      ),
+                                      child: SizedBox(
+                                          width: 80,
+                                          height: 40,
+                                          child: Text(
+                                              vacancyInfo[index]["label"],
+                                              style: TextStyle(fontSize: 18))),
+                                    )
+                                  ],
+                                )),
+                                Center(
+                                    child: Column(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                        top: 16,
+                                      ),
+                                      child: SizedBox(
+                                          width: 80,
+                                          child: RichText(
+                                              text: TextSpan(children: [
+                                            TextSpan(
+                                              text: "Deposit",
+                                              style: TextStyle(
+                                                  fontSize: 12,
+                                                  color: Colors.black),
+                                            ),
+                                          ]))),
+                                    ),
+                                    SizedBox(
+                                        width: 80,
+                                        height: 40,
+                                        child: Text(
+                                            "${vacancyInfo[index]["cancelFee"]}円",
+                                            style: TextStyle(fontSize: 18))),
+                                  ],
+                                )),
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                    left: 10,
+                                  ),
+                                  child: Center(
                                     child: AnimatedContainer(
                                       duration: Duration(milliseconds: 500),
                                       height: 40.0,
@@ -294,7 +377,7 @@ class _MerchantStrictState extends State<MerchantStrict> {
                                       decoration: BoxDecoration(
                                           borderRadius:
                                               BorderRadius.circular(20.0),
-                                          color: vacancyInfo[0]["isVacant"]
+                                          color: vacancyInfo[index]["isVacant"]
                                               ? Theme.of(context).primaryColor
                                               : Colors.blueGrey[100]
                                                   .withOpacity(0.5)),
@@ -305,14 +388,16 @@ class _MerchantStrictState extends State<MerchantStrict> {
                                                 Duration(milliseconds: 500),
                                             curve: Curves.easeIn,
                                             top: 3.0,
-                                            left: vacancyInfo[0]["isVacant"]
+                                            left: vacancyInfo[index]["isVacant"]
                                                 ? 60.0
                                                 : 0.0,
-                                            right: vacancyInfo[0]["isVacant"]
+                                            right: vacancyInfo[index]
+                                                    ["isVacant"]
                                                 ? 0.0
                                                 : 60.0,
                                             child: InkWell(
-                                              onTap: () => {toggleButton(0)},
+                                              onTap: () =>
+                                                  {toggleButton(index)},
                                               child: AnimatedSwitcher(
                                                 duration:
                                                     Duration(milliseconds: 500),
@@ -324,7 +409,7 @@ class _MerchantStrictState extends State<MerchantStrict> {
                                                       child: child,
                                                       turns: animation);
                                                 },
-                                                child: vacancyInfo[0]
+                                                child: vacancyInfo[index]
                                                         ["isVacant"]
                                                     ? Icon(Icons.check_circle,
                                                         color: Colors.teal,
@@ -343,1105 +428,49 @@ class _MerchantStrictState extends State<MerchantStrict> {
                                       ),
                                     ),
                                   ),
-                                ])),
+                                ),
+                              ],
+                            ),
+                          )
+                        ],
                       ),
-                      Card(
-                          child: Container(
-                              width: 300,
-                              height: 70,
-                              child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    Container(
-                                        width: 90,
-                                        child: Badge(
-                                          toAnimate: false,
-                                          shape: BadgeShape.square,
-                                          badgeColor: Colors.grey[100],
-                                          borderRadius:
-                                              BorderRadius.circular(8),
-                                          badgeContent: Container(
-                                              width: 90,
-                                              child: Text('2人席',
-                                                  textAlign: TextAlign.center,
-                                                  style: TextStyle(
-                                                    color: Colors.black,
-                                                    fontSize: 20,
-                                                  ))),
-                                        )),
-                                    Container(
-                                        width: 70,
-                                        child: TextFormField(
-                                          // The validator receives the text that the user has entered.
-                                          decoration: InputDecoration(
-                                            hintText: '0',
-                                          ),
-                                          controller: table2Controller,
-                                          validator: (value) {
-                                            if (value.isEmpty) {
-                                              return 'Input Cancel Fee.';
-                                            }
-                                            return null;
-                                          },
-                                        )),
-                                    Center(
-                                      child: AnimatedContainer(
-                                        duration: Duration(milliseconds: 500),
-                                        height: 40.0,
-                                        width: 100.0,
-                                        decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(20.0),
-                                            color: vacancyInfo[1]["isVacant"]
-                                                ? Theme.of(context).primaryColor
-                                                : Colors.blueGrey[100]
-                                                    .withOpacity(0.5)),
-                                        child: Stack(
-                                          children: <Widget>[
-                                            AnimatedPositioned(
-                                              duration:
-                                                  Duration(milliseconds: 500),
-                                              curve: Curves.easeIn,
-                                              top: 3.0,
-                                              left: vacancyInfo[1]["isVacant"]
-                                                  ? 60.0
-                                                  : 0.0,
-                                              right: vacancyInfo[1]["isVacant"]
-                                                  ? 0.0
-                                                  : 60.0,
-                                              child: InkWell(
-                                                onTap: () => {toggleButton(1)},
-                                                child: AnimatedSwitcher(
-                                                  duration: Duration(
-                                                      milliseconds: 500),
-                                                  transitionBuilder:
-                                                      (Widget child,
-                                                          Animation<double>
-                                                              animation) {
-                                                    return RotationTransition(
-                                                        child: child,
-                                                        turns: animation);
-                                                  },
-                                                  child: vacancyInfo[1]
-                                                          ["isVacant"]
-                                                      ? Icon(Icons.check_circle,
-                                                          color: Colors.teal,
-                                                          size: 32.0,
-                                                          key: UniqueKey())
-                                                      : Icon(
-                                                          Icons
-                                                              .remove_circle_outline,
-                                                          color:
-                                                              Colors.blueGrey,
-                                                          size: 32.0,
-                                                          key: UniqueKey()),
-                                                ),
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                    )
-                                  ]))),
-                      Card(
-                          child: Container(
-                              width: 300,
-                              height: 70,
-                              child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    Container(
-                                        width: 90,
-                                        child: Badge(
-                                          toAnimate: false,
-                                          shape: BadgeShape.square,
-                                          badgeColor: Colors.grey[100],
-                                          borderRadius:
-                                              BorderRadius.circular(8),
-                                          badgeContent: Container(
-                                              width: 90,
-                                              child: Text('3人席',
-                                                  textAlign: TextAlign.center,
-                                                  style: TextStyle(
-                                                    color: Colors.black,
-                                                    fontSize: 20,
-                                                  ))),
-                                        )),
-                                    Container(
-                                        width: 70,
-                                        child: TextFormField(
-                                          // The validator receives the text that the user has entered.
-                                          decoration: InputDecoration(
-                                            hintText: '0',
-                                          ),
-                                          controller: table3Controller,
-                                          validator: (value) {
-                                            if (value.isEmpty) {
-                                              return 'Input Cancel Fee.';
-                                            }
-                                            return null;
-                                          },
-                                        )),
-                                    Center(
-                                      child: AnimatedContainer(
-                                        duration: Duration(milliseconds: 500),
-                                        height: 40.0,
-                                        width: 100.0,
-                                        decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(20.0),
-                                            color: vacancyInfo[2]["isVacant"]
-                                                ? Theme.of(context).primaryColor
-                                                : Colors.blueGrey[100]
-                                                    .withOpacity(0.5)),
-                                        child: Stack(
-                                          children: <Widget>[
-                                            AnimatedPositioned(
-                                              duration:
-                                                  Duration(milliseconds: 500),
-                                              curve: Curves.easeIn,
-                                              top: 3.0,
-                                              left: vacancyInfo[2]["isVacant"]
-                                                  ? 60.0
-                                                  : 0.0,
-                                              right: vacancyInfo[2]["isVacant"]
-                                                  ? 0.0
-                                                  : 60.0,
-                                              child: InkWell(
-                                                onTap: () => {toggleButton(2)},
-                                                child: AnimatedSwitcher(
-                                                  duration: Duration(
-                                                      milliseconds: 500),
-                                                  transitionBuilder:
-                                                      (Widget child,
-                                                          Animation<double>
-                                                              animation) {
-                                                    return RotationTransition(
-                                                        child: child,
-                                                        turns: animation);
-                                                  },
-                                                  child: vacancyInfo[2]
-                                                          ["isVacant"]
-                                                      ? Icon(Icons.check_circle,
-                                                          color: Colors.teal,
-                                                          size: 32.0,
-                                                          key: UniqueKey())
-                                                      : Icon(
-                                                          Icons
-                                                              .remove_circle_outline,
-                                                          color:
-                                                              Colors.blueGrey,
-                                                          size: 32.0,
-                                                          key: UniqueKey()),
-                                                ),
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                    )
-                                  ]))),
-                      Card(
-                          child: Container(
-                              width: 300,
-                              height: 70,
-                              child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    Container(
-                                        width: 90,
-                                        child: Badge(
-                                          toAnimate: false,
-                                          shape: BadgeShape.square,
-                                          badgeColor: Colors.grey[100],
-                                          borderRadius:
-                                              BorderRadius.circular(8),
-                                          badgeContent: Container(
-                                              width: 90,
-                                              child: Text('4人席',
-                                                  textAlign: TextAlign.center,
-                                                  style: TextStyle(
-                                                    color: Colors.black,
-                                                    fontSize: 20,
-                                                  ))),
-                                        )),
-                                    Container(
-                                        width: 70,
-                                        child: TextFormField(
-                                          // The validator receives the text that the user has entered.
-                                          decoration: InputDecoration(
-                                            hintText: '0',
-                                          ),
-                                          controller: table4Controller,
-                                          validator: (value) {
-                                            if (value.isEmpty) {
-                                              return 'Input Cancel Fee.';
-                                            }
-                                            return null;
-                                          },
-                                        )),
-                                    Center(
-                                      child: AnimatedContainer(
-                                        duration: Duration(milliseconds: 500),
-                                        height: 40.0,
-                                        width: 100.0,
-                                        decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(20.0),
-                                            color: vacancyInfo[3]["isVacant"]
-                                                ? Theme.of(context).primaryColor
-                                                : Colors.blueGrey[100]
-                                                    .withOpacity(0.5)),
-                                        child: Stack(
-                                          children: <Widget>[
-                                            AnimatedPositioned(
-                                              duration:
-                                                  Duration(milliseconds: 500),
-                                              curve: Curves.easeIn,
-                                              top: 3.0,
-                                              left: vacancyInfo[3]["isVacant"]
-                                                  ? 60.0
-                                                  : 0.0,
-                                              right: vacancyInfo[3]["isVacant"]
-                                                  ? 0.0
-                                                  : 60.0,
-                                              child: InkWell(
-                                                onTap: () => {toggleButton(3)},
-                                                child: AnimatedSwitcher(
-                                                  duration: Duration(
-                                                      milliseconds: 500),
-                                                  transitionBuilder:
-                                                      (Widget child,
-                                                          Animation<double>
-                                                              animation) {
-                                                    return RotationTransition(
-                                                        child: child,
-                                                        turns: animation);
-                                                  },
-                                                  child: vacancyInfo[3]
-                                                          ["isVacant"]
-                                                      ? Icon(Icons.check_circle,
-                                                          color: Colors.teal,
-                                                          size: 32.0,
-                                                          key: UniqueKey())
-                                                      : Icon(
-                                                          Icons
-                                                              .remove_circle_outline,
-                                                          color:
-                                                              Colors.blueGrey,
-                                                          size: 32.0,
-                                                          key: UniqueKey()),
-                                                ),
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                    )
-                                  ]))),
-                      Card(
-                          child: Container(
-                              width: 300,
-                              height: 70,
-                              child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    Container(
-                                        width: 90,
-                                        child: Badge(
-                                          toAnimate: false,
-                                          shape: BadgeShape.square,
-                                          badgeColor: Colors.grey[100],
-                                          borderRadius:
-                                              BorderRadius.circular(8),
-                                          badgeContent: Container(
-                                              width: 90,
-                                              child: Text('5人席',
-                                                  textAlign: TextAlign.center,
-                                                  style: TextStyle(
-                                                    color: Colors.black,
-                                                    fontSize: 20,
-                                                  ))),
-                                        )),
-                                    Container(
-                                        width: 70,
-                                        child: TextFormField(
-                                          // The validator receives the text that the user has entered.
-                                          decoration: InputDecoration(
-                                            hintText: '0',
-                                          ),
-                                          controller: table5Controller,
-                                          validator: (value) {
-                                            if (value.isEmpty) {
-                                              return 'Input Cancel Fee.';
-                                            }
-                                            return null;
-                                          },
-                                        )),
-                                    Center(
-                                      child: AnimatedContainer(
-                                        duration: Duration(milliseconds: 500),
-                                        height: 40.0,
-                                        width: 100.0,
-                                        decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(20.0),
-                                            color: vacancyInfo[4]["isVacant"]
-                                                ? Theme.of(context).primaryColor
-                                                : Colors.blueGrey[100]
-                                                    .withOpacity(0.5)),
-                                        child: Stack(
-                                          children: <Widget>[
-                                            AnimatedPositioned(
-                                              duration:
-                                                  Duration(milliseconds: 500),
-                                              curve: Curves.easeIn,
-                                              top: 3.0,
-                                              left: vacancyInfo[4]["isVacant"]
-                                                  ? 60.0
-                                                  : 0.0,
-                                              right: vacancyInfo[4]["isVacant"]
-                                                  ? 0.0
-                                                  : 60.0,
-                                              child: InkWell(
-                                                onTap: () => {toggleButton(4)},
-                                                child: AnimatedSwitcher(
-                                                  duration: Duration(
-                                                      milliseconds: 500),
-                                                  transitionBuilder:
-                                                      (Widget child,
-                                                          Animation<double>
-                                                              animation) {
-                                                    return RotationTransition(
-                                                        child: child,
-                                                        turns: animation);
-                                                  },
-                                                  child: vacancyInfo[4]
-                                                          ["isVacant"]
-                                                      ? Icon(Icons.check_circle,
-                                                          color: Colors.teal,
-                                                          size: 32.0,
-                                                          key: UniqueKey())
-                                                      : Icon(
-                                                          Icons
-                                                              .remove_circle_outline,
-                                                          color:
-                                                              Colors.blueGrey,
-                                                          size: 32.0,
-                                                          key: UniqueKey()),
-                                                ),
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                    )
-                                  ]))),
-                      Card(
-                          child: Container(
-                              width: 300,
-                              height: 70,
-                              child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    Container(
-                                        width: 90,
-                                        child: Badge(
-                                          toAnimate: false,
-                                          shape: BadgeShape.square,
-                                          badgeColor: Colors.grey[100],
-                                          borderRadius:
-                                              BorderRadius.circular(8),
-                                          badgeContent: Container(
-                                              width: 90,
-                                              child: Text('6人席',
-                                                  textAlign: TextAlign.center,
-                                                  style: TextStyle(
-                                                    color: Colors.black,
-                                                    fontSize: 20,
-                                                  ))),
-                                        )),
-                                    Container(
-                                        width: 70,
-                                        child: TextFormField(
-                                          // The validator receives the text that the user has entered.
-                                          decoration: InputDecoration(
-                                            hintText: '0',
-                                          ),
-                                          controller: table6Controller,
-                                          validator: (value) {
-                                            if (value.isEmpty) {
-                                              return 'Input Cancel Fee.';
-                                            }
-                                            return null;
-                                          },
-                                        )),
-                                    Center(
-                                      child: AnimatedContainer(
-                                        duration: Duration(milliseconds: 500),
-                                        height: 40.0,
-                                        width: 100.0,
-                                        decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(20.0),
-                                            color: vacancyInfo[5]["isVacant"]
-                                                ? Theme.of(context).primaryColor
-                                                : Colors.blueGrey[100]
-                                                    .withOpacity(0.5)),
-                                        child: Stack(
-                                          children: <Widget>[
-                                            AnimatedPositioned(
-                                              duration:
-                                                  Duration(milliseconds: 500),
-                                              curve: Curves.easeIn,
-                                              top: 3.0,
-                                              left: vacancyInfo[5]["isVacant"]
-                                                  ? 60.0
-                                                  : 0.0,
-                                              right: vacancyInfo[5]["isVacant"]
-                                                  ? 0.0
-                                                  : 60.0,
-                                              child: InkWell(
-                                                onTap: () => {toggleButton(5)},
-                                                child: AnimatedSwitcher(
-                                                  duration: Duration(
-                                                      milliseconds: 500),
-                                                  transitionBuilder:
-                                                      (Widget child,
-                                                          Animation<double>
-                                                              animation) {
-                                                    return RotationTransition(
-                                                        child: child,
-                                                        turns: animation);
-                                                  },
-                                                  child: vacancyInfo[5]
-                                                          ["isVacant"]
-                                                      ? Icon(Icons.check_circle,
-                                                          color: Colors.teal,
-                                                          size: 32.0,
-                                                          key: UniqueKey())
-                                                      : Icon(
-                                                          Icons
-                                                              .remove_circle_outline,
-                                                          color:
-                                                              Colors.blueGrey,
-                                                          size: 32.0,
-                                                          key: UniqueKey()),
-                                                ),
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                    )
-                                  ]))),
-                      Card(
-                          child: Container(
-                              width: 300,
-                              height: 70,
-                              child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    Container(
-                                        width: 90,
-                                        child: Badge(
-                                          toAnimate: false,
-                                          shape: BadgeShape.square,
-                                          badgeColor: Colors.grey[100],
-                                          borderRadius:
-                                              BorderRadius.circular(8),
-                                          badgeContent: Container(
-                                              width: 90,
-                                              child: Text('7人席',
-                                                  textAlign: TextAlign.center,
-                                                  style: TextStyle(
-                                                    color: Colors.black,
-                                                    fontSize: 20,
-                                                  ))),
-                                        )),
-                                    Container(
-                                        width: 70,
-                                        child: TextFormField(
-                                          // The validator receives the text that the user has entered.
-                                          decoration: InputDecoration(
-                                            hintText: '0',
-                                          ),
-                                          controller: table7Controller,
-                                          validator: (value) {
-                                            if (value.isEmpty) {
-                                              return 'Input Cancel Fee.';
-                                            }
-                                            return null;
-                                          },
-                                        )),
-                                    Center(
-                                      child: AnimatedContainer(
-                                        duration: Duration(milliseconds: 500),
-                                        height: 40.0,
-                                        width: 100.0,
-                                        decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(20.0),
-                                            color: vacancyInfo[6]["isVacant"]
-                                                ? Theme.of(context).primaryColor
-                                                : Colors.blueGrey[100]
-                                                    .withOpacity(0.5)),
-                                        child: Stack(
-                                          children: <Widget>[
-                                            AnimatedPositioned(
-                                              duration:
-                                                  Duration(milliseconds: 500),
-                                              curve: Curves.easeIn,
-                                              top: 3.0,
-                                              left: vacancyInfo[6]["isVacant"]
-                                                  ? 60.0
-                                                  : 0.0,
-                                              right: vacancyInfo[6]["isVacant"]
-                                                  ? 0.0
-                                                  : 60.0,
-                                              child: InkWell(
-                                                onTap: () => {toggleButton(6)},
-                                                child: AnimatedSwitcher(
-                                                  duration: Duration(
-                                                      milliseconds: 500),
-                                                  transitionBuilder:
-                                                      (Widget child,
-                                                          Animation<double>
-                                                              animation) {
-                                                    return RotationTransition(
-                                                        child: child,
-                                                        turns: animation);
-                                                  },
-                                                  child: vacancyInfo[6]
-                                                          ["isVacant"]
-                                                      ? Icon(Icons.check_circle,
-                                                          color: Colors.teal,
-                                                          size: 32.0,
-                                                          key: UniqueKey())
-                                                      : Icon(
-                                                          Icons
-                                                              .remove_circle_outline,
-                                                          color:
-                                                              Colors.blueGrey,
-                                                          size: 32.0,
-                                                          key: UniqueKey()),
-                                                ),
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                    )
-                                  ]))),
-                      Card(
-                          child: Container(
-                              width: 300,
-                              height: 70,
-                              child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    Container(
-                                        width: 90,
-                                        child: Badge(
-                                          toAnimate: false,
-                                          shape: BadgeShape.square,
-                                          badgeColor: Colors.grey[100],
-                                          borderRadius:
-                                              BorderRadius.circular(8),
-                                          badgeContent: Container(
-                                              width: 90,
-                                              child: Text('8人席',
-                                                  textAlign: TextAlign.center,
-                                                  style: TextStyle(
-                                                    color: Colors.black,
-                                                    fontSize: 20,
-                                                  ))),
-                                        )),
-                                    Container(
-                                        width: 70,
-                                        child: TextFormField(
-                                          // The validator receives the text that the user has entered.
-                                          decoration: InputDecoration(
-                                            hintText: '0',
-                                          ),
-                                          controller: table8Controller,
-                                          validator: (value) {
-                                            if (value.isEmpty) {
-                                              return 'Input Cancel Fee.';
-                                            }
-                                            return null;
-                                          },
-                                        )),
-                                    Center(
-                                      child: AnimatedContainer(
-                                        duration: Duration(milliseconds: 500),
-                                        height: 40.0,
-                                        width: 100.0,
-                                        decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(20.0),
-                                            color: vacancyInfo[7]["isVacant"]
-                                                ? Theme.of(context).primaryColor
-                                                : Colors.blueGrey[100]
-                                                    .withOpacity(0.5)),
-                                        child: Stack(
-                                          children: <Widget>[
-                                            AnimatedPositioned(
-                                              duration:
-                                                  Duration(milliseconds: 500),
-                                              curve: Curves.easeIn,
-                                              top: 3.0,
-                                              left: vacancyInfo[7]["isVacant"]
-                                                  ? 60.0
-                                                  : 0.0,
-                                              right: vacancyInfo[7]["isVacant"]
-                                                  ? 0.0
-                                                  : 60.0,
-                                              child: InkWell(
-                                                onTap: () => {toggleButton(7)},
-                                                child: AnimatedSwitcher(
-                                                  duration: Duration(
-                                                      milliseconds: 500),
-                                                  transitionBuilder:
-                                                      (Widget child,
-                                                          Animation<double>
-                                                              animation) {
-                                                    return RotationTransition(
-                                                        child: child,
-                                                        turns: animation);
-                                                  },
-                                                  child: vacancyInfo[7]
-                                                          ["isVacant"]
-                                                      ? Icon(Icons.check_circle,
-                                                          color: Colors.teal,
-                                                          size: 32.0,
-                                                          key: UniqueKey())
-                                                      : Icon(
-                                                          Icons
-                                                              .remove_circle_outline,
-                                                          color:
-                                                              Colors.blueGrey,
-                                                          size: 32.0,
-                                                          key: UniqueKey()),
-                                                ),
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                    )
-                                  ]))),
-                      Card(
-                          child: Container(
-                              width: 300,
-                              height: 70,
-                              child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    Container(
-                                        width: 90,
-                                        child: Badge(
-                                          toAnimate: false,
-                                          shape: BadgeShape.square,
-                                          badgeColor: Colors.grey[100],
-                                          borderRadius:
-                                              BorderRadius.circular(8),
-                                          badgeContent: Container(
-                                              width: 90,
-                                              child: Text('9人席',
-                                                  textAlign: TextAlign.center,
-                                                  style: TextStyle(
-                                                    color: Colors.black,
-                                                    fontSize: 20,
-                                                  ))),
-                                        )),
-                                    Container(
-                                        width: 70,
-                                        child: TextFormField(
-                                          // The validator receives the text that the user has entered.
-                                          decoration: InputDecoration(
-                                            hintText: '0',
-                                          ),
-                                          controller: table9Controller,
-                                          validator: (value) {
-                                            if (value.isEmpty) {
-                                              return 'Input Cancel Fee.';
-                                            }
-                                            return null;
-                                          },
-                                        )),
-                                    Center(
-                                      child: AnimatedContainer(
-                                        duration: Duration(milliseconds: 500),
-                                        height: 40.0,
-                                        width: 100.0,
-                                        decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(20.0),
-                                            color: vacancyInfo[8]["isVacant"]
-                                                ? Theme.of(context).primaryColor
-                                                : Colors.blueGrey[100]
-                                                    .withOpacity(0.5)),
-                                        child: Stack(
-                                          children: <Widget>[
-                                            AnimatedPositioned(
-                                              duration:
-                                                  Duration(milliseconds: 500),
-                                              curve: Curves.easeIn,
-                                              top: 3.0,
-                                              left: vacancyInfo[8]["isVacant"]
-                                                  ? 60.0
-                                                  : 0.0,
-                                              right: vacancyInfo[8]["isVacant"]
-                                                  ? 0.0
-                                                  : 60.0,
-                                              child: InkWell(
-                                                onTap: () => {toggleButton(8)},
-                                                child: AnimatedSwitcher(
-                                                  duration: Duration(
-                                                      milliseconds: 500),
-                                                  transitionBuilder:
-                                                      (Widget child,
-                                                          Animation<double>
-                                                              animation) {
-                                                    return RotationTransition(
-                                                        child: child,
-                                                        turns: animation);
-                                                  },
-                                                  child: vacancyInfo[8]
-                                                          ["isVacant"]
-                                                      ? Icon(Icons.check_circle,
-                                                          color: Colors.teal,
-                                                          size: 32.0,
-                                                          key: UniqueKey())
-                                                      : Icon(
-                                                          Icons
-                                                              .remove_circle_outline,
-                                                          color:
-                                                              Colors.blueGrey,
-                                                          size: 32.0,
-                                                          key: UniqueKey()),
-                                                ),
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                    )
-                                  ]))),
-                      Card(
-                          child: Container(
-                              width: 300,
-                              height: 70,
-                              child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    Container(
-                                        width: 90,
-                                        child: Badge(
-                                          toAnimate: false,
-                                          shape: BadgeShape.square,
-                                          badgeColor: Colors.grey[100],
-                                          borderRadius:
-                                              BorderRadius.circular(8),
-                                          badgeContent: Container(
-                                              width: 90,
-                                              child: Text('10人席',
-                                                  textAlign: TextAlign.center,
-                                                  style: TextStyle(
-                                                    color: Colors.black,
-                                                    fontSize: 20,
-                                                  ))),
-                                        )),
-                                    Container(
-                                        width: 70,
-                                        child: TextFormField(
-                                          // The validator receives the text that the user has entered.
-                                          decoration: InputDecoration(
-                                            hintText: '0',
-                                          ),
-                                          controller: table10Controller,
-                                          validator: (value) {
-                                            if (value.isEmpty) {
-                                              return 'Input Cancel Fee.';
-                                            }
-                                            return null;
-                                          },
-                                        )),
-                                    Center(
-                                      child: AnimatedContainer(
-                                        duration: Duration(milliseconds: 500),
-                                        height: 40.0,
-                                        width: 100.0,
-                                        decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(20.0),
-                                            color: vacancyInfo[9]["isVacant"]
-                                                ? Theme.of(context).primaryColor
-                                                : Colors.blueGrey[100]
-                                                    .withOpacity(0.5)),
-                                        child: Stack(
-                                          children: <Widget>[
-                                            AnimatedPositioned(
-                                              duration:
-                                                  Duration(milliseconds: 500),
-                                              curve: Curves.easeIn,
-                                              top: 3.0,
-                                              left: vacancyInfo[9]["isVacant"]
-                                                  ? 60.0
-                                                  : 0.0,
-                                              right: vacancyInfo[9]["isVacant"]
-                                                  ? 0.0
-                                                  : 60.0,
-                                              child: InkWell(
-                                                onTap: () => {toggleButton(9)},
-                                                child: AnimatedSwitcher(
-                                                  duration: Duration(
-                                                      milliseconds: 500),
-                                                  transitionBuilder:
-                                                      (Widget child,
-                                                          Animation<double>
-                                                              animation) {
-                                                    return RotationTransition(
-                                                        child: child,
-                                                        turns: animation);
-                                                  },
-                                                  child: vacancyInfo[9]
-                                                          ["isVacant"]
-                                                      ? Icon(Icons.check_circle,
-                                                          color: Colors.teal,
-                                                          size: 32.0,
-                                                          key: UniqueKey())
-                                                      : Icon(
-                                                          Icons
-                                                              .remove_circle_outline,
-                                                          color:
-                                                              Colors.blueGrey,
-                                                          size: 32.0,
-                                                          key: UniqueKey()),
-                                                ),
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                    )
-                                  ]))),
-                      Card(
-                          child: Container(
-                              width: 300,
-                              height: 70,
-                              child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    Container(
-                                        width: 90,
-                                        child: Badge(
-                                          toAnimate: false,
-                                          shape: BadgeShape.square,
-                                          badgeColor: Colors.grey[100],
-                                          borderRadius:
-                                              BorderRadius.circular(8),
-                                          badgeContent: Container(
-                                              width: 90,
-                                              child: Text('11人席',
-                                                  textAlign: TextAlign.center,
-                                                  style: TextStyle(
-                                                    color: Colors.black,
-                                                    fontSize: 20,
-                                                  ))),
-                                        )),
-                                    Container(
-                                        width: 70,
-                                        child: TextFormField(
-                                          // The validator receives the text that the user has entered.
-                                          decoration: InputDecoration(
-                                            hintText: '0',
-                                          ),
-                                          controller: table11Controller,
-                                          validator: (value) {
-                                            if (value.isEmpty) {
-                                              return 'Input Cancel Fee.';
-                                            }
-                                            return null;
-                                          },
-                                        )),
-                                    Center(
-                                      child: AnimatedContainer(
-                                        duration: Duration(milliseconds: 500),
-                                        height: 40.0,
-                                        width: 100.0,
-                                        decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(20.0),
-                                            color: vacancyInfo[10]["isVacant"]
-                                                ? Theme.of(context).primaryColor
-                                                : Colors.blueGrey[100]
-                                                    .withOpacity(0.5)),
-                                        child: Stack(
-                                          children: <Widget>[
-                                            AnimatedPositioned(
-                                              duration:
-                                                  Duration(milliseconds: 500),
-                                              curve: Curves.easeIn,
-                                              top: 3.0,
-                                              left: vacancyInfo[10]["isVacant"]
-                                                  ? 60.0
-                                                  : 0.0,
-                                              right: vacancyInfo[10]["isVacant"]
-                                                  ? 0.0
-                                                  : 60.0,
-                                              child: InkWell(
-                                                onTap: () => {toggleButton(10)},
-                                                child: AnimatedSwitcher(
-                                                  duration: Duration(
-                                                      milliseconds: 500),
-                                                  transitionBuilder:
-                                                      (Widget child,
-                                                          Animation<double>
-                                                              animation) {
-                                                    return RotationTransition(
-                                                        child: child,
-                                                        turns: animation);
-                                                  },
-                                                  child: vacancyInfo[10]
-                                                          ["isVacant"]
-                                                      ? Icon(Icons.check_circle,
-                                                          color: Colors.teal,
-                                                          size: 32.0,
-                                                          key: UniqueKey())
-                                                      : Icon(
-                                                          Icons
-                                                              .remove_circle_outline,
-                                                          color:
-                                                              Colors.blueGrey,
-                                                          size: 32.0,
-                                                          key: UniqueKey()),
-                                                ),
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                    )
-                                  ]))),
-                      Card(
-                          child: Container(
-                              width: 300,
-                              height: 70,
-                              child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    Container(
-                                        width: 90,
-                                        child: Badge(
-                                          toAnimate: false,
-                                          shape: BadgeShape.square,
-                                          badgeColor: Colors.grey[100],
-                                          borderRadius:
-                                              BorderRadius.circular(8),
-                                          badgeContent: Container(
-                                              width: 90,
-                                              child: Text('12人席',
-                                                  textAlign: TextAlign.center,
-                                                  style: TextStyle(
-                                                    color: Colors.black,
-                                                    fontSize: 20,
-                                                  ))),
-                                        )),
-                                    Container(
-                                        width: 70,
-                                        child: TextFormField(
-                                          // The validator receives the text that the user has entered.
-                                          decoration: InputDecoration(
-                                            hintText: '0',
-                                          ),
-                                          controller: table12Controller,
-                                          validator: (value) {
-                                            if (value.isEmpty) {
-                                              return 'Input Cancel Fee.';
-                                            }
-                                            return null;
-                                          },
-                                        )),
-                                    Center(
-                                      child: AnimatedContainer(
-                                        duration: Duration(milliseconds: 500),
-                                        height: 40.0,
-                                        width: 100.0,
-                                        decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(20.0),
-                                            color: vacancyInfo[11]["isVacant"]
-                                                ? Theme.of(context).primaryColor
-                                                : Colors.blueGrey[100]
-                                                    .withOpacity(0.5)),
-                                        child: Stack(
-                                          children: <Widget>[
-                                            AnimatedPositioned(
-                                              duration:
-                                                  Duration(milliseconds: 500),
-                                              curve: Curves.easeIn,
-                                              top: 3.0,
-                                              left: vacancyInfo[11]["isVacant"]
-                                                  ? 60.0
-                                                  : 0.0,
-                                              right: vacancyInfo[11]["isVacant"]
-                                                  ? 0.0
-                                                  : 60.0,
-                                              child: InkWell(
-                                                onTap: () => {toggleButton(11)},
-                                                child: AnimatedSwitcher(
-                                                  duration: Duration(
-                                                      milliseconds: 500),
-                                                  transitionBuilder:
-                                                      (Widget child,
-                                                          Animation<double>
-                                                              animation) {
-                                                    return RotationTransition(
-                                                        child: child,
-                                                        turns: animation);
-                                                  },
-                                                  child: vacancyInfo[11]
-                                                          ["isVacant"]
-                                                      ? Icon(Icons.check_circle,
-                                                          color: Colors.teal,
-                                                          size: 32.0,
-                                                          key: UniqueKey())
-                                                      : Icon(
-                                                          Icons
-                                                              .remove_circle_outline,
-                                                          color:
-                                                              Colors.blueGrey,
-                                                          size: 32.0,
-                                                          key: UniqueKey()),
-                                                ),
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                    )
-                                  ]))),
-                    ]);
-              }),
+                    ],
+                  ),
+                ),
+              ),
+              Positioned(
+                top: 10,
+                left: 0,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                  child: SizedBox(
+                    height: 40,
+                    child: vacancyInfo[index]["isVacant"]
+                        ? AspectRatio(
+                            aspectRatio: 1.2,
+                            child: Image.asset("assets/images/openGreen.png"),
+                          )
+                        : AspectRatio(
+                            aspectRatio: 1.2,
+                            child: Image.asset("assets/images/closeFinal.jpeg"),
+                          ),
+                  ),
+                ),
+              ),
+              Positioned(
+                  top: 3,
+                  left: 185,
+                  child: IconButton(
+                    icon: FaIcon(FontAwesomeIcons.edit, size: 12),
+                    onPressed: () {
+                      print("test");
+                      showDialogForCancelFee(index);
+                    },
+                  )),
+            ],
+          ),
+        ),
+      ],
     );
-  }
-
-  void _changePage(BuildContext context, String route) {
-    widget.channel.sink.close();
-    Navigator.pushNamed(context, route);
-    print("Going to $route was triggered");
   }
 }
