@@ -134,7 +134,7 @@ class _AuthState extends State<Auth> {
         loginButton: 'ログイン',
         signupButton: '新規登録',
         forgotPasswordButton: 'パスワードを忘れた場合',
-        recoverPasswordIntro: "パスワードをリセットしてください。",
+        recoverPasswordIntro: "パスワードがリセットされます。",
         recoverPasswordButton: 'パスワードリセット',
         goBackButton: '戻る',
         // confirmPasswordError: 'Not match!',
