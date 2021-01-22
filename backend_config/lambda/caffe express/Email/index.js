@@ -329,7 +329,7 @@ const createHTML = (body) => {
                       <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
                         <tr>
                           <td class="logo" style="text-align: center;">
-                          <img src="https://your-solution-front.vercel.app/logo-transparent-bg.png" alt="" style="width: 100px; max-width: 600px; height: auto; margin: auto; display: block;">
+                          <img src="https://res.cloudinary.com/hbej35zod/image/upload/v1611292596/VACANSEAT_white_ylzigx.png" alt="" style="width: 200px; max-width: 600px; height: auto; margin: auto; display: block;">
                           </td>
                         </tr>
                       </table>
@@ -341,7 +341,7 @@ const createHTML = (body) => {
                         <tr>
                           <td style="padding: 0 2.5em; text-align: center; padding-bottom: 3em;">
                             <div class="text">
-                              <h2>Caffe Express予約完了のお知らせ</h2>
+                              <h2>VACANSEAT予約完了のお知らせ</h2>
                             </div>
                           </td>
                         </tr>
