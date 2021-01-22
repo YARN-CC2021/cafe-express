@@ -121,11 +121,27 @@ class _AuthState extends State<Auth> {
   @override
   Widget build(BuildContext context) {
     return FlutterLogin(
-        onLogin: logIn,
-        onSignup: signUp,
-        onRecoverPassword: recoverPassword,
-        title: 'Cafe Express',
-        theme: LoginTheme(primaryColor: Theme.of(context).primaryColor));
+      title: 'VACANSEAT',
+      logo: 'assets/images/logo_green.png',
+      onLogin: logIn,
+      onSignup: signUp,
+      onRecoverPassword: recoverPassword,
+      theme: LoginTheme(primaryColor: Theme.of(context).primaryColor),
+      messages: LoginMessages(
+        usernameHint: 'メールアドレス',
+        passwordHint: 'パスワード',
+        confirmPasswordHint: 'パスワード再確認',
+        loginButton: 'ログイン',
+        signupButton: '新規登録',
+        forgotPasswordButton: 'パスワードを忘れた場合',
+        recoverPasswordIntro: "パスワードをリセットしてください。",
+        recoverPasswordButton: 'パスワードリセット',
+        goBackButton: '戻る',
+        // confirmPasswordError: 'Not match!',
+        recoverPasswordDescription: 'このメールアドレスに新しいパスワードを送信します。',
+        recoverPasswordSuccess: 'パスワードリセットが完了しました。',
+      ),
+    );
   }
 
   void _returnWrapper(BuildContext context) {
