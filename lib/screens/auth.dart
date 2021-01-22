@@ -122,7 +122,7 @@ class _AuthState extends State<Auth> {
   Widget build(BuildContext context) {
     return FlutterLogin(
       title: null,
-      logo: 'assets/logo_green.png',
+      logo: 'assets/images/logo_green.png',
       onLogin: logIn,
       onSignup: signUp,
       onRecoverPassword: recoverPassword,
