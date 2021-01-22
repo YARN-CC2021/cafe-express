@@ -326,13 +326,13 @@ class _MapPageState extends State<MapPage> {
                         onTap: () {
                           _changePage(context, TimerRoute);
                         }),
+                  ])
                     // CircularMenuItem(icon: Icons.star, onTap: () {
                     //   //callback
                     // }),
                     // CircularMenuItem(icon: Icons.pages, onTap: () {
                     //   //callback
                     // }),
-                  ])
                 // bottomNavigationBar: BottomAppBar(
                 //   child: new Row(
                 //     mainAxisSize: MainAxisSize.max,

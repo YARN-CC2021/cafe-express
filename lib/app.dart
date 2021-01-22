@@ -106,11 +106,6 @@ class MyApp extends StatelessWidget {
             primaryTextTheme: _buildTextTheme(base.primaryTextTheme),
             accentTextTheme: _buildTextTheme(base.accentTextTheme),
           ),
-          // textTheme: TextTheme(
-          //   headline1: TextStyle(fontSize: 72.0, fontWeight: FontWeight.bold),
-          //   headline6: TextStyle(fontSize: 36.0, fontStyle: FontStyle.italic),
-          //   bodyText2: TextStyle(fontSize: 14.0, fontFamily: 'Hind'),
-          // )),
           debugShowCheckedModeBanner: false,
           onGenerateRoute: _routes(),
           home: Wrapper(),
