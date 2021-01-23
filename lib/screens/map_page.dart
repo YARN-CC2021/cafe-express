@@ -8,9 +8,13 @@ import 'dart:async';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import '../app.dart';
+import '../app_theme.dart';
+import 'filters_screen.dart';
 import 'package:amplify_storage_s3/amplify_storage_s3.dart';
 import 'package:amplify_core/amplify_core.dart';
 import "package:awesome_dialog/awesome_dialog.dart";
+import '../models/category.dart';
+import '../global.dart' as globals;
 
 class MapPage extends StatefulWidget {
   @override
@@ -21,9 +25,7 @@ class _MapPageState extends State<MapPage> {
   List<dynamic> listShops = [];
   var shopData;
   Map selectedShop;
-  String distance = '100m';
-  String category = "All";
-  String groupNum = "All";
+  var result;
 
   PageController _pageController = PageController();
   bool _isPageViewAnimating;
@@ -47,7 +49,6 @@ class _MapPageState extends State<MapPage> {
     super.initState();
     // 現在位置の取得
     _getLocation();
-    // _getAllShopData();
 
     _isPageViewAnimating = false;
 
@@ -138,23 +139,6 @@ class _MapPageState extends State<MapPage> {
                                                                               shop["id"]]),
                                                                     ),
                                                                   ),
-                                                                  // child: FadeInImage(placeholder: null, image: null)
-                                                                  // child: Image
-                                                                  //     .network(
-                                                                  //   listOfUrl[shop[
-                                                                  //       "id"]],
-                                                                  //   fit: BoxFit
-                                                                  //       .cover,
-                                                                  //   loadingBuilder:
-                                                                  //       (context,
-                                                                  //           child,
-                                                                  //           loadingProgress) {
-                                                                  //     if (loadingProgress ==
-                                                                  //         null)
-                                                                  //       return child;
-                                                                  //     return CircularProgressIndicator();
-                                                                  //   },
-                                                                  // ),
                                                                 )),
                                                   Positioned(
                                                     left: 0,
@@ -198,115 +182,48 @@ class _MapPageState extends State<MapPage> {
                               ],
                             ),
                           ),
-                          Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                Column(children: [
-                                  Text("距離"),
-                                  DropdownButton<String>(
-                                    value: distance,
-                                    icon: Icon(Icons.arrow_drop_down),
-                                    iconSize: 24,
-                                    elevation: 16,
-                                    style: TextStyle(color: Colors.deepPurple),
-                                    underline: Container(
-                                      height: 2,
-                                      color: Colors.deepPurpleAccent,
-                                    ),
-                                    onChanged: (String newValue) {
-                                      setState(() {
-                                        distance = newValue;
-                                        _filterShop(
-                                            distance, category, groupNum);
-                                      });
-                                    },
-                                    items: <String>[
-                                      '100m',
-                                      '500m',
-                                      '1km',
-                                      '2km'
-                                    ].map<DropdownMenuItem<String>>(
-                                        (String value) {
-                                      return DropdownMenuItem<String>(
-                                        value: value,
-                                        child: Text(value),
-                                      );
-                                    }).toList(),
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                left: 16, right: 16, bottom: 10, top: 10),
+                            child: Container(
+                              height: 48,
+                              decoration: BoxDecoration(
+                                color: CafeExpressTheme.buildLightTheme()
+                                    .primaryColor,
+                                borderRadius: const BorderRadius.all(
+                                    Radius.circular(24.0)),
+                                boxShadow: <BoxShadow>[
+                                  BoxShadow(
+                                    color: Colors.grey.withOpacity(0.6),
+                                    blurRadius: 8,
+                                    offset: const Offset(4, 4),
                                   ),
-                                ]),
-                                Column(children: [
-                                  Text("カテゴリー"),
-                                  DropdownButton<String>(
-                                    value: category,
-                                    icon: Icon(Icons.arrow_drop_down),
-                                    iconSize: 24,
-                                    elevation: 16,
-                                    style: TextStyle(color: Colors.deepPurple),
-                                    underline: Container(
-                                      height: 2,
-                                      color: Colors.deepPurpleAccent,
+                                ],
+                              ),
+                              child: Material(
+                                color: Colors.transparent,
+                                child: InkWell(
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(24.0)),
+                                  highlightColor: Colors.transparent,
+                                  onTap: () {
+                                    FocusScope.of(context)
+                                        .requestFocus(FocusNode());
+                                    _goToFilter(context);
+                                  },
+                                  child: Center(
+                                    child: Text(
+                                      '条件を絞る',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 18,
+                                          color: Colors.white),
                                     ),
-                                    onChanged: (String newValue) {
-                                      setState(() {
-                                        category = newValue;
-                                        _filterShop(
-                                            distance, category, groupNum);
-                                      });
-                                    },
-                                    items: <String>['All', 'カフェ', 'レストラン', 'バー']
-                                        .map<DropdownMenuItem<String>>(
-                                            (String value) {
-                                      return DropdownMenuItem<String>(
-                                        value: value,
-                                        child: Text(value),
-                                      );
-                                    }).toList(),
                                   ),
-                                ]),
-                                Column(children: [
-                                  Text("人数"),
-                                  DropdownButton<String>(
-                                    value: groupNum,
-                                    icon: Icon(Icons.arrow_drop_down),
-                                    iconSize: 24,
-                                    elevation: 16,
-                                    style: TextStyle(color: Colors.deepPurple),
-                                    underline: Container(
-                                      height: 2,
-                                      color: Colors.deepPurpleAccent,
-                                    ),
-                                    onChanged: (String newValue) {
-                                      setState(() {
-                                        groupNum = newValue;
-                                        _filterShop(
-                                            distance, category, groupNum);
-                                      });
-                                    },
-                                    items: <String>[
-                                      'All',
-                                      '1',
-                                      '2',
-                                      '3',
-                                      '4',
-                                      '5',
-                                      '6',
-                                      '7',
-                                      '8',
-                                      '9',
-                                      '10',
-                                      '11',
-                                      '12'
-                                    ].map<DropdownMenuItem<String>>(
-                                        (String value) {
-                                      return DropdownMenuItem<String>(
-                                        value: value,
-                                        child: Text(value),
-                                      );
-                                    }).toList(),
-                                  ),
-                                ]),
-                              ]),
+                                ),
+                              ),
+                            ),
+                          ),
                         ]),
                     items: [
                     CircularMenuItem(
@@ -326,58 +243,17 @@ class _MapPageState extends State<MapPage> {
                         onTap: () {
                           _changePage(context, TimerRoute);
                         }),
-                  ])
-                    // CircularMenuItem(icon: Icons.star, onTap: () {
-                    //   //callback
-                    // }),
-                    // CircularMenuItem(icon: Icons.pages, onTap: () {
-                    //   //callback
-                    // }),
-                // bottomNavigationBar: BottomAppBar(
-                //   child: new Row(
-                //     mainAxisSize: MainAxisSize.max,
-                //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //     children: <Widget>[
-                //       SizedBox(width: 7),
-                //       IconButton(
-                //         ///Timer
-                //         icon: Icon(
-                //           Icons.qr_code_rounded,
-                //           size: 24.0,
-                //         ),
-                //         color: Colors.black,
-                //         onPressed: () => {_changePage(context, QrRoute)},
-                //       ),
-                //       Container(
-                //         width: 56.0,
-                //         height: 10,
-                //       ),
-                //       IconButton(
-                //         /// booking history
-                //         icon: Icon(
-                //           Icons.assignment,
-                //           size: 24.0,
-                //         ),
-                //         color: Colors.black,
-                //         onPressed: () => {_changePage(context, BookingHistoryRoute)},
-                //       ),
-                //       SizedBox(width: 7),
-                //     ],
-                //   ),
-                //   color: Theme.of(context).primaryColor,
-                //   shape: CircularNotchedRectangle(),
-                // ),
-                // floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,
-                // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-                // floatingActionButton: FloatingActionButton(
-                //   elevation: 4.0,
-                //   child: Icon(
-                //     ///map search
-                //     Icons.videogame_asset,
-                //   ),
-                //   onPressed: () => {_changePage(context, MerchantRoute)},
-                // ),
-                ));
+                  ])));
+  }
+
+  _goToFilter(BuildContext context) async {
+    result = await Navigator.push<dynamic>(
+      context,
+      MaterialPageRoute<dynamic>(
+          builder: (BuildContext context) => FiltersScreen(),
+          fullscreenDialog: true),
+    );
+    _filterShop(result["distance"], result["category"], result["groupSize"]);
   }
 
   void _changePage(BuildContext context, String route) {
@@ -488,54 +364,65 @@ class _MapPageState extends State<MapPage> {
           listShops = shopData;
         });
         await _showPic();
-        _filterShop(distance, category, groupNum);
+
+        _filterShop(
+            500,
+            [
+              CategoryData(
+                titleTxt: 'All',
+                isSelected: true,
+              ),
+            ],
+            1);
       }
     } else {
       print('Request failed with status: ${response.statusCode}.');
     }
   }
 
-  void _filterShop(String distance, String category, String groupNum) {
+  void _filterShop(int distance, List category, int groupNum) {
     listShops = shopData;
     listShops = _filterShopByCategory(category);
     listShops = _filterShopByDistance(distance);
     listShops = _filterShopByGroupSize(groupNum);
   }
 
-  List _filterShopByCategory(String category) {
-    if (category == 'All') {
+  List _filterShopByCategory(List category) {
+    List selectedCategory = [];
+    if (category[0].isSelected == true) {
       return listShops;
     } else {
-      return listShops.where((data) => data['category'] == category).toList();
+      for (var data in category) {
+        if (data.isSelected == true) {
+          selectedCategory.add(data.titleTxt);
+        }
+      }
+      return listShops
+          .where((shop) => selectedCategory
+              .map((category) => category == shop['category'])
+              .contains(true))
+          .toList();
     }
   }
 
-  List _filterShopByDistance(String distance) {
-    int numDistance;
-    if (distance.contains('km')) {
-      numDistance = int.parse(distance.replaceAll('km', '000'));
-    } else {
-      numDistance = int.parse(distance.replaceAll('m', ''));
-    }
-    return listShops
-        .where((shop) => _getDistance(shop) <= numDistance)
-        .toList();
-  }
-
-  List _filterShopByGroupSize(String groupNum) {
-    if (groupNum == 'All') {
+  List _filterShopByGroupSize(int groupNum) {
+    if (globals.isFilterOn == false) {
       return listShops;
     } else {
       return listShops
           .where((shop) => shop["vacancy"]['${shop['vacancyType']}']
               .map((sheet) =>
                   sheet['isVacant'] == true &&
-                  sheet['Min'] <= int.parse(groupNum) &&
-                  sheet['Max'] >= int.parse(groupNum))
+                  sheet['Min'] <= groupNum &&
+                  sheet['Max'] >= groupNum)
               .toList()
               .contains(true))
           .toList();
     }
+  }
+
+  List _filterShopByDistance(int distance) {
+    return listShops.where((shop) => _getDistance(shop) <= distance).toList();
   }
 
   int _getDistance(Map shop) {
