@@ -39,7 +39,6 @@ class _BookingHistoryPageState extends State<BookingHistoryPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: new Container(),
         title: Text("予約履歴",
             textAlign: TextAlign.center,
             style: TextStyle(
@@ -53,30 +52,8 @@ class _BookingHistoryPageState extends State<BookingHistoryPage> {
       body: bookingData == null
           ? Center(child: CircularProgressIndicator())
           : bookingData.length == 0
-              ? CircularMenu(
-                  alignment: Alignment.topLeft,
-                  radius: 100,
-                  backgroundWidget: Center(
-                      child:
-                          Text("予約情報がありません", style: TextStyle(fontSize: 20))),
-                  items: [
-                      CircularMenuItem(
-                          icon: Icons.logout,
-                          onTap: () {
-                            _logOut();
-                            // callback
-                          }),
-                      CircularMenuItem(
-                          icon: Icons.timer,
-                          onTap: () {
-                            _changePage(context, TimerRoute);
-                          }),
-                      CircularMenuItem(
-                          icon: Icons.map,
-                          onTap: () {
-                            _changePage(context, MapSearchRoute);
-                          }),
-                    ])
+              ? Center(
+                  child: Text("予約情報がありません", style: TextStyle(fontSize: 20)))
               : StreamBuilder(
                   stream: channel.stream,
                   builder: (context, snapshot) {
