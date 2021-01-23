@@ -7,6 +7,9 @@ import 'package:http/http.dart' as http;
 import 'package:web_socket_channel/io.dart';
 import '../app.dart';
 import '../app_theme.dart';
+import 'package:circular_menu/circular_menu.dart';
+import 'package:amplify_core/amplify_core.dart';
+import 'package:awesome_dialog/awesome_dialog.dart';
 
 class BookingHistoryPage extends StatefulWidget {
   @override
@@ -36,6 +39,7 @@ class _BookingHistoryPageState extends State<BookingHistoryPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: new Container(),
         title: Text("予約履歴",
             textAlign: TextAlign.center,
             style: TextStyle(
@@ -49,8 +53,30 @@ class _BookingHistoryPageState extends State<BookingHistoryPage> {
       body: bookingData == null
           ? Center(child: CircularProgressIndicator())
           : bookingData.length == 0
-              ? Center(
-                  child: Text("予約情報がありません", style: TextStyle(fontSize: 20)))
+              ? CircularMenu(
+                  alignment: Alignment.topLeft,
+                  radius: 100,
+                  backgroundWidget: Center(
+                      child:
+                          Text("予約情報がありません", style: TextStyle(fontSize: 20))),
+                  items: [
+                      CircularMenuItem(
+                          icon: Icons.logout,
+                          onTap: () {
+                            _logOut();
+                            // callback
+                          }),
+                      CircularMenuItem(
+                          icon: Icons.timer,
+                          onTap: () {
+                            _changePage(context, TimerRoute);
+                          }),
+                      CircularMenuItem(
+                          icon: Icons.map,
+                          onTap: () {
+                            _changePage(context, MapSearchRoute);
+                          }),
+                    ])
               : StreamBuilder(
                   stream: channel.stream,
                   builder: (context, snapshot) {
@@ -66,6 +92,40 @@ class _BookingHistoryPageState extends State<BookingHistoryPage> {
                     return buildListView();
                   }),
     );
+  }
+
+  void _logOut() {
+    AwesomeDialog(
+      context: context,
+      customHeader: null,
+      dialogType: DialogType.NO_HEADER,
+      animType: AnimType.BOTTOMSLIDE,
+      body: Center(
+        child: Text('本当にログアウトしますか？'),
+      ),
+      btnOkOnPress: () {
+        try {
+          Amplify.Auth.signOut();
+          _changePage(context, AuthRoute);
+        } on Error catch (e) {
+          print(e);
+        }
+      },
+      useRootNavigator: false,
+      btnOkColor: Colors.tealAccent[400],
+      btnCancelOnPress: () {},
+      btnOkText: 'ログアウト',
+      btnCancelText: 'キャンセル',
+      btnCancelColor: Colors.blueGrey[400],
+      dismissOnTouchOutside: false,
+      headerAnimationLoop: false,
+      showCloseIcon: false,
+      buttonsBorderRadius: BorderRadius.all(Radius.circular(100)),
+    )..show();
+    // Amplify.Auth.signOut();
+    // Navigator.pushNamed(context, AuthRoute);
+
+    print("triggered");
   }
 
   void _changePage(BuildContext context, String route) {
