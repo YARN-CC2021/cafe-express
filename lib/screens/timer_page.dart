@@ -146,16 +146,16 @@ class _TimerPageState extends State<TimerPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          leading: new Container(),
-          title: Text("タイマーページ",
-              textAlign: TextAlign.center,
-              style:
-                  TextStyle(fontWeight: FontWeight.bold, color: Colors.black)),
-          centerTitle: true,
-          backgroundColor: CafeExpressTheme.buildLightTheme().backgroundColor,
-          elevation: 3.0,
-        ),
+        // appBar: AppBar(
+        //   leading: new Container(),
+        //   title: Text("タイマーページ",
+        //       textAlign: TextAlign.center,
+        //       style:
+        //           TextStyle(fontWeight: FontWeight.bold, color: Colors.black)),
+        //   centerTitle: true,
+        //   backgroundColor: CafeExpressTheme.buildLightTheme().backgroundColor,
+        //   elevation: 3.0,
+        // ),
         body: _yourLocation == null ||
                 bookingData == null ||
                 shopingData == null
@@ -203,7 +203,7 @@ class _TimerPageState extends State<TimerPage> {
                                   body: Center(
                                       child: Column(children: [
                                     Text('名前: ${bookingData["bookName"]} さん'),
-                                    Text('予約したお店: ${shopingData["name"]} さん'),
+                                    Text('予約したお店: ${shopingData["name"]}'),
                                     Text('予約番号: ${bookingData["bookingId"]}'),
                                     Text(
                                         '${_displayStatus(json.decode(snapshot.data)["status"])}が完了しました！'),
@@ -285,49 +285,106 @@ class _TimerPageState extends State<TimerPage> {
                                             ],
                                           ),
                                         ),
-                                        Column(
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
                                           children: [
-                                            Container(
-                                                padding: EdgeInsets.symmetric(
-                                                    vertical: 20.0,
-                                                    horizontal: 80.0),
-                                                child: RaisedButton(
-                                                  child: Text("QRコードでチェックイン"),
-                                                  onPressed: () => _scan(),
-                                                )),
-                                            Text("お店に連絡したいならアイコンをタップ"),
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.spaceAround,
-                                              children: [
-                                                Column(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                    children: [
-                                                      IconButton(
-                                                          icon: Icon(Icons
-                                                              .local_phone),
-                                                          onPressed: () {
-                                                            launch(
-                                                                "tel:${shopingData['tel']}");
-                                                          }),
-                                                      Text("電話"),
-                                                    ]),
-                                                Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  children: [
-                                                    IconButton(
-                                                        icon: Icon(Icons.mail),
-                                                        onPressed: () {
-                                                          launch(
-                                                              "mailto:${shopingData['contactEmail']}");
-                                                        }),
-                                                    Text("メール"),
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 16,
+                                                  right: 16,
+                                                  bottom: 10,
+                                                  top: 10),
+                                              child: Container(
+                                                height: 45,
+                                                width: 200,
+                                                decoration: BoxDecoration(
+                                                  color: CafeExpressTheme
+                                                          .buildLightTheme()
+                                                      .primaryColor,
+                                                  borderRadius:
+                                                      const BorderRadius.all(
+                                                          Radius.circular(
+                                                              24.0)),
+                                                  boxShadow: <BoxShadow>[
+                                                    BoxShadow(
+                                                      color: Colors.grey
+                                                          .withOpacity(0.6),
+                                                      blurRadius: 8,
+                                                      offset:
+                                                          const Offset(4, 4),
+                                                    ),
                                                   ],
                                                 ),
-                                              ],
+                                                child: Material(
+                                                  color: Colors.transparent,
+                                                  child: InkWell(
+                                                    borderRadius:
+                                                        const BorderRadius.all(
+                                                            Radius.circular(
+                                                                24.0)),
+                                                    highlightColor:
+                                                        Colors.transparent,
+                                                    onTap: () {
+                                                      _scan();
+                                                    },
+                                                    child: Center(
+                                                      child: Text(
+                                                        'QRチェックイン',
+                                                        style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.w500,
+                                                            fontSize: 18,
+                                                            color:
+                                                                Colors.white),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            Container(
+                                              decoration: BoxDecoration(
+                                                color: CafeExpressTheme
+                                                        .buildLightTheme()
+                                                    .primaryColor,
+                                                borderRadius:
+                                                    const BorderRadius.all(
+                                                  Radius.circular(38.0),
+                                                ),
+                                                boxShadow: <BoxShadow>[
+                                                  BoxShadow(
+                                                      color: Colors.grey
+                                                          .withOpacity(0.4),
+                                                      offset:
+                                                          const Offset(0, 2),
+                                                      blurRadius: 8.0),
+                                                ],
+                                              ),
+                                              child: Material(
+                                                color: Colors.transparent,
+                                                child: InkWell(
+                                                  borderRadius:
+                                                      const BorderRadius.all(
+                                                    Radius.circular(32.0),
+                                                  ),
+                                                  onTap: () {
+                                                    launch(
+                                                        "tel:${shopingData['tel']}");
+                                                  },
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            16.0),
+                                                    child: Icon(
+                                                        Icons.local_phone,
+                                                        size: 20,
+                                                        color: CafeExpressTheme
+                                                                .buildLightTheme()
+                                                            .backgroundColor),
+                                                  ),
+                                                ),
+                                              ),
                                             )
                                           ],
                                         )
