@@ -146,22 +146,46 @@ class _TimerPageState extends State<TimerPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        // appBar: AppBar(
-        //   title: Text("タイマーページ",
-        //       textAlign: TextAlign.center,
-        //       style:
-        //           TextStyle(fontWeight: FontWeight.bold, color: Colors.black)),
-        //   centerTitle: true,
-        //   backgroundColor: CafeExpressTheme.buildLightTheme().backgroundColor,
-        //   elevation: 3.0,
-        // ),
+        appBar: AppBar(
+          leading: new Container(),
+          title: Text("タイマーページ",
+              textAlign: TextAlign.center,
+              style:
+                  TextStyle(fontWeight: FontWeight.bold, color: Colors.black)),
+          centerTitle: true,
+          backgroundColor: CafeExpressTheme.buildLightTheme().backgroundColor,
+          elevation: 3.0,
+        ),
         body: _yourLocation == null ||
                 bookingData == null ||
                 shopingData == null
             ? Center(child: CircularProgressIndicator())
             : bookingData.length == 0
-                ? Center(
-                    child: Text("予約情報がありません", style: TextStyle(fontSize: 20)))
+                ? CircularMenu(
+                    alignment: Alignment.topLeft,
+                    radius: 100,
+                    backgroundWidget: Center(
+                        child:
+                            Text("予約情報がありません", style: TextStyle(fontSize: 20))),
+                    items: [
+                        CircularMenuItem(
+                            icon: Icons.logout,
+                            onTap: () {
+                              _logOut();
+                              // callback
+                            }),
+                        CircularMenuItem(
+                            icon: Icons.assignment,
+                            onTap: () {
+                              _changePage(context, BookingHistoryRoute);
+                              //callback
+                            }),
+                        CircularMenuItem(
+                            icon: Icons.map,
+                            onTap: () {
+                              _changePage(context, MapSearchRoute);
+                            }),
+                      ])
                 : StreamBuilder(
                     stream: widget.channel.stream,
                     builder: (context, snapshot) {
@@ -170,35 +194,35 @@ class _TimerPageState extends State<TimerPage> {
                               bookingData["bookingId"] &&
                           bookingData["status"] == "paid") {
                         print("snapshot.data ${snapshot.data}");
-                        WidgetsBinding.instance.addPostFrameCallback((_) =>
-                            AwesomeDialog(
-                              context: context,
-                              customHeader: null,
-                              animType: AnimType.BOTTOMSLIDE,
-                              dialogType: DialogType.SUCCES,
-                              body: Center(
-                                  child: Column(children: [
-                                Text('名前: ${bookingData["bookName"]} さん'),
-                                Text('予約したお店: ${shopingData["name"]} さん'),
-                                Text('予約番号: ${bookingData["bookingId"]}'),
-                                Text(
-                                    '${_displayStatus(json.decode(snapshot.data)["status"])}が完了しました！'),
-                                Text(
-                                    '${_displayStatus(json.decode(snapshot.data)["status"])}時間：${json.decode(snapshot.data)["updatedAt"]}'),
-                              ])),
-                              btnOkOnPress: () {},
-                              useRootNavigator: false,
-                              btnOkColor: Colors.tealAccent[400],
-                              // btnCancelOnPress: () {},
-                              btnOkText: 'OK',
-                              // btnCancelText: 'Go To\n Booking List',
-                              // btnCancelColor: Colors.blueGreyAccent[400],
-                              dismissOnTouchOutside: false,
-                              headerAnimationLoop: false,
-                              showCloseIcon: false,
-                              buttonsBorderRadius:
-                                  BorderRadius.all(Radius.circular(100)),
-                            )..show());
+                        WidgetsBinding.instance
+                            .addPostFrameCallback((_) => AwesomeDialog(
+                                  context: context,
+                                  customHeader: null,
+                                  animType: AnimType.BOTTOMSLIDE,
+                                  dialogType: DialogType.SUCCES,
+                                  body: Center(
+                                      child: Column(children: [
+                                    Text('名前: ${bookingData["bookName"]} さん'),
+                                    Text('予約したお店: ${shopingData["name"]} さん'),
+                                    Text('予約番号: ${bookingData["bookingId"]}'),
+                                    Text(
+                                        '${_displayStatus(json.decode(snapshot.data)["status"])}が完了しました！'),
+                                    Text(
+                                        '${_displayStatus(json.decode(snapshot.data)["status"])}時間：${json.decode(snapshot.data)["updatedAt"]}'),
+                                  ])),
+                                  btnOkOnPress: () {},
+                                  useRootNavigator: false,
+                                  btnOkColor: Colors.tealAccent[400],
+                                  // btnCancelOnPress: () {},
+                                  btnOkText: 'OK',
+                                  // btnCancelText: 'Go To\n Booking List',
+                                  // btnCancelColor: Colors.blueGreyAccent[400],
+                                  dismissOnTouchOutside: false,
+                                  headerAnimationLoop: false,
+                                  showCloseIcon: false,
+                                  buttonsBorderRadius:
+                                      BorderRadius.all(Radius.circular(100)),
+                                )..show());
                         bookingData["status"] =
                             json.decode(snapshot.data)["status"];
                         lockedTime = timetodisplay.toString();
@@ -277,19 +301,22 @@ class _TimerPageState extends State<TimerPage> {
                                                   MainAxisAlignment.spaceAround,
                                               children: [
                                                 Column(
-                                                  mainAxisAlignment: MainAxisAlignment.center,
-                                                  children: [
-                                                  IconButton(
-                                                      icon: Icon(
-                                                          Icons.local_phone),
-                                                      onPressed: () {
-                                                        launch(
-                                                            "tel:${shopingData['tel']}");
-                                                      }),
-                                                  Text("電話"),
-                                                ]),
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      IconButton(
+                                                          icon: Icon(Icons
+                                                              .local_phone),
+                                                          onPressed: () {
+                                                            launch(
+                                                                "tel:${shopingData['tel']}");
+                                                          }),
+                                                      Text("電話"),
+                                                    ]),
                                                 Column(
-                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
                                                   children: [
                                                     IconButton(
                                                         icon: Icon(Icons.mail),
