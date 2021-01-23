@@ -6,22 +6,24 @@ import '../global.dart' as globals;
 import 'dart:async';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
-class Validation extends StatefulWidget {
+class PasswordReset extends StatefulWidget {
   final String email;
-  final String passcode;
 
-  Validation(this.email, this.passcode);
+  PasswordReset(this.email);
 
-  _ValidationState createState() => _ValidationState();
+  _PasswordResetState createState() => _PasswordResetState();
 }
 
-class _ValidationState extends State<Validation> {
+class _PasswordResetState extends State<PasswordReset> {
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
   String currentText = "";
   StreamController<ErrorAnimationType> errorController =
       StreamController<ErrorAnimationType>();
-  TextEditingController _confirmationCodeController = TextEditingController();
 
-  final _scaffoldKey = GlobalKey<ScaffoldState>();
+  final TextEditingController _confirmationCodeController =
+      TextEditingController();
+  final TextEditingController _newPassCodeController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,15 +31,14 @@ class _ValidationState extends State<Validation> {
       appBar: AppBar(
         title: Text("Confirm your email"),
         backgroundColor: Theme.of(context).primaryColor,
-        centerTitle: true,
       ),
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 40),
+        padding: const EdgeInsets.all(8.0),
         child: Form(
           child: Column(
             children: [
               Text(
-                "An email confirmation code has been sent to ${widget.email}.",
+                "An email confirmation code has been sent to ${widget.email}",
                 style: Theme.of(context).textTheme.headline6,
               ),
               SizedBox(height: 80),
@@ -82,7 +83,15 @@ class _ValidationState extends State<Validation> {
                   return true;
                 },
               ),
-              SizedBox(height: 80),
+              SizedBox(height: 20),
+              TextFormField(
+                keyboardType: TextInputType.number,
+                controller: _newPassCodeController,
+                decoration: InputDecoration(labelText: "New Password"),
+                // validator: (value) => value.length != 6
+                //     ? "The confirmation code is invalid"
+                //     : null,
+              ),
               RaisedButton(
                 onPressed: () => _submitCode(context),
                 child: Text("CONFIRM"),
@@ -97,14 +106,16 @@ class _ValidationState extends State<Validation> {
   Future<void> _submitCode(BuildContext context) async {
     //  if (_formKey.currentState.validate()) {
     final confirmationCode = _confirmationCodeController.text;
+    final newPassCode = _newPassCodeController.text;
+
     try {
-      final SignUpResult response = await Amplify.Auth.confirmSignUp(
-        username: widget.email,
-        confirmationCode: confirmationCode,
-      );
-      if (response.isSignUpComplete) {
+      final UpdatePasswordResult response = await Amplify.Auth.confirmPassword(
+          username: widget.email,
+          newPassword: newPassCode,
+          confirmationCode: confirmationCode);
+      if (response != null) {
         //_goToUserCategory(context);
-        autoLogIn(context);
+        autoLogIn(context, newPassCode);
       }
     } on AuthError catch (e) {
       _scaffoldKey.currentState.showSnackBar(
@@ -116,19 +127,19 @@ class _ValidationState extends State<Validation> {
     //}
   }
 
-  void _goToUserCategory(BuildContext context) {
-    Navigator.pushNamed(context, UserCategoryRoute);
+  void _goToWrapper(BuildContext context) {
+    Navigator.pushNamed(context, WrapperRoute);
     print("new login move to user type page");
   }
 
-  Future<void> autoLogIn(aContext) async {
+  Future<void> autoLogIn(aContext, newPassCode) async {
     SignInResult result = await Amplify.Auth.signIn(
-        username: widget.email, password: widget.passcode);
+        username: widget.email, password: newPassCode);
     try {
       if (result.isSignedIn) {
         globals.firstSignIn = true;
         print("First Sign In!!! : ${globals.firstSignIn}");
-        _goToUserCategory(aContext);
+        _goToWrapper(aContext);
         print(result.isSignedIn);
       }
     } catch (e) {
