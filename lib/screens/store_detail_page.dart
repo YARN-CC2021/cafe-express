@@ -189,250 +189,279 @@ class _StoreDetailPageState extends State<StoreDetailPage>
         color: CafeExpressTheme.nearlyWhite,
         child: Scaffold(
           backgroundColor: Colors.transparent,
-          body: Stack(
-            children: <Widget>[
-              Column(
-                children: <Widget>[
-                  AspectRatio(
-                    aspectRatio: 1.2,
-                    child: mainPhotoUrl == null
-                        ? Center(child: CircularProgressIndicator())
-                        : Image.network(
-                            mainPhotoUrl,
-                            fit: BoxFit.contain,
-                            loadingBuilder: (context, child, loadingProgress) {
-                              if (loadingProgress == null) return child;
-                              return Center(child: LinearProgressIndicator());
-                            },
-                            errorBuilder: (BuildContext context,
-                                Object exception, StackTrace stackTrace) {
-                              return Text('画像がないか、ロード中にエラーが起こりました');
-                            },
-                          ),
-                  ),
-                ],
-              ),
-              Positioned(
-                top: (MediaQuery.of(context).size.width / 1.2) - 24.0,
-                bottom: 0,
-                left: 0,
-                right: 0,
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: CafeExpressTheme.nearlyWhite,
-                    borderRadius: const BorderRadius.only(
-                        topLeft: Radius.circular(32.0),
-                        topRight: Radius.circular(32.0)),
-                    boxShadow: <BoxShadow>[
-                      BoxShadow(
-                          color: CafeExpressTheme.grey.withOpacity(0.2),
-                          offset: const Offset(1.1, 1.1),
-                          blurRadius: 10.0),
-                    ],
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 8, right: 8),
-                    child: SingleChildScrollView(
-                      child: Container(
-                        constraints: BoxConstraints(
-                            minHeight: infoHeight,
-                            maxHeight: tempHeight > infoHeight
-                                ? tempHeight
-                                : infoHeight),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  top: 32.0, left: 18, right: 16),
-                              child: Text(
-                                shopData["name"],
-                                textAlign: TextAlign.left,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 22,
-                                  letterSpacing: 0.27,
-                                  color: CafeExpressTheme.darkerText,
+          body: shopData == null || availableSeats == null
+              ? Center(
+                  child: CircularProgressIndicator(),
+                )
+              : Stack(
+                  children: <Widget>[
+                    Column(
+                      children: <Widget>[
+                        AspectRatio(
+                          aspectRatio: 1.2,
+                          child: mainPhotoUrl == null
+                              ? Center(child: CircularProgressIndicator())
+                              : Image.network(
+                                  mainPhotoUrl,
+                                  fit: BoxFit.contain,
+                                  loadingBuilder:
+                                      (context, child, loadingProgress) {
+                                    if (loadingProgress == null) return child;
+                                    return Center(
+                                        child: LinearProgressIndicator());
+                                  },
+                                  errorBuilder: (BuildContext context,
+                                      Object exception, StackTrace stackTrace) {
+                                    return Text('画像がないか、ロード中にエラーが起こりました');
+                                  },
                                 ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 16, right: 16, bottom: 8, top: 16),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                crossAxisAlignment: CrossAxisAlignment.center,
+                        ),
+                      ],
+                    ),
+                    Positioned(
+                      top: (MediaQuery.of(context).size.width / 1.2) - 24.0,
+                      bottom: 0,
+                      left: 0,
+                      right: 0,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: CafeExpressTheme.nearlyWhite,
+                          borderRadius: const BorderRadius.only(
+                              topLeft: Radius.circular(32.0),
+                              topRight: Radius.circular(32.0)),
+                          boxShadow: <BoxShadow>[
+                            BoxShadow(
+                                color: CafeExpressTheme.grey.withOpacity(0.2),
+                                offset: const Offset(1.1, 1.1),
+                                blurRadius: 10.0),
+                          ],
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 8, right: 8),
+                          child: SingleChildScrollView(
+                            child: Container(
+                              constraints: BoxConstraints(
+                                  minHeight: infoHeight,
+                                  maxHeight: tempHeight > infoHeight
+                                      ? tempHeight
+                                      : infoHeight),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
-                                  Column(
-                                      crossAxisAlignment: CrossAxisAlignment
-                                          .start, // for left side
-                                      children: [
-                                        Row(children: [
-                                          Icon(FontAwesomeIcons.mapMarkerAlt,
-                                              color: Theme.of(context)
-                                                  .primaryColor,
-                                              size: 14),
-                                          Text(
-                                            " " + shopData["address"],
-                                            textAlign: TextAlign.left,
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.w200,
-                                              fontSize: 13,
-                                              letterSpacing: 0.27,
-                                              color: CafeExpressTheme.grey,
-                                            ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        top: 32.0, left: 18, right: 16),
+                                    child: Text(
+                                      shopData["name"],
+                                      textAlign: TextAlign.left,
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 22,
+                                        letterSpacing: 0.27,
+                                        color: CafeExpressTheme.darkerText,
+                                      ),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        left: 16,
+                                        right: 16,
+                                        bottom: 8,
+                                        top: 16),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: <Widget>[
+                                        Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment
+                                                    .start, // for left side
+                                            children: [
+                                              Row(children: [
+                                                Icon(
+                                                    FontAwesomeIcons
+                                                        .mapMarkerAlt,
+                                                    color: Theme.of(context)
+                                                        .primaryColor,
+                                                    size: 14),
+                                                Text(
+                                                  " " + shopData["address"],
+                                                  textAlign: TextAlign.left,
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.w200,
+                                                    fontSize: 14,
+                                                    letterSpacing: 0.27,
+                                                    color:
+                                                        CafeExpressTheme.grey,
+                                                  ),
+                                                ),
+                                              ]),
+                                              Row(children: [
+                                                Icon(FontAwesomeIcons.phone,
+                                                    color: Theme.of(context)
+                                                        .primaryColor,
+                                                    size: 14),
+                                                Text(
+                                                  " " + shopData["tel"],
+                                                  textAlign: TextAlign.left,
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.w200,
+                                                    fontSize: 14,
+                                                    letterSpacing: 0.27,
+                                                    color:
+                                                        CafeExpressTheme.grey,
+                                                  ),
+                                                ),
+                                              ]),
+                                              Row(children: [
+                                                Icon(FontAwesomeIcons.envelope,
+                                                    color: Theme.of(context)
+                                                        .primaryColor,
+                                                    size: 14),
+                                                Text(
+                                                  " " +
+                                                      shopData["contactEmail"],
+                                                  textAlign: TextAlign.left,
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.w200,
+                                                    fontSize: 14,
+                                                    letterSpacing: 0.27,
+                                                    color:
+                                                        CafeExpressTheme.grey,
+                                                  ),
+                                                ),
+                                              ]),
+                                            ]),
+                                      ],
+                                    ),
+                                  ),
+                                  AnimatedOpacity(
+                                    duration: const Duration(milliseconds: 500),
+                                    opacity: opacity2,
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 16,
+                                          right: 16,
+                                          top: 10,
+                                          bottom: 8),
+                                      child: new Align(
+                                        alignment: Alignment.topLeft,
+                                        child: Text(
+                                          shopData["description"],
+                                          textAlign: TextAlign.justify,
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w200,
+                                            fontSize: 14,
+                                            letterSpacing: 0.27,
+                                            color: CafeExpressTheme.grey,
                                           ),
-                                        ]),
-                                        Row(children: [
-                                          Icon(FontAwesomeIcons.phone,
-                                              color: Theme.of(context)
-                                                  .primaryColor,
-                                              size: 14),
-                                          Text(
-                                            " " + shopData["tel"],
-                                            textAlign: TextAlign.left,
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.w200,
-                                              fontSize: 13,
-                                              letterSpacing: 0.27,
-                                              color: CafeExpressTheme.grey,
-                                            ),
-                                          ),
-                                        ]),
-                                        Row(children: [
-                                          Icon(FontAwesomeIcons.envelope,
-                                              color: Theme.of(context)
-                                                  .primaryColor,
-                                              size: 14),
-                                          Text(
-                                            " " + shopData["contactEmail"],
-                                            textAlign: TextAlign.left,
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.w200,
-                                              fontSize: 13,
-                                              letterSpacing: 0.27,
-                                              color: CafeExpressTheme.grey,
-                                            ),
-                                          ),
-                                        ]),
-                                      ]),
+                                          maxLines: 3,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.only(top: 10, left: 18),
+                                    child: Text(
+                                      '空席',
+                                      textAlign: TextAlign.left,
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 15,
+                                        letterSpacing: 0.27,
+                                        color: CafeExpressTheme.darkerText,
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                      child: SingleChildScrollView(
+                                          child: Container(
+                                    height: 60,
+                                    width: double.infinity,
+                                    child: ListView.builder(
+                                      shrinkWrap: true,
+                                      padding: const EdgeInsets.only(
+                                          top: 0,
+                                          bottom: 0,
+                                          right: 16,
+                                          left: 16),
+                                      itemCount: availableSeats.length,
+                                      scrollDirection: Axis.horizontal,
+                                      itemBuilder:
+                                          (BuildContext context, int index) {
+                                        return getTimeBoxUI(
+                                            availableSeats[index]["label"],
+                                            index);
+                                      },
+                                    ),
+                                  ))),
                                 ],
                               ),
                             ),
-                            AnimatedOpacity(
-                              duration: const Duration(milliseconds: 500),
-                              opacity: opacity2,
-                              child: Padding(
-                                padding: const EdgeInsets.only(
-                                    left: 16, right: 16, top: 10, bottom: 8),
-                                child: new Align(
-                                  alignment: Alignment.topLeft,
-                                  child: Text(
-                                    shopData["description"],
-                                    textAlign: TextAlign.justify,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w200,
-                                      fontSize: 14,
-                                      letterSpacing: 0.27,
-                                      color: CafeExpressTheme.grey,
-                                    ),
-                                    maxLines: 3,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(top: 10, left: 18),
-                              child: Text(
-                                '空席',
-                                textAlign: TextAlign.left,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 15,
-                                  letterSpacing: 0.27,
-                                  color: CafeExpressTheme.darkerText,
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                                child: SingleChildScrollView(
-                                    child: Container(
-                              height: 60,
-                              width: double.infinity,
-                              child: ListView.builder(
-                                shrinkWrap: true,
-                                padding: const EdgeInsets.only(
-                                    top: 0, bottom: 0, right: 16, left: 16),
-                                itemCount: availableSeats.length,
-                                scrollDirection: Axis.horizontal,
-                                itemBuilder: (BuildContext context, int index) {
-                                  return getTimeBoxUI(
-                                      availableSeats[index]["label"], index);
-                                },
-                              ),
-                            ))),
-                          ],
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ),
-              ),
-              Positioned(
-                top: (MediaQuery.of(context).size.width / 1.2) - 24.0 - 35,
-                right: 35,
-                child: ScaleTransition(
-                  alignment: Alignment.center,
-                  scale: CurvedAnimation(
-                      parent: animationController, curve: Curves.fastOutSlowIn),
-                  child: Card(
-                    color: Theme.of(context).primaryColor,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(50.0)),
-                    elevation: 10.0,
-                    child: Container(
-                      width: 60,
-                      height: 60,
-                      child: Center(
-                          child: shopData["category"] == "カフェ"
-                              ? FaIcon(FontAwesomeIcons.coffee,
-                                  color: Colors.white, size: 26)
-                              : shopData["category"] == "レストラン"
-                                  ? FaIcon(FontAwesomeIcons.utensils,
-                                      color: Colors.white, size: 26)
-                                  : FaIcon(FontAwesomeIcons.glassMartiniAlt,
-                                      color: Colors.white, size: 26)),
-                    ),
-                  ),
-                ),
-              ),
-              Padding(
-                padding:
-                    EdgeInsets.only(top: MediaQuery.of(context).padding.top),
-                child: SizedBox(
-                  width: AppBar().preferredSize.height,
-                  height: AppBar().preferredSize.height,
-                  child: Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      borderRadius:
-                          BorderRadius.circular(AppBar().preferredSize.height),
-                      child: Icon(
-                        Icons.arrow_back_ios,
-                        color: CafeExpressTheme.nearlyBlack,
+                    Positioned(
+                      top:
+                          (MediaQuery.of(context).size.width / 1.2) - 24.0 - 35,
+                      right: 35,
+                      child: ScaleTransition(
+                        alignment: Alignment.center,
+                        scale: CurvedAnimation(
+                            parent: animationController,
+                            curve: Curves.fastOutSlowIn),
+                        child: Card(
+                          color: Theme.of(context).primaryColor,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(50.0)),
+                          elevation: 10.0,
+                          child: Container(
+                            width: 60,
+                            height: 60,
+                            child: Center(
+                                child: shopData["category"] == "カフェ"
+                                    ? FaIcon(FontAwesomeIcons.coffee,
+                                        color: Colors.white, size: 26)
+                                    : shopData["category"] == "レストラン"
+                                        ? FaIcon(FontAwesomeIcons.utensils,
+                                            color: Colors.white, size: 26)
+                                        : FaIcon(
+                                            FontAwesomeIcons.glassMartiniAlt,
+                                            color: Colors.white,
+                                            size: 26)),
+                          ),
+                        ),
                       ),
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
                     ),
-                  ),
+                    Padding(
+                      padding: EdgeInsets.only(
+                          top: MediaQuery.of(context).padding.top),
+                      child: SizedBox(
+                        width: AppBar().preferredSize.height,
+                        height: AppBar().preferredSize.height,
+                        child: Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                            borderRadius: BorderRadius.circular(
+                                AppBar().preferredSize.height),
+                            child: Icon(
+                              Icons.arrow_back_ios,
+                              color: CafeExpressTheme.nearlyBlack,
+                            ),
+                            onTap: () {
+                              Navigator.pop(context);
+                            },
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-            ],
-          ),
           floatingActionButtonLocation:
               FloatingActionButtonLocation.centerDocked,
           floatingActionButton: Padding(
@@ -460,115 +489,124 @@ class _StoreDetailPageState extends State<StoreDetailPage>
                 ),
                 FloatingActionButton.extended(
                   heroTag: "hero2",
-                  onPressed: () {
-                    AwesomeDialog(
-                      context: context,
-                      title: "予約詳細",
-                      customHeader: null,
-                      animType: AnimType.LEFTSLIDE,
-                      dialogType: DialogType.NO_HEADER,
-                      body: Center(
-                          child: Column(children: [
-                        Container(
-                            padding: EdgeInsets.only(bottom: 20),
-                            width: 150,
-                            height: 60,
-                            child: Form(
-                                key: _formKey,
-                                child: TextFormField(
-                                  // The validator receives the text that the user has entered.
-                                  textAlign: TextAlign.center,
-                                  decoration: InputDecoration(
-                                    labelText: "予約名",
-                                    focusedBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(10.0),
-                                      borderSide: BorderSide(
-                                        color: Theme.of(context).primaryColor,
-                                      ),
-                                    ),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(10.0),
-                                      borderSide: BorderSide(
-                                        color: CafeExpressTheme.grey,
-                                        width: 2.0,
-                                      ),
-                                    ),
-                                  ),
-                                  controller: nameController,
-                                  validator: (value) {
-                                    if (value.isEmpty) {
-                                      return '名前が入力されていません';
-                                    }
-                                    return null;
-                                  },
-                                ))),
-                        Text(
-                          '人数:${availableSeats[selectedSeatIndex]["Min"]}人',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Text(
-                          'デポジット:${availableSeats[selectedSeatIndex]["cancelFee"]}円',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Text(
-                          '予約するテーブル:${availableSeats[selectedSeatIndex]['label']}',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ])),
-                      btnOkOnPress: () async => {
-                        if (_formKey.currentState.validate())
-                          {
-                            bookData["depositAmount"] =
-                                availableSeats[selectedSeatIndex]["cancelFee"],
-                            bookData["tableType"] =
-                                availableSeats[selectedSeatIndex],
-                            await getSeatIndex(),
-                            print("done getting seat index"),
-                            bookData["index"] = seatIndex,
-                            print("bookdata index: ${bookData["index"]}"),
-                            bookData["partySize"] =
-                                availableSeats[selectedSeatIndex]["Min"],
-                            bookData["bookName"] = nameController.text,
-                            availableSeats[selectedSeatIndex]["cancelFee"] == 0
-                                ? {
-                                    bookedTime = DateTime.now(),
-                                    expireTime = bookedTime
-                                        .add(new Duration(minutes: 30)),
-                                    bookData["bookedAt"] = "$bookedTime",
-                                    bookData["bookingId"] =
-                                        "${globals.userId}${bookedTime.millisecondsSinceEpoch}",
-                                    bookData["createdAt"] = "$bookedTime",
-                                    bookData["expiredAt"] = "$expireTime",
-                                    bookData["status"] = "paid",
-                                    bookData["updatedAt"] = "$bookedTime",
-                                    channel.sink.add(json.encode(bookData)),
-                                    _sendEmail(),
-                                    _goTimerPage(
-                                      context,
-                                    )
-                                  }
-                                : createPaymentMethod()
-                          }
-                      },
-                      useRootNavigator: false,
-                      btnOkColor: Colors.tealAccent[400],
-                      btnCancelOnPress: () {},
-                      btnOkText: '予約',
-                      btnCancelText: 'キャンセル',
-                      btnCancelColor: Colors.blueGrey[400],
-                      dismissOnTouchOutside: false,
-                      headerAnimationLoop: false,
-                      showCloseIcon: true,
-                      buttonsBorderRadius:
-                          BorderRadius.all(Radius.circular(100)),
-                    )..show();
-                  },
+                  onPressed: selectedSeatIndex == null
+                      ? null
+                      : () {
+                          AwesomeDialog(
+                            context: context,
+                            title: "予約詳細",
+                            customHeader: null,
+                            animType: AnimType.LEFTSLIDE,
+                            dialogType: DialogType.NO_HEADER,
+                            body: Center(
+                                child: Column(children: [
+                              Container(
+                                  padding: EdgeInsets.only(bottom: 20),
+                                  width: 150,
+                                  height: 60,
+                                  child: Form(
+                                      key: _formKey,
+                                      child: TextFormField(
+                                        // The validator receives the text that the user has entered.
+                                        textAlign: TextAlign.center,
+                                        decoration: InputDecoration(
+                                          labelText: "予約名",
+                                          focusedBorder: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10.0),
+                                            borderSide: BorderSide(
+                                              color: Theme.of(context)
+                                                  .primaryColor,
+                                            ),
+                                          ),
+                                          enabledBorder: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10.0),
+                                            borderSide: BorderSide(
+                                              color: CafeExpressTheme.grey,
+                                              width: 2.0,
+                                            ),
+                                          ),
+                                        ),
+                                        controller: nameController,
+                                        validator: (value) {
+                                          if (value.isEmpty) {
+                                            return '名前が入力されていません';
+                                          }
+                                          return null;
+                                        },
+                                      ))),
+                              Text(
+                                '人数:${availableSeats[selectedSeatIndex]["Min"]}人',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Text(
+                                'デポジット:${availableSeats[selectedSeatIndex]["cancelFee"]}円',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Text(
+                                '予約するテーブル:${availableSeats[selectedSeatIndex]['label']}',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ])),
+                            btnOkOnPress: () async => {
+                              if (_formKey.currentState.validate())
+                                {
+                                  bookData["depositAmount"] =
+                                      availableSeats[selectedSeatIndex]
+                                          ["cancelFee"],
+                                  bookData["tableType"] =
+                                      availableSeats[selectedSeatIndex],
+                                  await getSeatIndex(),
+                                  print("done getting seat index"),
+                                  bookData["index"] = seatIndex,
+                                  print("bookdata index: ${bookData["index"]}"),
+                                  bookData["partySize"] =
+                                      availableSeats[selectedSeatIndex]["Min"],
+                                  bookData["bookName"] = nameController.text,
+                                  availableSeats[selectedSeatIndex]
+                                              ["cancelFee"] ==
+                                          0
+                                      ? {
+                                          bookedTime = DateTime.now(),
+                                          expireTime = bookedTime
+                                              .add(new Duration(minutes: 30)),
+                                          bookData["bookedAt"] = "$bookedTime",
+                                          bookData["bookingId"] =
+                                              "${globals.userId}${bookedTime.millisecondsSinceEpoch}",
+                                          bookData["createdAt"] = "$bookedTime",
+                                          bookData["expiredAt"] = "$expireTime",
+                                          bookData["status"] = "paid",
+                                          bookData["updatedAt"] = "$bookedTime",
+                                          channel.sink
+                                              .add(json.encode(bookData)),
+                                          _sendEmail(),
+                                          _goTimerPage(
+                                            context,
+                                          )
+                                        }
+                                      : createPaymentMethod()
+                                }
+                            },
+                            useRootNavigator: false,
+                            btnOkColor: Colors.tealAccent[400],
+                            btnCancelOnPress: () {},
+                            btnOkText: '予約',
+                            btnCancelText: 'キャンセル',
+                            btnCancelColor: Colors.blueGrey[400],
+                            dismissOnTouchOutside: false,
+                            headerAnimationLoop: false,
+                            showCloseIcon: true,
+                            buttonsBorderRadius:
+                                BorderRadius.all(Radius.circular(100)),
+                          )..show();
+                        },
                   label: Text('予約する', style: TextStyle(color: Colors.white)),
                   backgroundColor: Theme.of(context).primaryColor,
                 )
