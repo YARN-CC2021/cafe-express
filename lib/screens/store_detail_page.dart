@@ -319,6 +319,29 @@ class _StoreDetailPageState extends State<StoreDetailPage>
                                 ],
                               ),
                             ),
+                            AnimatedOpacity(
+                              duration: const Duration(milliseconds: 500),
+                              opacity: opacity2,
+                              child: Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 16, right: 16, top: 10, bottom: 8),
+                                child: new Align(
+                                  alignment: Alignment.topLeft,
+                                  child: Text(
+                                    shopData["description"],
+                                    textAlign: TextAlign.justify,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w200,
+                                      fontSize: 14,
+                                      letterSpacing: 0.27,
+                                      color: CafeExpressTheme.grey,
+                                    ),
+                                    maxLines: 3,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ),
+                            ),
                             Padding(
                               padding: EdgeInsets.only(top: 10, left: 18),
                               child: Text(
@@ -349,31 +372,10 @@ class _StoreDetailPageState extends State<StoreDetailPage>
                                 },
                               ),
                             ))),
-                            Expanded(
-                              child: AnimatedOpacity(
-                                duration: const Duration(milliseconds: 500),
-                                opacity: opacity2,
-                                child: Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 16, right: 16, top: 0, bottom: 8),
-                                  child: new Align(
-                                    alignment: Alignment.topLeft,
-                                    child: Text(
-                                      shopData["description"],
-                                      textAlign: TextAlign.justify,
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w200,
-                                        fontSize: 14,
-                                        letterSpacing: 0.27,
-                                        color: CafeExpressTheme.grey,
-                                      ),
-                                      maxLines: 3,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
+
+                            // SizedBox(
+                            //   height: 70,
+                            // )
                             // AnimatedOpacity(
                             //   duration: const Duration(milliseconds: 500),
                             //   opacity: opacity3,
@@ -504,17 +506,35 @@ class _StoreDetailPageState extends State<StoreDetailPage>
               ),
             ],
           ),
-          floatingActionButton: Padding(
-            padding: EdgeInsets.only(bottom: 10),
-            child: FloatingActionButton.extended(
-              onPressed: () {},
-              label: Text('予約する', style: TextStyle(color: Colors.white)),
-              icon: Icon(Icons.thumb_up),
-              backgroundColor: Theme.of(context).primaryColor,
-            ),
-          ),
           floatingActionButtonLocation:
               FloatingActionButtonLocation.centerDocked,
+          floatingActionButton: Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.only(right: 7),
+                  child: FloatingActionButton.extended(
+                    onPressed: () {},
+                    label: Text(
+                      "人数:3人\nデポジット: 500円",
+                      style: TextStyle(),
+                      textAlign: TextAlign.center,
+                    ),
+                    backgroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(0))),
+                  ),
+                ),
+                FloatingActionButton.extended(
+                  onPressed: () {},
+                  label: Text('予約する', style: TextStyle(color: Colors.white)),
+                  backgroundColor: Theme.of(context).primaryColor,
+                )
+              ],
+            ),
+          ),
         ));
   }
 
