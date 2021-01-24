@@ -249,39 +249,191 @@ class _TimerPageState extends State<TimerPage> {
                                               0.7,
                                           child: Column(
                                             children: [
-                                              bookingData["status"] ==
-                                                          "checked_in" ||
-                                                      bookingData["status"] ==
-                                                          "cancelled"
-                                                  ? Center(
-                                                      child: Column(children: [
-                                                      Text(
-                                                          '予約番号: ${bookingData["bookingId"]}'),
-                                                      Text(
-                                                          '${shopingData["name"]}での${_displayStatus(bookingData["status"])}が完了しました！'),
-                                                      Text(
-                                                          '${_displayStatus(bookingData["status"])}時間：${bookingData["updatedAt"]}'),
-                                                    ]))
-                                                  : Center(
-                                                      child: Column(
-                                                        children: [
-                                                          Text(
-                                                              '${bookingData["bookName"]} さん'),
-                                                          Text(
-                                                            '$timetodisplay\n以内にお店にチェックインしましょう。',
-                                                            style: TextStyle(
-                                                                fontSize: 25.0,
-                                                                color: bookingData[
-                                                                            "status"] ==
-                                                                        "paid"
-                                                                    ? Colors
-                                                                        .black
-                                                                    : Colors
-                                                                        .grey),
-                                                          ),
-                                                        ],
+                                              Container(
+                                                padding: const EdgeInsets.only(
+                                                    top: 8),
+                                                child: Text(
+                                                  '${_displayStatus(bookingData["status"])}が完了しました！',
+                                                  style: TextStyle(
+                                                    fontSize: 18,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                              ),
+                                              bookingData["status"] == "paid"
+                                                  ? Container(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              top: 12),
+                                                      child: const Text(
+                                                        '時間内にお店にチェックインしましょう。',
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                        style: TextStyle(
+                                                          fontSize: 13,
+                                                        ),
                                                       ),
+                                                    )
+                                                  : Padding(
+                                                      padding:
+                                                          EdgeInsets.all(0)),
+                                              bookingData["status"] == "paid"
+                                                  ? Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              top: 8),
+                                                      child: Container(
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color:
+                                                              Colors.grey[200],
+                                                          borderRadius: BorderRadius.only(
+                                                              topLeft: Radius
+                                                                  .circular(
+                                                                      16.0),
+                                                              bottomLeft: Radius
+                                                                  .circular(
+                                                                      16.0),
+                                                              bottomRight:
+                                                                  Radius
+                                                                      .circular(
+                                                                          16.0),
+                                                              topRight: Radius
+                                                                  .circular(
+                                                                      16.0)),
+                                                        ),
+                                                        child: Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .all(8),
+                                                          child: Text(
+                                                            '$timetodisplay',
+                                                            textAlign: TextAlign
+                                                                .center,
+                                                            style: TextStyle(
+                                                              fontFamily:
+                                                                  CafeExpressTheme
+                                                                      .fontName,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500,
+                                                              fontSize: 18,
+                                                              letterSpacing:
+                                                                  0.0,
+                                                              color: Colors
+                                                                  .black
+                                                                  .withOpacity(
+                                                                      0.6),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    )
+                                                  : Padding(
+                                                      padding:
+                                                          EdgeInsets.all(0)),
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    right: 4.0,
+                                                    left: 4.0,
+                                                    top: 15.0,
+                                                    bottom: 8.0),
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                    color: CafeExpressTheme
+                                                        .nearlyWhite,
+                                                    borderRadius:
+                                                        const BorderRadius.all(
+                                                            Radius.circular(
+                                                                10.0)),
+                                                    boxShadow: <BoxShadow>[
+                                                      BoxShadow(
+                                                          color:
+                                                              CafeExpressTheme
+                                                                  .grey
+                                                                  .withOpacity(
+                                                                      0.2),
+                                                          offset: const Offset(
+                                                              1.1, 1.1),
+                                                          blurRadius: 8.0),
+                                                    ],
+                                                  ),
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            left: 18.0,
+                                                            right: 18.0,
+                                                            top: 12.0,
+                                                            bottom: 12.0),
+                                                    child: Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .center,
+                                                      children: <Widget>[
+                                                        Text(
+                                                          '${shopingData["name"]}',
+                                                          textAlign:
+                                                              TextAlign.center,
+                                                          style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.w600,
+                                                            fontSize: 14,
+                                                            letterSpacing: 0.27,
+                                                            color:
+                                                                CafeExpressTheme
+                                                                    .darkText,
+                                                          ),
+                                                        ),
+                                                        Text(
+                                                          '予約名: ${bookingData["bookName"]}さん',
+                                                          textAlign:
+                                                              TextAlign.left,
+                                                          style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.w200,
+                                                            fontSize: 12,
+                                                            letterSpacing: 0.27,
+                                                            color:
+                                                                CafeExpressTheme
+                                                                    .lightText,
+                                                          ),
+                                                        ),
+                                                        Text(
+                                                          '予約番号: ${bookingData["bookingId"]}',
+                                                          textAlign:
+                                                              TextAlign.left,
+                                                          style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.w200,
+                                                            fontSize: 12,
+                                                            letterSpacing: 0.27,
+                                                            color:
+                                                                CafeExpressTheme
+                                                                    .lightText,
+                                                          ),
+                                                        ),
+                                                        Text(
+                                                          '${_displayStatus(bookingData["status"])}時刻：${bookingData["updatedAt"]}',
+                                                          textAlign:
+                                                              TextAlign.left,
+                                                          style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.w200,
+                                                            fontSize: 12,
+                                                            letterSpacing: 0.27,
+                                                            color:
+                                                                CafeExpressTheme
+                                                                    .lightText,
+                                                          ),
+                                                        ),
+                                                      ],
                                                     ),
+                                                  ),
+                                                ),
+                                              )
                                             ],
                                           ),
                                         ),
@@ -293,7 +445,7 @@ class _TimerPageState extends State<TimerPage> {
                                               padding: const EdgeInsets.only(
                                                   left: 16,
                                                   right: 16,
-                                                  bottom: 10,
+                                                  bottom: 16,
                                                   top: 10),
                                               child: Container(
                                                 height: 45,
@@ -450,7 +602,8 @@ class _TimerPageState extends State<TimerPage> {
           }
         },
         myLocationEnabled: true,
-        myLocationButtonEnabled: true,
+        myLocationButtonEnabled: false,
+        zoomControlsEnabled: false,
         mapToolbarEnabled: false,
       );
     }
@@ -469,6 +622,7 @@ class _TimerPageState extends State<TimerPage> {
           if (totalTime < 0) {
             //go fail page
             timer.cancel();
+            timetodisplay = "期限が切れています";
           } else if (totalTime < 3600) {
             int m = totalTime ~/ 60;
             int s = totalTime - (60 * m);

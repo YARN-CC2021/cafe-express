@@ -193,6 +193,7 @@ class _MapPageState extends State<MapPage> {
                                               top: 10),
                                           child: Container(
                                             height: 40,
+                                            width: 150,
                                             decoration: BoxDecoration(
                                               color: CafeExpressTheme
                                                       .buildLightTheme()
@@ -385,7 +386,7 @@ class _MapPageState extends State<MapPage> {
         await _showPic();
 
         _filterShop(
-            1500,
+            500,
             [
               CategoryData(
                 titleTxt: 'All',
