@@ -189,7 +189,7 @@ class _MapPageState extends State<MapPage> {
                                           padding: const EdgeInsets.only(
                                               left: 16,
                                               right: 16,
-                                              bottom: 10,
+                                              bottom: 12,
                                               top: 10),
                                           child: Container(
                                             height: 45,
