@@ -58,8 +58,6 @@ class _StoreDetailPageState extends State<StoreDetailPage>
   };
   Map shopData;
   String vacancyType;
-  int groupNum = 1;
-  // int price = 0;
   Map seat;
   int seatIndex;
   var availableSeats;
@@ -108,7 +106,6 @@ class _StoreDetailPageState extends State<StoreDetailPage>
         availableSeats = shopData['vacancy']['$vacancyType']
             .where((seat) => seat['isVacant'] == true)
             .toList();
-        // await detectSeat(groupNum);
 
         bookData["storeInfo"] = {
           "address": shopData['address'],
@@ -133,17 +130,6 @@ class _StoreDetailPageState extends State<StoreDetailPage>
     seatIndex = await shopData['vacancy']['$vacancyType'].indexWhere((table) =>
         table['label'] == availableSeats[selectedSeatIndex]["label"]);
     print("seat Index : $seatIndex");
-    // seat
-    //     seatIndex != -1 ? shopData['vacancy']['$vacancyType'][seatIndex] : null;
-    // setState(() {
-    //   if (seat != null && seatIndex != -1) {
-    //     isSeatAvailable = true;
-    //   } else {
-    //     isSeatAvailable = false;
-    //   }
-    // });
-    // price = seat != null ? seat['cancelFee'] : 0;
-    // print("Seat in detectSeat $seat");
   }
 
   Future<void> _showPic() async {
@@ -162,6 +148,67 @@ class _StoreDetailPageState extends State<StoreDetailPage>
       mainPhotoUrl = null;
     }
     print("listOfUrl: $mainPhotoUrl");
+  }
+
+  Widget getOpenClose(String day) {
+    String dayJp;
+    String sentence;
+    switch (day) {
+      case "Mon":
+        dayJp = "月";
+        break;
+      case "Tue":
+        dayJp = "火";
+        break;
+      case "Wed":
+        dayJp = "水";
+        break;
+      case "Thu":
+        dayJp = "木";
+        break;
+      case "Fri":
+        dayJp = "金";
+        break;
+      case "Sat":
+        dayJp = "土";
+        break;
+      case "Sun":
+        dayJp = "日";
+        break;
+      default:
+        dayJp = "祝";
+    }
+    if (shopData['hours'][day]['day_off']) {
+      sentence = "$dayJp：定休日";
+    } else {
+      String bookingStart = gethours(shopData['hours'][day]['bookingStart']);
+      String bookingEnd = gethours(shopData['hours'][day]['bookingEnd']);
+      sentence = "$dayJp：$bookingStart ～ $bookingEnd";
+    }
+    return Text(
+      sentence,
+      textAlign: TextAlign.left,
+      style: TextStyle(
+        fontWeight: FontWeight.w200,
+        fontSize: 14,
+        letterSpacing: 0.27,
+        color: CafeExpressTheme.grey,
+      ),
+    );
+  }
+
+  String gethours(String time) {
+    String first;
+    String last;
+    if (time.length == 4) {
+      if (time.substring(0, 1) == "1") {
+        first = first = time.substring(0, 2);
+      } else {
+        first = time.substring(1, 2);
+      }
+      last = time.substring(2);
+    }
+    return '$first:$last';
   }
 
   Future<void> setData() async {
@@ -184,7 +231,7 @@ class _StoreDetailPageState extends State<StoreDetailPage>
   Widget build(BuildContext context) {
     final double tempHeight = MediaQuery.of(context).size.height -
         (MediaQuery.of(context).size.width / 1.2) +
-        24.0;
+        300.0; // Increased from 24 --> 224
     return Container(
         color: CafeExpressTheme.nearlyWhite,
         child: Scaffold(
@@ -358,12 +405,57 @@ class _StoreDetailPageState extends State<StoreDetailPage>
                                             letterSpacing: 0.27,
                                             color: CafeExpressTheme.grey,
                                           ),
-                                          maxLines: 3,
+                                          maxLines: 7,
                                           overflow: TextOverflow.ellipsis,
                                         ),
                                       ),
                                     ),
                                   ),
+                                  Padding(
+                                    padding: EdgeInsets.only(top: 10, left: 18),
+                                    child: Text(
+                                      '予約可能時間',
+                                      textAlign: TextAlign.left,
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 15,
+                                        letterSpacing: 0.27,
+                                        color: CafeExpressTheme.darkerText,
+                                      ),
+                                    ),
+                                  ),
+                                  Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 16,
+                                          right: 16,
+                                          bottom: 8,
+                                          top: 16),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment
+                                                      .start, // for left side
+                                              children: [
+                                                getOpenClose("Mon"),
+                                                getOpenClose("Tue"),
+                                                getOpenClose("Wed"),
+                                                getOpenClose("Thu"),
+                                              ]),
+                                          Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment
+                                                      .start, // for left side
+                                              children: [
+                                                getOpenClose("Fri"),
+                                                getOpenClose("Sat"),
+                                                getOpenClose("Sun"),
+                                                getOpenClose("Holiday"),
+                                              ]),
+                                        ],
+                                      )),
                                   Padding(
                                     padding: EdgeInsets.only(top: 10, left: 18),
                                     child: Text(
