@@ -296,8 +296,7 @@ class _BookingHistoryPageState extends State<BookingHistoryPage> {
                         child: SizedBox(
                           width: 100,
                           child: Text(
-                            // booking["bookName"],
-                            "隆盛カフェ",
+                            booking["storeInfo"]["name"],
                             style: TextStyle(fontWeight: FontWeight.bold),
                             textAlign: TextAlign.left,
                           ),
@@ -306,8 +305,7 @@ class _BookingHistoryPageState extends State<BookingHistoryPage> {
                       Padding(
                         padding: EdgeInsets.only(right: 15),
                         child: Text(
-                          // "種類：${booking["tableType"]["label"]}\n人数：${booking["partySize"]}人",
-                          "種類：１２人席\n人数：${booking["partySize"]}人",
+                          "種類：${booking["tableType"]["label"]}\n人数：${booking["partySize"]}人",
                           style: TextStyle(fontSize: 10),
                         ),
                       ),
