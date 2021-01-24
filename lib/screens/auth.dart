@@ -147,7 +147,6 @@ class _AuthState extends State<Auth> {
   void _returnWrapper(BuildContext context) {
     // Navigator.pushNamed(context, MapSearchRoute);
     Navigator.pushNamed(context, WrapperRoute);
-    print("triggered");
   }
 
   void _goToValidation(BuildContext context, String email, String passcode) {

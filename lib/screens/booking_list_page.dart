@@ -77,7 +77,9 @@ class _BookingPageState extends State<BookingPage> {
                     bookingId = json.decode(snapshot.data)["bookingId"];
                   }
                 }
-                return buildListView();
+                return Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    child: buildListView());
               }),
     );
   }
