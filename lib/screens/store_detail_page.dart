@@ -10,6 +10,9 @@ import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
 import '../global.dart' as globals;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:awesome_dialog/awesome_dialog.dart';
+import '../app.dart';
+import 'package:flutter/cupertino.dart';
 
 class StoreDetailPage extends StatefulWidget {
   final String id;
@@ -56,16 +59,15 @@ class _StoreDetailPageState extends State<StoreDetailPage>
   Map shopData;
   String vacancyType;
   int groupNum = 1;
-  int price = 0;
+  // int price = 0;
   Map seat;
   int seatIndex;
   var availableSeats;
   bool isSeatAvailable = false;
   var mainPhotoUrl;
   int selectedSeatIndex;
-  final _formKey = GlobalKey<FormState>();
-
   final TextEditingController nameController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -106,7 +108,7 @@ class _StoreDetailPageState extends State<StoreDetailPage>
         availableSeats = shopData['vacancy']['$vacancyType']
             .where((seat) => seat['isVacant'] == true)
             .toList();
-        await detectSeat(groupNum);
+        // await detectSeat(groupNum);
 
         bookData["storeInfo"] = {
           "address": shopData['address'],
@@ -126,22 +128,22 @@ class _StoreDetailPageState extends State<StoreDetailPage>
     }
   }
 
-  Future<void> detectSeat(int groupNum) async {
+  Future<void> getSeatIndex() async {
+    print("inside getSeat Index");
     seatIndex = await shopData['vacancy']['$vacancyType'].indexWhere((table) =>
-        table['isVacant'] == true &&
-        table['Min'] <= groupNum &&
-        table['Max'] >= groupNum);
-    seat =
-        seatIndex != -1 ? shopData['vacancy']['$vacancyType'][seatIndex] : null;
-    setState(() {
-      if (seat != null && seatIndex != -1) {
-        isSeatAvailable = true;
-      } else {
-        isSeatAvailable = false;
-      }
-    });
-    price = seat != null ? seat['cancelFee'] : 0;
-    print("Seat in detectSeat $seat");
+        table['label'] == availableSeats[selectedSeatIndex]["label"]);
+    print("seat Index : $seatIndex");
+    // seat
+    //     seatIndex != -1 ? shopData['vacancy']['$vacancyType'][seatIndex] : null;
+    // setState(() {
+    //   if (seat != null && seatIndex != -1) {
+    //     isSeatAvailable = true;
+    //   } else {
+    //     isSeatAvailable = false;
+    //   }
+    // });
+    // price = seat != null ? seat['cancelFee'] : 0;
+    // print("Seat in detectSeat $seat");
   }
 
   Future<void> _showPic() async {
@@ -204,7 +206,7 @@ class _StoreDetailPageState extends State<StoreDetailPage>
                             },
                             errorBuilder: (BuildContext context,
                                 Object exception, StackTrace stackTrace) {
-                              return Text('イメージがないか、ロード中にエラーが起こりました');
+                              return Text('画像がないか、ロード中にエラーが起こりました');
                             },
                           ),
                   ),
@@ -216,7 +218,6 @@ class _StoreDetailPageState extends State<StoreDetailPage>
                 left: 0,
                 right: 0,
                 child: Container(
-                  // width: double.infinity,
                   decoration: BoxDecoration(
                     color: CafeExpressTheme.nearlyWhite,
                     borderRadius: const BorderRadius.only(
@@ -373,81 +374,6 @@ class _StoreDetailPageState extends State<StoreDetailPage>
                                 },
                               ),
                             ))),
-
-                            // SizedBox(
-                            //   height: 70,
-                            // )
-                            // AnimatedOpacity(
-                            //   duration: const Duration(milliseconds: 500),
-                            //   opacity: opacity3,
-                            //   child: Padding(
-                            //     padding: const EdgeInsets.only(
-                            //         left: 16, bottom: 16, right: 16),
-                            //     child: Row(
-                            //       mainAxisAlignment: MainAxisAlignment.center,
-                            //       crossAxisAlignment: CrossAxisAlignment.center,
-                            //       children: <Widget>[
-                            //         Container(
-                            //           width: 48,
-                            //           height: 48,
-                            //           child: Container(
-                            //             decoration: BoxDecoration(
-                            //               color: CafeExpressTheme.nearlyWhite,
-                            //               borderRadius: const BorderRadius.all(
-                            //                 Radius.circular(16.0),
-                            //               ),
-                            //               border: Border.all(
-                            //                   color: CafeExpressTheme.grey
-                            //                       .withOpacity(0.2)),
-                            //             ),
-                            //             child: Icon(
-                            //               Icons.add,
-                            //               color: Theme.of(context).primaryColor,
-                            //               size: 28,
-                            //             ),
-                            //           ),
-                            //         ),
-                            //         const SizedBox(
-                            //           width: 16,
-                            //         ),
-                            //         Expanded(
-                            //           child: Container(
-                            //             height: 48,
-                            //             decoration: BoxDecoration(
-                            //               color: Theme.of(context).primaryColor,
-                            //               borderRadius: const BorderRadius.all(
-                            //                 Radius.circular(24),
-                            //               ),
-                            //               boxShadow: <BoxShadow>[
-                            //                 BoxShadow(
-                            //                     color: Theme.of(context)
-                            //                         .primaryColor
-                            //                         .withOpacity(0.5),
-                            //                     offset: const Offset(1.1, 1.1),
-                            //                     blurRadius: 10.0),
-                            //               ],
-                            //             ),
-                            //             child: Center(
-                            //               child: Text(
-                            //                 'Join Course',
-                            //                 textAlign: TextAlign.left,
-                            //                 style: TextStyle(
-                            //                   fontWeight: FontWeight.w600,
-                            //                   fontSize: 18,
-                            //                   letterSpacing: 0.0,
-                            //                   color: CafeExpressTheme.nearlyWhite,
-                            //                 ),
-                            //               ),
-                            //             ),
-                            //           ),
-                            //         )
-                            //       ],
-                            //     ),
-                            //   ),
-                            // ),
-                            // SizedBox(
-                            //   height: 80,
-                            // )
                           ],
                         ),
                       ),
@@ -517,10 +443,11 @@ class _StoreDetailPageState extends State<StoreDetailPage>
                 Padding(
                   padding: EdgeInsets.only(right: 7),
                   child: FloatingActionButton.extended(
+                    heroTag: "hero1",
                     onPressed: () {},
                     label: selectedSeatIndex != null
                         ? Text(
-                            "人数：${availableSeats[selectedSeatIndex]["Min"]人}\nデポジット：${availableSeats[selectedSeatIndex]["cancelFee"]}円",
+                            "人数：${availableSeats[selectedSeatIndex]["Min"]}人\nデポジット：${availableSeats[selectedSeatIndex]["cancelFee"]}円",
                             textAlign: TextAlign.center)
                         : Text(
                             "席を選択してください",
@@ -532,7 +459,116 @@ class _StoreDetailPageState extends State<StoreDetailPage>
                   ),
                 ),
                 FloatingActionButton.extended(
-                  onPressed: () {},
+                  heroTag: "hero2",
+                  onPressed: () {
+                    AwesomeDialog(
+                      context: context,
+                      title: "予約詳細",
+                      customHeader: null,
+                      animType: AnimType.LEFTSLIDE,
+                      dialogType: DialogType.NO_HEADER,
+                      body: Center(
+                          child: Column(children: [
+                        Container(
+                            padding: EdgeInsets.only(bottom: 20),
+                            width: 150,
+                            height: 60,
+                            child: Form(
+                                key: _formKey,
+                                child: TextFormField(
+                                  // The validator receives the text that the user has entered.
+                                  textAlign: TextAlign.center,
+                                  decoration: InputDecoration(
+                                    labelText: "予約名",
+                                    focusedBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                      borderSide: BorderSide(
+                                        color: Theme.of(context).primaryColor,
+                                      ),
+                                    ),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                      borderSide: BorderSide(
+                                        color: CafeExpressTheme.grey,
+                                        width: 2.0,
+                                      ),
+                                    ),
+                                  ),
+                                  controller: nameController,
+                                  validator: (value) {
+                                    if (value.isEmpty) {
+                                      return '名前が入力されていません';
+                                    }
+                                    return null;
+                                  },
+                                ))),
+                        Text(
+                          '人数:${availableSeats[selectedSeatIndex]["Min"]}人',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(
+                          'デポジット:${availableSeats[selectedSeatIndex]["cancelFee"]}円',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(
+                          '予約するテーブル:${availableSeats[selectedSeatIndex]['label']}',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ])),
+                      btnOkOnPress: () async => {
+                        if (_formKey.currentState.validate())
+                          {
+                            bookData["depositAmount"] =
+                                availableSeats[selectedSeatIndex]["cancelFee"],
+                            bookData["tableType"] =
+                                availableSeats[selectedSeatIndex],
+                            await getSeatIndex(),
+                            print("done getting seat index"),
+                            bookData["index"] = seatIndex,
+                            print("bookdata index: ${bookData["index"]}"),
+                            bookData["partySize"] =
+                                availableSeats[selectedSeatIndex]["Min"],
+                            bookData["bookName"] = nameController.text,
+                            availableSeats[selectedSeatIndex]["cancelFee"] == 0
+                                ? {
+                                    bookedTime = DateTime.now(),
+                                    expireTime = bookedTime
+                                        .add(new Duration(minutes: 30)),
+                                    bookData["bookedAt"] = "$bookedTime",
+                                    bookData["bookingId"] =
+                                        "${globals.userId}${bookedTime.millisecondsSinceEpoch}",
+                                    bookData["createdAt"] = "$bookedTime",
+                                    bookData["expiredAt"] = "$expireTime",
+                                    bookData["status"] = "paid",
+                                    bookData["updatedAt"] = "$bookedTime",
+                                    channel.sink.add(json.encode(bookData)),
+                                    _sendEmail(),
+                                    _goTimerPage(
+                                      context,
+                                    )
+                                  }
+                                : createPaymentMethod()
+                          }
+                      },
+                      useRootNavigator: false,
+                      btnOkColor: Colors.tealAccent[400],
+                      btnCancelOnPress: () {},
+                      btnOkText: '予約',
+                      btnCancelText: 'キャンセル',
+                      btnCancelColor: Colors.blueGrey[400],
+                      dismissOnTouchOutside: false,
+                      headerAnimationLoop: false,
+                      showCloseIcon: true,
+                      buttonsBorderRadius:
+                          BorderRadius.all(Radius.circular(100)),
+                    )..show();
+                  },
                   label: Text('予約する', style: TextStyle(color: Colors.white)),
                   backgroundColor: Theme.of(context).primaryColor,
                 )
@@ -540,6 +576,162 @@ class _StoreDetailPageState extends State<StoreDetailPage>
             ),
           ),
         ));
+  }
+
+  Future<void> createPaymentMethod() async {
+    StripePayment.setStripeAccount(null);
+    //step 1: add card
+    PaymentMethod paymentMethod = PaymentMethod();
+    paymentMethod = await StripePayment.paymentRequestWithCardForm(
+      CardFormPaymentRequest(),
+    ).then((PaymentMethod paymentMethod) {
+      return paymentMethod;
+    }).catchError((e) {
+      print('Errore Card: ${e.toString()}');
+    });
+    print("paymentMethod $paymentMethod");
+    if (paymentMethod != null) {
+      await processPaymentAsDirectCharge(paymentMethod);
+      bookedTime = DateTime.now();
+      expireTime = bookedTime.add(new Duration(minutes: 30));
+      bookData["bookedAt"] = "$bookedTime";
+      bookData["bookingId"] =
+          "${globals.userId}${bookedTime.millisecondsSinceEpoch}";
+      bookData["createdAt"] = "$bookedTime";
+      bookData["expiredAt"] = "$expireTime";
+      bookData["status"] = "paid";
+      bookData["updatedAt"] = "$bookedTime";
+      channel.sink.add(json.encode(bookData));
+      _sendEmail();
+      _goTimerPage(context);
+    } else {
+      showDialog(
+          context: context,
+          builder: (BuildContext context) => ShowDialogToDismiss(
+              title: 'Error',
+              content:
+                  'It is not possible to pay with this card. Please try again with a different card',
+              buttonText: 'CLOSE'));
+    }
+  }
+
+  void _goTimerPage(BuildContext context) {
+    Navigator.pushNamed(context, TimerRoute);
+    print("goTimerPage was triggered");
+  }
+
+  Future<void> _sendEmail() async {
+    Map sendBody = bookData;
+    sendBody["contactEmail"] = shopData['contactEmail'];
+    sendBody["price"] = availableSeats[selectedSeatIndex]["cancelFee"];
+    var response = await http.post(
+      "https://pq3mbzzsbg.execute-api.ap-northeast-1.amazonaws.com/CaffeExpressRESTAPI/email",
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(sendBody),
+    );
+  }
+
+  Future<void> processPaymentAsDirectCharge(PaymentMethod paymentMethod) async {
+    setState(() {
+      showSpinner = true;
+    });
+    //step 2: request to create PaymentIntent, attempt to confirm the payment & return PaymentIntent
+    print(
+        "amount = ${availableSeats[selectedSeatIndex]["cancelFee"]}, payMethod= ${paymentMethod.id} storeStripeId=${shopData["stripeId"]}");
+    final http.Response response = await http.post(
+        '$url?amount=${availableSeats[selectedSeatIndex]["cancelFee"]}&payMethod=${paymentMethod.id}&storeStripeId=${shopData["stripeId"]}'); // acct_1IAYF4QG0EUj44rM
+    print("decordedBody: ${jsonDecode(response.body)}");
+    if (response.body != null &&
+        response.body != 'error' &&
+        jsonDecode(response.body)["body"] != null) {
+      final decordedBody = jsonDecode(response.body);
+      final paymentIntentX = jsonDecode(decordedBody["body"]);
+      final status = paymentIntentX['paymentIntent']['status'];
+      final strAccount = paymentIntentX['stripeAccount'];
+      //step 3: check if payment was succesfully confirmed
+      if (status == 'succeeded') {
+        //payment was confirmed by the server without need for futher authentification
+        StripePayment.completeNativePayRequest();
+        setState(() {
+          text =
+              'Payment completed. ${paymentIntentX['paymentIntent']['amount'].toString()}p succesfully charged';
+          showSpinner = false;
+        });
+      } else {
+        //step 4: there is a need to authenticate
+        StripePayment.setStripeAccount(strAccount);
+        await StripePayment.confirmPaymentIntent(PaymentIntent(
+                paymentMethodId: paymentIntentX['paymentIntent']
+                    ['payment_method'],
+                clientSecret: paymentIntentX['paymentIntent']['client_secret']))
+            .then(
+          (PaymentIntentResult paymentIntentResult) async {
+            //This code will be executed if the authentication is successful
+            //step 5: request the server to confirm the payment with
+            final statusFinal = paymentIntentResult.status;
+            if (statusFinal == 'succeeded') {
+              StripePayment.completeNativePayRequest();
+              setState(() {
+                showSpinner = false;
+              });
+            } else if (statusFinal == 'processing') {
+              StripePayment.cancelNativePayRequest();
+              setState(() {
+                showSpinner = false;
+              });
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) => ShowDialogToDismiss(
+                      title: 'Warning',
+                      content:
+                          'The payment is still in \'processing\' state. This is unusual. Please contact us',
+                      buttonText: 'CLOSE'));
+            } else {
+              StripePayment.cancelNativePayRequest();
+              setState(() {
+                showSpinner = false;
+              });
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) => ShowDialogToDismiss(
+                      title: 'Error',
+                      content:
+                          'There was an error to confirm the payment. Details: $statusFinal',
+                      buttonText: 'CLOSE'));
+            }
+          },
+          //If Authentication fails, a PlatformException will be raised which can be handled here
+        ).catchError((e) {
+          //case B1
+          StripePayment.cancelNativePayRequest();
+          setState(() {
+            showSpinner = false;
+          });
+          showDialog(
+              context: context,
+              builder: (BuildContext context) => ShowDialogToDismiss(
+                  title: 'Error',
+                  content:
+                      'There was an error to confirm the payment. Please try again with another card',
+                  buttonText: 'CLOSE'));
+        });
+      }
+    } else {
+      //case A
+      StripePayment.cancelNativePayRequest();
+      setState(() {
+        showSpinner = false;
+      });
+      showDialog(
+          context: context,
+          builder: (BuildContext context) => ShowDialogToDismiss(
+              title: 'Error',
+              content:
+                  'There was an error in creating the payment. Please try again with another card',
+              buttonText: 'CLOSE'));
+    }
   }
 
   Widget getTimeBoxUI(String text, int index) {
@@ -589,5 +781,55 @@ class _StoreDetailPageState extends State<StoreDetailPage>
             ),
           ),
         ));
+  }
+}
+
+class ShowDialogToDismiss extends StatelessWidget {
+  final String content;
+  final String title;
+  final String buttonText;
+  ShowDialogToDismiss({this.title, this.buttonText, this.content});
+  @override
+  Widget build(BuildContext context) {
+    if (!Platform.isIOS) {
+      return AlertDialog(
+        title: new Text(
+          title,
+        ),
+        content: new Text(
+          this.content,
+        ),
+        actions: <Widget>[
+          new FlatButton(
+            child: new Text(
+              buttonText,
+            ),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      );
+    } else {
+      return CupertinoAlertDialog(
+          title: Text(
+            title,
+          ),
+          content: new Text(
+            this.content,
+          ),
+          actions: <Widget>[
+            CupertinoDialogAction(
+              isDefaultAction: true,
+              child: new Text(
+                buttonText[0].toUpperCase() +
+                    buttonText.substring(1).toLowerCase(),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            )
+          ]);
+    }
   }
 }

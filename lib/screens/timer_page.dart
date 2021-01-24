@@ -109,6 +109,7 @@ class _TimerPageState extends State<TimerPage> {
     if (response.statusCode == 200) {
       final jsonResponse = await json.decode(utf8.decode(response.bodyBytes));
       bookingData = jsonResponse['body'];
+      print("bookingData in _getBookingData $bookingData");
       if (bookingData.length > 0) {
         await _sortBookingData(bookingData);
         bookingData = bookingData[0];
@@ -129,6 +130,7 @@ class _TimerPageState extends State<TimerPage> {
     if (response.statusCode == 200) {
       final jsonResponse = await json.decode(utf8.decode(response.bodyBytes));
       shopingData = jsonResponse['body'];
+      print("shopingData in _getShopData $shopingData");
     } else {
       print('Request failed with status: ${response.statusCode}.');
     }
