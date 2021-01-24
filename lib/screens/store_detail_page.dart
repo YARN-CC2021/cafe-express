@@ -520,7 +520,7 @@ class _StoreDetailPageState extends State<StoreDetailPage>
                     onPressed: () {},
                     label: selectedSeatIndex != null
                         ? Text(
-                            "人数：${availableSeats[selectedSeatIndex]["Min"]人}\nデポジット：${availableSeats[selectedSeatIndex]["cancelFee"]}円",
+                            "人数：${availableSeats[selectedSeatIndex]["Min"]}人\nデポジット：${availableSeats[selectedSeatIndex]["cancelFee"]}円",
                             textAlign: TextAlign.center)
                         : Text(
                             "席を選択してください",
