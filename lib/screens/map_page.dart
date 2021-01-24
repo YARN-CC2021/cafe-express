@@ -192,7 +192,7 @@ class _MapPageState extends State<MapPage> {
                                               bottom: 10,
                                               top: 10),
                                           child: Container(
-                                            height: 40,
+                                            height: 45,
                                             width: 150,
                                             decoration: BoxDecoration(
                                               color: CafeExpressTheme
