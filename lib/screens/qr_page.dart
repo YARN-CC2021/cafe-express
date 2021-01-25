@@ -27,7 +27,6 @@ class _QrPageState extends State<QrPage> {
 
   @override
   Widget build(BuildContext context) {
-    //return either a strict or flex control panel page
     return Scaffold(
         appBar: AppBar(
           leading: new Container(),
@@ -50,11 +49,6 @@ class _QrPageState extends State<QrPage> {
                 ),
               )
             : Center(child: CircularProgressIndicator()));
-  }
-
-  void _changePage(BuildContext context, String route) {
-    Navigator.pushNamed(context, route);
-    print("Going to $route was triggered");
   }
 
   Future<void> _fetchShopId() async {
