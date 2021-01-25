@@ -18,7 +18,7 @@ class _PeopleSliderViewState extends State<PeopleSliderView> {
 
   @override
   void initState() {
-    peopleValue = widget.peopleValue;
+    peopleValue = globals.peopleValue;
     super.initState();
   }
 
@@ -55,10 +55,11 @@ class _PeopleSliderViewState extends State<PeopleSliderView> {
                   ? null
                   : (double value) {
                       setState(() {
-                        peopleValue = value;
+                        globals.peopleValue = value;
+                        peopleValue = globals.peopleValue;
                       });
                       try {
-                        widget.onChangePeopleValue(peopleValue);
+                        widget.onChangePeopleValue(globals.peopleValue);
                       } catch (_) {}
                     },
               min: 1,

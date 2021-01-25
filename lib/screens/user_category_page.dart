@@ -40,8 +40,6 @@ class _UserCategoryPageState extends State<UserCategoryPage> {
           Padding(
               padding: EdgeInsets.all(10.0),
               child: ButtonTheme(
-                  // minWidth: MediaQuery.of(context).size.width / 1.5,
-                  // height: MediaQuery.of(context).size.height / 3.2,
                   minWidth: 300,
                   height: 300,
                   child: RaisedButton.icon(
@@ -61,8 +59,6 @@ class _UserCategoryPageState extends State<UserCategoryPage> {
           Padding(
               padding: EdgeInsets.all(10.0),
               child: ButtonTheme(
-                  // minWidth: MediaQuery.of(context).size.width / 1.5,
-                  // height: MediaQuery.of(context).size.height / 3.2,
                   minWidth: 300,
                   height: 300,
                   child: RaisedButton.icon(
@@ -86,14 +82,10 @@ class _UserCategoryPageState extends State<UserCategoryPage> {
     var userData = await Amplify.Auth.getCurrentUser();
     var userId = userData.userId;
     var useremail = userData.username;
-
-    print("User Category: Globals : $userId");
     globals.userId = userId;
-
-    print("User Category $userId");
+    print("useId: $userId");
     print("username= ${userData.username}");
-
-    print("_insertUserCategory body= $userId, $isCustomer");
+    print("user customer category= $isCustomer");
     var response = await http.post(
       "https://pq3mbzzsbg.execute-api.ap-northeast-1.amazonaws.com/CaffeExpressRESTAPI/user",
       headers: <String, String>{

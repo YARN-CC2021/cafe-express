@@ -20,11 +20,10 @@ import 'screens/stripe.dart';
 import 'services/stored_cards.dart';
 import 'screens/password_reset.dart';
 import 'package:amplify_core/amplify_core.dart';
-import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
-import 'package:flutter/services.dart';
 import 'app_theme.dart';
 import 'custom_drawer/navigation_home_screen.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'screens/store_detail_page.dart';
 
 const WrapperRoute = "/";
 const AuthRoute = "/auth";
@@ -46,6 +45,7 @@ const MerchantProfileSettingRoute = "/merchant_profile_setting";
 const StripeRoute = "/stripe";
 const StoredCardsRoute = "/stored_cards";
 const NavigateMerchantRoute = "/navigate_merchant";
+const StoreDetailRoute = "/store_detail";
 
 final Color primaryColor = HexColor('#54D3C2');
 final Color secondaryColor = HexColor('#54D3C2');
@@ -168,6 +168,9 @@ class MyApp extends StatelessWidget {
         case MerchantCalendarRoute:
           screen = MerchantCalendarPage();
           break;
+        case NavigateMerchantRoute:
+          screen = NavigationHomeScreen();
+          break;
         case TimerRoute:
           // screen = TimerPage(arguments['shopData'], arguments['bookData']);
           screen = TimerPage();
@@ -183,6 +186,9 @@ class MyApp extends StatelessWidget {
           break;
         case StoredCardsRoute:
           screen = ExistingCardsPage();
+          break;
+        case StoreDetailRoute:
+          screen = StoreDetailPage(arguments['id']);
           break;
         case BookingHistoryRoute:
           screen = BookingHistoryPage();

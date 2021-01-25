@@ -66,7 +66,9 @@ class _BookingHistoryPageState extends State<BookingHistoryPage> {
                           json.decode(snapshot.data)["status"]);
                       bookingId = json.decode(snapshot.data)["bookingId"];
                     }
-                    return buildListView();
+                    return Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 25),
+                        child: buildListView());
                   }),
     );
   }
@@ -283,56 +285,50 @@ class _BookingHistoryPageState extends State<BookingHistoryPage> {
       child: Container(
         decoration: BoxDecoration(
           gradient: _changeCardColor(booking),
+          boxShadow: <BoxShadow>[
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.6),
+              offset: const Offset(4, 4),
+              blurRadius: 30,
+            ),
+          ],
         ),
         child: Row(
           children: <Widget>[
             Expanded(
                 flex: 1,
                 child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 5),
                     child: Column(children: [
                       Padding(
                         padding: EdgeInsets.only(bottom: 10, top: 8),
                         child: SizedBox(
-                          width: 100,
+                          width: 200,
+                          height: 20,
                           child: Text(
-                            // booking["bookName"],
-                            "隆盛カフェ",
+                            booking["storeInfo"]["name"],
                             style: TextStyle(fontWeight: FontWeight.bold),
+                            overflow: TextOverflow.ellipsis,
                             textAlign: TextAlign.left,
                           ),
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.only(right: 15),
-                        child: Text(
-                          // "種類：${booking["tableType"]["label"]}\n人数：${booking["partySize"]}人",
-                          "種類：１２人席\n人数：${booking["partySize"]}人",
-                          style: TextStyle(fontSize: 10),
-                        ),
-                      ),
+                          padding: EdgeInsets.only(right: 15),
+                          child: SizedBox(
+                            width: 200,
+                            child: Text(
+                              "予約席：${booking["tableType"]["label"]}\n人数：${booking["partySize"]}人",
+                              style: TextStyle(fontSize: 10),
+                            ),
+                          )),
                     ]))),
             // Container(
             //   padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-            //   child: Column(children: [
-            //     MaterialButton(
-            //       minWidth: 110,
-            //       // disabledColor: Colors.blueGrey[100],
-            //       child: Text('キャンセル',
-            //           style: TextStyle(fontSize: 12, color: Colors.white)),
-            //       color: Colors.redAccent,
-            //       shape: const StadiumBorder(
-            //         side: BorderSide(color: Colors.white),
-            //       ),
-            //       onPressed: DateTime.now()
-            //                   .isBefore(DateTime.parse(booking["expiredAt"])) &&
-            //               booking["status"] == "paid"
-            //           ? () {
-            //               _statusUpdate(index, "cancelled");
-            //             }
-            //           : null,
-            //     ),
-            //   ]),
+            //   child: Column(
+            //     children: [SizedBox(width: 110)],
+            //   ),
+            // )
           ],
         ),
       ),

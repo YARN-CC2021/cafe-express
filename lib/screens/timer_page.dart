@@ -109,6 +109,7 @@ class _TimerPageState extends State<TimerPage> {
     if (response.statusCode == 200) {
       final jsonResponse = await json.decode(utf8.decode(response.bodyBytes));
       bookingData = jsonResponse['body'];
+      print("bookingData in _getBookingData $bookingData");
       if (bookingData.length > 0) {
         await _sortBookingData(bookingData);
         bookingData = bookingData[0];
@@ -129,6 +130,7 @@ class _TimerPageState extends State<TimerPage> {
     if (response.statusCode == 200) {
       final jsonResponse = await json.decode(utf8.decode(response.bodyBytes));
       shopingData = jsonResponse['body'];
+      print("shopingData in _getShopData $shopingData");
     } else {
       print('Request failed with status: ${response.statusCode}.');
     }
@@ -146,16 +148,16 @@ class _TimerPageState extends State<TimerPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          leading: new Container(),
-          title: Text("タイマーページ",
-              textAlign: TextAlign.center,
-              style:
-                  TextStyle(fontWeight: FontWeight.bold, color: Colors.black)),
-          centerTitle: true,
-          backgroundColor: CafeExpressTheme.buildLightTheme().backgroundColor,
-          elevation: 3.0,
-        ),
+        // appBar: AppBar(
+        //   leading: new Container(),
+        //   title: Text("タイマーページ",
+        //       textAlign: TextAlign.center,
+        //       style:
+        //           TextStyle(fontWeight: FontWeight.bold, color: Colors.black)),
+        //   centerTitle: true,
+        //   backgroundColor: CafeExpressTheme.buildLightTheme().backgroundColor,
+        //   elevation: 3.0,
+        // ),
         body: _yourLocation == null ||
                 bookingData == null ||
                 shopingData == null
@@ -203,7 +205,7 @@ class _TimerPageState extends State<TimerPage> {
                                   body: Center(
                                       child: Column(children: [
                                     Text('名前: ${bookingData["bookName"]} さん'),
-                                    Text('予約したお店: ${shopingData["name"]} さん'),
+                                    Text('予約したお店: ${shopingData["name"]}'),
                                     Text('予約番号: ${bookingData["bookingId"]}'),
                                     Text(
                                         '${_displayStatus(json.decode(snapshot.data)["status"])}が完了しました！'),
@@ -249,85 +251,358 @@ class _TimerPageState extends State<TimerPage> {
                                               0.7,
                                           child: Column(
                                             children: [
-                                              bookingData["status"] ==
-                                                          "checked_in" ||
-                                                      bookingData["status"] ==
-                                                          "cancelled"
-                                                  ? Center(
-                                                      child: Column(children: [
-                                                      Text(
-                                                          '予約番号: ${bookingData["bookingId"]}'),
-                                                      Text(
-                                                          '${shopingData["name"]}での${_displayStatus(bookingData["status"])}が完了しました！'),
-                                                      Text(
-                                                          '${_displayStatus(bookingData["status"])}時間：${bookingData["updatedAt"]}'),
-                                                    ]))
-                                                  : Center(
-                                                      child: Column(
-                                                        children: [
-                                                          Text(
-                                                              '${bookingData["bookName"]} さん'),
-                                                          Text(
-                                                            '$timetodisplay\n以内にお店にチェックインしましょう。',
-                                                            style: TextStyle(
-                                                                fontSize: 25.0,
-                                                                color: bookingData[
-                                                                            "status"] ==
-                                                                        "paid"
-                                                                    ? Colors
-                                                                        .black
-                                                                    : Colors
-                                                                        .grey),
-                                                          ),
-                                                        ],
+                                              Container(
+                                                padding: const EdgeInsets.only(
+                                                    top: 8),
+                                                child: bookingData["status"] ==
+                                                        "cancelled"
+                                                    ? Text(
+                                                        '予約が${_displayStatus(bookingData["status"])}されました',
+                                                        style: TextStyle(
+                                                          fontSize: 18,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                        ),
+                                                      )
+                                                    : Text(
+                                                        '${_displayStatus(bookingData["status"])}が完了しました！',
+                                                        style: TextStyle(
+                                                          fontSize: 18,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                        ),
                                                       ),
+                                              ),
+                                              bookingData["status"] == "paid"
+                                                  ? Container(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              top: 12),
+                                                      child: const Text(
+                                                        '時間内にお店にチェックインしましょう。',
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                        style: TextStyle(
+                                                          fontSize: 13,
+                                                        ),
+                                                      ),
+                                                    )
+                                                  : Padding(
+                                                      padding:
+                                                          EdgeInsets.all(0)),
+                                              bookingData["status"] == "paid"
+                                                  ? Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              top: 8),
+                                                      child: Container(
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color:
+                                                              Colors.grey[200],
+                                                          borderRadius: BorderRadius.only(
+                                                              topLeft: Radius
+                                                                  .circular(
+                                                                      16.0),
+                                                              bottomLeft: Radius
+                                                                  .circular(
+                                                                      16.0),
+                                                              bottomRight:
+                                                                  Radius
+                                                                      .circular(
+                                                                          16.0),
+                                                              topRight: Radius
+                                                                  .circular(
+                                                                      16.0)),
+                                                        ),
+                                                        child: Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .all(8),
+                                                          child: Text(
+                                                            '$timetodisplay',
+                                                            textAlign: TextAlign
+                                                                .center,
+                                                            style: TextStyle(
+                                                              fontFamily:
+                                                                  CafeExpressTheme
+                                                                      .fontName,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500,
+                                                              fontSize: 18,
+                                                              letterSpacing:
+                                                                  0.0,
+                                                              color: Colors
+                                                                  .black
+                                                                  .withOpacity(
+                                                                      0.6),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    )
+                                                  : Padding(
+                                                      padding:
+                                                          EdgeInsets.all(0)),
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    right: 4.0,
+                                                    left: 4.0,
+                                                    top: 15.0,
+                                                    bottom: 8.0),
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                    color: CafeExpressTheme
+                                                        .nearlyWhite,
+                                                    borderRadius:
+                                                        const BorderRadius.all(
+                                                            Radius.circular(
+                                                                10.0)),
+                                                    boxShadow: <BoxShadow>[
+                                                      BoxShadow(
+                                                          color:
+                                                              CafeExpressTheme
+                                                                  .grey
+                                                                  .withOpacity(
+                                                                      0.2),
+                                                          offset: const Offset(
+                                                              1.1, 1.1),
+                                                          blurRadius: 8.0),
+                                                    ],
+                                                  ),
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            left: 18.0,
+                                                            right: 18.0,
+                                                            top: 12.0,
+                                                            bottom: 12.0),
+                                                    child: Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: <Widget>[
+                                                        Padding(
+                                                          padding:
+                                                              EdgeInsets.only(
+                                                                  bottom: 10),
+                                                          child: Align(
+                                                            alignment: Alignment
+                                                                .center,
+                                                            child: Text(
+                                                              '${shopingData["name"]}',
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .center,
+                                                              style: TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w600,
+                                                                fontSize: 14,
+                                                                letterSpacing:
+                                                                    0.27,
+                                                                color:
+                                                                    CafeExpressTheme
+                                                                        .darkText,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        Text(
+                                                          '予約名: ${bookingData["bookName"]}さん',
+                                                          textAlign:
+                                                              TextAlign.left,
+                                                          style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.w200,
+                                                            fontSize: 12,
+                                                            letterSpacing: 0.27,
+                                                            color:
+                                                                CafeExpressTheme
+                                                                    .lightText,
+                                                          ),
+                                                        ),
+                                                        Text(
+                                                          '予約番号: ${bookingData["bookingId"]}',
+                                                          textAlign:
+                                                              TextAlign.left,
+                                                          style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.w200,
+                                                            fontSize: 12,
+                                                            letterSpacing: 0.27,
+                                                            color:
+                                                                CafeExpressTheme
+                                                                    .lightText,
+                                                          ),
+                                                        ),
+                                                        Text(
+                                                          '${_displayStatus(bookingData["status"])}時刻：${bookingData["updatedAt"].substring(0, 16)}',
+                                                          textAlign:
+                                                              TextAlign.left,
+                                                          style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.w200,
+                                                            fontSize: 12,
+                                                            letterSpacing: 0.27,
+                                                            color:
+                                                                CafeExpressTheme
+                                                                    .lightText,
+                                                          ),
+                                                        ),
+                                                      ],
                                                     ),
+                                                  ),
+                                                ),
+                                              )
                                             ],
                                           ),
                                         ),
-                                        Column(
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
                                           children: [
-                                            Container(
-                                                padding: EdgeInsets.symmetric(
-                                                    vertical: 20.0,
-                                                    horizontal: 80.0),
-                                                child: RaisedButton(
-                                                  child: Text("QRコードでチェックイン"),
-                                                  onPressed: () => _scan(),
-                                                )),
-                                            Text("お店に連絡したいならアイコンをタップ"),
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.spaceAround,
-                                              children: [
-                                                Column(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                    children: [
-                                                      IconButton(
-                                                          icon: Icon(Icons
-                                                              .local_phone),
-                                                          onPressed: () {
-                                                            launch(
-                                                                "tel:${shopingData['tel']}");
-                                                          }),
-                                                      Text("電話"),
-                                                    ]),
-                                                Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  children: [
-                                                    IconButton(
-                                                        icon: Icon(Icons.mail),
-                                                        onPressed: () {
-                                                          launch(
-                                                              "mailto:${shopingData['contactEmail']}");
-                                                        }),
-                                                    Text("メール"),
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 16,
+                                                  right: 16,
+                                                  bottom: 16,
+                                                  top: 10),
+                                              child: Container(
+                                                height: 45,
+                                                width: 200,
+                                                decoration: BoxDecoration(
+                                                  color: bookingData[
+                                                                  "status"] ==
+                                                              "checked_in" ||
+                                                          bookingData[
+                                                                  "status"] ==
+                                                              "cancelled"
+                                                      ? Colors.grey
+                                                      : CafeExpressTheme
+                                                              .buildLightTheme()
+                                                          .primaryColor,
+                                                  borderRadius:
+                                                      const BorderRadius.all(
+                                                          Radius.circular(
+                                                              24.0)),
+                                                  boxShadow: <BoxShadow>[
+                                                    BoxShadow(
+                                                      color: Colors.grey
+                                                          .withOpacity(0.6),
+                                                      blurRadius: 8,
+                                                      offset:
+                                                          const Offset(4, 4),
+                                                    ),
                                                   ],
                                                 ),
-                                              ],
+                                                child: Material(
+                                                  color: Colors.transparent,
+                                                  child: InkWell(
+                                                    borderRadius:
+                                                        const BorderRadius.all(
+                                                            Radius.circular(
+                                                                24.0)),
+                                                    highlightColor:
+                                                        Colors.transparent,
+                                                    onTap: () {
+                                                      _scan();
+                                                    },
+                                                    child: Center(
+                                                      child: Text(
+                                                        'QRチェックイン',
+                                                        style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.w500,
+                                                            fontSize: 18,
+                                                            color:
+                                                                Colors.white),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            Container(
+                                              decoration: BoxDecoration(
+                                                color: CafeExpressTheme
+                                                        .buildLightTheme()
+                                                    .primaryColor,
+                                                borderRadius:
+                                                    const BorderRadius.all(
+                                                  Radius.circular(38.0),
+                                                ),
+                                                boxShadow: <BoxShadow>[
+                                                  BoxShadow(
+                                                      color: Colors.grey
+                                                          .withOpacity(0.4),
+                                                      offset:
+                                                          const Offset(0, 2),
+                                                      blurRadius: 8.0),
+                                                ],
+                                              ),
+                                              child: Material(
+                                                color: Colors.transparent,
+                                                child: InkWell(
+                                                  borderRadius:
+                                                      const BorderRadius.all(
+                                                    Radius.circular(32.0),
+                                                  ),
+                                                  onTap: () {
+                                                    AwesomeDialog(
+                                                      context: context,
+                                                      customHeader: null,
+                                                      dialogType:
+                                                          DialogType.NO_HEADER,
+                                                      animType:
+                                                          AnimType.BOTTOMSLIDE,
+                                                      body: Center(
+                                                        child: Text(
+                                                            '${bookingData["storeInfo"]["name"]}に\n電話をしますか？',
+                                                            textAlign: TextAlign
+                                                                .center),
+                                                      ),
+                                                      btnOkOnPress: () {
+                                                        launch(
+                                                            "tel:${shopingData['tel']}");
+                                                      },
+                                                      useRootNavigator: false,
+                                                      btnOkColor:
+                                                          Theme.of(context)
+                                                              .primaryColor,
+                                                      btnCancelOnPress: () {},
+                                                      btnOkText: '電話する',
+                                                      btnCancelText: 'キャンセル',
+                                                      btnCancelColor:
+                                                          Colors.blueGrey[400],
+                                                      dismissOnTouchOutside:
+                                                          true,
+                                                      headerAnimationLoop:
+                                                          false,
+                                                      showCloseIcon: false,
+                                                      buttonsBorderRadius:
+                                                          BorderRadius.all(
+                                                              Radius.circular(
+                                                                  100)),
+                                                    )..show();
+                                                  },
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            16.0),
+                                                    child: Icon(
+                                                        Icons.local_phone,
+                                                        size: 20,
+                                                        color: CafeExpressTheme
+                                                                .buildLightTheme()
+                                                            .backgroundColor),
+                                                  ),
+                                                ),
+                                              ),
                                             )
                                           ],
                                         )
@@ -393,7 +668,8 @@ class _TimerPageState extends State<TimerPage> {
           }
         },
         myLocationEnabled: true,
-        myLocationButtonEnabled: true,
+        myLocationButtonEnabled: false,
+        zoomControlsEnabled: false,
         mapToolbarEnabled: false,
       );
     }
@@ -412,6 +688,7 @@ class _TimerPageState extends State<TimerPage> {
           if (totalTime < 0) {
             //go fail page
             timer.cancel();
+            timetodisplay = "期限が切れています";
           } else if (totalTime < 3600) {
             int m = totalTime ~/ 60;
             int s = totalTime - (60 * m);
