@@ -109,9 +109,9 @@ class _MerchantStrictState extends State<MerchantStrict> {
                                 Text(
                                     '人数: ${json.decode(snapshot.data)["partySize"]}'),
                                 Text(
-                                    '予約時間: ${json.decode(snapshot.data)["bookedAt"]}'),
+                                    '予約時間: ${json.decode(snapshot.data)["bookedAt"].substring(0, 16)}'),
                                 Text(
-                                    '到着締切: ${json.decode(snapshot.data)["expiredAt"]}'),
+                                    '到着締切: ${json.decode(snapshot.data)["expiredAt"].substring(0, 16)}'),
                                 Text(
                                     'キャンセル料: ${json.decode(snapshot.data)["depositAmount"]}円'),
                               ])),
