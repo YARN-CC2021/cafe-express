@@ -5,7 +5,6 @@ import 'dart:convert';
 import '../global.dart' as globals;
 import 'package:http/http.dart' as http;
 import 'package:web_socket_channel/io.dart';
-import '../app.dart';
 import '../app_theme.dart';
 
 class BookingListPage extends StatefulWidget {
@@ -64,22 +63,23 @@ class _BookingPageState extends State<BookingPage> {
           : bookingData.length == 0
               ? Center(
                   child: Text("予約情報がありません", style: TextStyle(fontSize: 20)))
-              :  StreamBuilder(
-              stream: channel.stream,
-              builder: (context, snapshot) {
-                if (snapshot.hasData &&
-                    json.decode(snapshot.data)["bookingId"] != bookingId) {
-                  if (json.decode(snapshot.data)["status"] == "checked_in") {
-                    _statusUpdateFromCustomer(json.decode(snapshot.data));
-                  } else {
-                    _insertBooking(json.decode(snapshot.data));
-                    bookingId = json.decode(snapshot.data)["bookingId"];
-                  }
-                }
-                return Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 10),
-                    child: buildListView());
-              }),
+              : StreamBuilder(
+                  stream: channel.stream,
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData &&
+                        json.decode(snapshot.data)["bookingId"] != bookingId) {
+                      if (json.decode(snapshot.data)["status"] ==
+                          "checked_in") {
+                        _statusUpdateFromCustomer(json.decode(snapshot.data));
+                      } else {
+                        _insertBooking(json.decode(snapshot.data));
+                        bookingId = json.decode(snapshot.data)["bookingId"];
+                      }
+                    }
+                    return Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        child: buildListView());
+                  }),
     );
   }
 

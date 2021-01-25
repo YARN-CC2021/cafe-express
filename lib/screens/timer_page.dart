@@ -210,10 +210,20 @@ class _TimerPageState extends State<TimerPage> {
                                               vertical: 10),
                                           child: Align(
                                               alignment: Alignment.center,
-                                              child: Text(
-                                                '${_displayStatus(json.decode(snapshot.data)["status"])}が完了しました！',
-                                                style: TextStyle(fontSize: 20),
-                                              ))),
+                                              child: json.decode(snapshot.data)[
+                                                          "status"] ==
+                                                      "cancelled"
+                                                  ? Text(
+                                                      '予約が${_displayStatus(bookingData["status"])}されました',
+                                                      style: TextStyle(
+                                                        fontSize: 20,
+                                                      ),
+                                                    )
+                                                  : Text(
+                                                      '${_displayStatus(json.decode(snapshot.data)["status"])}が完了しました！',
+                                                      style: TextStyle(
+                                                          fontSize: 20),
+                                                    ))),
                                       Text(
                                           '予約名: ${bookingData["bookName"]} さん'),
                                       Text('予約したお店: ${shopingData["name"]}'),
@@ -224,7 +234,7 @@ class _TimerPageState extends State<TimerPage> {
                               ),
                               btnOkOnPress: () {},
                               useRootNavigator: false,
-                              btnOkColor: Colors.tealAccent[400],
+                              btnOkColor: Theme.of(context).primaryColor,
                               // btnCancelOnPress: () {},
                               btnOkText: 'OK',
                               // btnCancelText: 'Go To\n Booking List',
@@ -751,7 +761,7 @@ class _TimerPageState extends State<TimerPage> {
         }
       },
       useRootNavigator: false,
-      btnOkColor: Colors.tealAccent[400],
+      btnOkColor: Theme.of(context).primaryColor,
       btnCancelOnPress: () {},
       btnOkText: 'ログアウト',
       btnCancelText: 'キャンセル',
