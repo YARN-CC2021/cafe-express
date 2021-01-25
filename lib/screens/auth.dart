@@ -8,6 +8,8 @@ import "../global.dart" as globals;
 import 'package:amplify_storage_s3/amplify_storage_s3.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import "../models/user_status.dart";
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class Auth extends StatefulWidget {
   @override
@@ -61,6 +63,9 @@ class _AuthState extends State<Auth> {
           username: data.name, password: data.password);
       if (result.isSignedIn) {
         isSignIn.signedIn();
+        var user = await Amplify.Auth.getCurrentUser();
+        globals.userId = user.userId;
+        await _fetchType();
         _returnWrapper(context);
       }
     } catch (e) {
@@ -150,5 +155,18 @@ class _AuthState extends State<Auth> {
     Navigator.pushNamed(context, PasswordResetRoute,
         arguments: {"email": email});
     print("new login move to user type page");
+  }
+
+  Future<void> _fetchType() async {
+    try {
+      var response = await http.get(
+          'https://pq3mbzzsbg.execute-api.ap-northeast-1.amazonaws.com/CaffeExpressRESTAPI/usercategory/${globals.userId}');
+      final jsonResponse = await json.decode(utf8.decode(response.bodyBytes));
+      final type = jsonResponse['body'];
+      print("User is Customer: $type");
+      globals.isCustomer = type["isCustomer"];
+    } on AuthError catch (e) {
+      print(e);
+    }
   }
 }

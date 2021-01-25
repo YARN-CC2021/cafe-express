@@ -4,7 +4,6 @@ import 'package:web_socket_channel/io.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:awesome_dialog/awesome_dialog.dart';
-import '../app.dart';
 import '../app_theme.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -191,7 +190,7 @@ class _MerchantStrictState extends State<MerchantStrict> {
         _cancelFeeUpdate(index);
       },
       useRootNavigator: false,
-      btnOkColor: Colors.tealAccent[400],
+      btnOkColor: Theme.of(context).primaryColor,
       btnCancelOnPress: () {},
       btnOkText: '保存',
       btnCancelText: 'キャンセル',
