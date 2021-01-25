@@ -57,7 +57,6 @@ class _MerchantCalendarPageState extends State<MerchantCalendarPage> {
   }
 
   Future<void> _updateStoreProfile() async {
-    // print("JSON stringiified shopdata ${jsonEncode(shopData)}");
     var response = await http.patch(
       "https://pq3mbzzsbg.execute-api.ap-northeast-1.amazonaws.com/CaffeExpressRESTAPI/store/$_userId",
       headers: <String, String>{
@@ -90,14 +89,12 @@ class _MerchantCalendarPageState extends State<MerchantCalendarPage> {
       initialTime: _time,
     );
     var hour;
-    // hour converted to our format
     if (newTime.hour.toString().length == 1) {
       hour = "0" + newTime.hour.toString().substring(0);
     } else {
       hour = newTime.hour.toString();
     }
 
-    // minute converted to our format
     var minute;
     if (newTime.minute.toString().length == 1) {
       minute = "0" + newTime.minute.toString().substring(0);
@@ -543,8 +540,8 @@ class _MerchantCalendarPageState extends State<MerchantCalendarPage> {
                                       useRootNavigator: false,
                                       // btnOkColor: Colors.tealAccent[400],
                                       // btnCancelOnPress: () {},
-                                      // btnOkText: 'ログアウト',
-                                      // btnCancelText: 'キャンセル',
+                                      // btnOkText: '',
+                                      // btnCancelText: '',
                                       // btnCancelColor: Colors.blueGrey[400],
                                       dismissOnTouchOutside: true,
                                       headerAnimationLoop: false,
@@ -574,10 +571,5 @@ class _MerchantCalendarPageState extends State<MerchantCalendarPage> {
                   ]),
             ),
           );
-  }
-
-  void _changePage(BuildContext context, String route) {
-    Navigator.pushNamed(context, route);
-    print("Going to $route was triggered");
   }
 }
