@@ -86,6 +86,7 @@ class MyApp extends StatelessWidget {
             colorScheme: colorScheme,
             primaryColor: primaryColor,
             buttonColor: primaryColor,
+            bottomAppBarColor: HexColor("#F8FAFB"),
             indicatorColor: Colors.white,
             splashColor: Colors.white24,
             splashFactory: InkRipple.splashFactory,
