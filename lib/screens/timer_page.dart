@@ -17,6 +17,9 @@ import '../app.dart';
 import 'package:amplify_core/amplify_core.dart';
 
 class TimerPage extends StatefulWidget {
+  final bookData;
+  TimerPage(this.bookData);
+
   final channel = IOWebSocketChannel.connect(
       "wss://gu2u8vdip2.execute-api.ap-northeast-1.amazonaws.com/CafeExpressWS?id=${globals.userId}");
 
@@ -99,27 +102,35 @@ class _TimerPageState extends State<TimerPage> {
   @override
   void dispose() {
     // timer.cancel();
+    widget.channel.sink.close();
     _locationChangedListen?.cancel();
     super.dispose();
   }
 
   Future<void> _getBookingData() async {
-    var response = await http.get(
-        'https://pq3mbzzsbg.execute-api.ap-northeast-1.amazonaws.com/CaffeExpressRESTAPI/booking?customerId=${globals.userId}');
-    if (response.statusCode == 200) {
-      final jsonResponse = await json.decode(utf8.decode(response.bodyBytes));
-      bookingData = jsonResponse['body'];
-      print("bookingData in _getBookingData $bookingData");
-      if (bookingData.length > 0) {
-        await _sortBookingData(bookingData);
-        bookingData = bookingData[0];
-        await _getShopData();
-        start();
+    if (widget.bookData == null) {
+      var response = await http.get(
+          'https://pq3mbzzsbg.execute-api.ap-northeast-1.amazonaws.com/CaffeExpressRESTAPI/booking?customerId=${globals.userId}');
+      if (response.statusCode == 200) {
+        final jsonResponse = await json.decode(utf8.decode(response.bodyBytes));
+        bookingData = jsonResponse['body'];
+        print("bookingData in _getBookingData $bookingData");
+        if (bookingData.length > 0) {
+          await _sortBookingData(bookingData);
+          bookingData = bookingData[0];
+          await _getShopData();
+          start();
+        } else {
+          shopingData = {};
+        }
       } else {
-        shopingData = {};
+        print('Request failed with status: ${response.statusCode}.');
       }
     } else {
-      print('Request failed with status: ${response.statusCode}.');
+      bookingData = widget.bookData;
+      print("bookingData in passed case $bookingData");
+      await _getShopData();
+      start();
     }
   }
 

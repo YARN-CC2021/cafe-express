@@ -260,7 +260,7 @@ class _MapPageState extends State<MapPage> {
                     CircularMenuItem(
                         icon: Icons.timer,
                         onTap: () {
-                          _changePage(context, TimerRoute);
+                          _goTimerPage(context, TimerRoute, null);
                         }),
                   ])));
   }
@@ -278,6 +278,12 @@ class _MapPageState extends State<MapPage> {
   void _changePage(BuildContext context, String route) {
     Navigator.pushNamed(context, route);
     print("Going to $route was triggered");
+  }
+
+  void _goTimerPage(BuildContext context, String route, bookData) {
+    Navigator.pushNamed(context, TimerRoute,
+        arguments: {"passedBookingData": bookData});
+    print("goTimerPage was triggered");
   }
 
   Widget _makeGoogleMap() {
