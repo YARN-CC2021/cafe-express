@@ -190,7 +190,7 @@ class _StoreDetailPageState extends State<StoreDetailPage>
       textAlign: TextAlign.left,
       style: TextStyle(
         fontWeight: FontWeight.w200,
-        fontSize: 14,
+        fontSize: 12,
         letterSpacing: 0.27,
         color: CafeExpressTheme.grey,
       ),
@@ -231,7 +231,7 @@ class _StoreDetailPageState extends State<StoreDetailPage>
   Widget build(BuildContext context) {
     final double tempHeight = MediaQuery.of(context).size.height -
         (MediaQuery.of(context).size.width / 1.2) +
-        300.0; // Increased from 24 --> 300
+        24; // Increased from 24 --> 300
     return Container(
         color: CafeExpressTheme.nearlyWhite,
         child: Scaffold(
@@ -401,18 +401,18 @@ class _StoreDetailPageState extends State<StoreDetailPage>
                                           textAlign: TextAlign.justify,
                                           style: TextStyle(
                                             fontWeight: FontWeight.w200,
-                                            fontSize: 14,
+                                            fontSize: 13,
                                             letterSpacing: 0.27,
                                             color: CafeExpressTheme.grey,
                                           ),
-                                          maxLines: 7,
+                                          maxLines: 3,
                                           overflow: TextOverflow.ellipsis,
                                         ),
                                       ),
                                     ),
                                   ),
                                   Padding(
-                                    padding: EdgeInsets.only(top: 10, left: 18),
+                                    padding: EdgeInsets.only(top: 10, left: 16),
                                     child: Text(
                                       '営業時間',
                                       textAlign: TextAlign.left,
@@ -442,22 +442,40 @@ class _StoreDetailPageState extends State<StoreDetailPage>
                                                 getOpenClose("Mon"),
                                                 getOpenClose("Tue"),
                                                 getOpenClose("Wed"),
-                                                getOpenClose("Thu"),
                                               ]),
                                           Column(
                                               crossAxisAlignment:
                                                   CrossAxisAlignment
                                                       .start, // for left side
                                               children: [
+                                                getOpenClose("Thu"),
                                                 getOpenClose("Fri"),
                                                 getOpenClose("Sat"),
+                                              ]),
+                                          Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment
+                                                      .start, // for left side
+                                              children: [
                                                 getOpenClose("Sun"),
                                                 getOpenClose("Holiday"),
+                                                Text(
+                                                  "",
+                                                  textAlign: TextAlign.left,
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.w200,
+                                                    fontSize: 12,
+                                                    letterSpacing: 0.27,
+                                                    color:
+                                                        CafeExpressTheme.grey,
+                                                  ),
+                                                )
                                               ]),
                                         ],
                                       )),
                                   Padding(
-                                    padding: EdgeInsets.only(top: 10, left: 18),
+                                    padding: EdgeInsets.only(
+                                        top: 10, left: 16, bottom: 5),
                                     child: Text(
                                       '空席',
                                       textAlign: TextAlign.left,

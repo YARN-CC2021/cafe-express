@@ -1,9 +1,10 @@
+import 'package:cafeexpress/app.dart';
+import 'package:cafeexpress/custom_drawer/navigation_home_screen.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:geocoder/geocoder.dart';
-import '../app.dart';
 import '../global.dart' as globals;
 import 'package:file_picker/file_picker.dart';
 import 'dart:io';
@@ -11,6 +12,7 @@ import 'package:amplify_storage_s3/amplify_storage_s3.dart';
 import 'package:amplify_core/amplify_core.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../app_theme.dart';
+import 'package:awesome_dialog/awesome_dialog.dart';
 
 class MerchantProfilePage extends StatefulWidget {
   @override
@@ -675,6 +677,7 @@ class _MerchantProfilePageState extends State<MerchantProfilePage> {
   }
 
   Future<void> _updateStoreProfile() async {
+    print("inside update store");
     await _getAddress(shopData["address"]);
     var response = await http.patch(
       "https://pq3mbzzsbg.execute-api.ap-northeast-1.amazonaws.com/CaffeExpressRESTAPI/store/$_userId",
@@ -685,10 +688,30 @@ class _MerchantProfilePageState extends State<MerchantProfilePage> {
     );
     if (response.statusCode == 200) {
       if (globals.firstSignIn) {
+        print("insidefirstsignin");
         globals.firstSignIn = false;
-        _changePage(context, MerchantRoute);
+        _changePage(context, NavigateMerchantRoute);
       } else {
-        _changePage(context, MerchantProfileSettingRoute);
+        AwesomeDialog(
+          context: context,
+          customHeader: null,
+          dialogType: DialogType.NO_HEADER,
+          animType: AnimType.BOTTOMSLIDE,
+          body: Center(
+            child: Text('プロフィール情報がアップデートされました'),
+          ),
+          // btnOkOnPress: () {},
+          useRootNavigator: false,
+          // btnOkColor: Colors.tealAccent[400],
+          // btnCancelOnPress: () {},
+          // btnOkText: '',
+          // btnCancelText: '',
+          // btnCancelColor: Colors.blueGrey[400],
+          dismissOnTouchOutside: true,
+          headerAnimationLoop: false,
+          showCloseIcon: false,
+          buttonsBorderRadius: BorderRadius.all(Radius.circular(100)),
+        )..show();
       }
     } else {
       print('Request failed with status: ${response.statusCode}.');
