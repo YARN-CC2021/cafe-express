@@ -249,13 +249,11 @@ class _MapPageState extends State<MapPage> {
                         icon: Icons.logout,
                         onTap: () {
                           _logOut();
-                          // callback
                         }),
                     CircularMenuItem(
                         icon: Icons.assignment,
                         onTap: () {
                           _changePage(context, BookingHistoryRoute);
-                          //callback
                         }),
                     CircularMenuItem(
                         icon: Icons.timer,
@@ -297,7 +295,6 @@ class _MapPageState extends State<MapPage> {
           target: LatLng(_yourLocation.latitude, _yourLocation.longitude),
           zoom: 18.0,
         ),
-        // padding: EdgeInsets.only(bottom: 180.0),
         markers: listShops.map((shop) {
           return Marker(
             markerId: MarkerId(shop['id']),
@@ -334,7 +331,6 @@ class _MapPageState extends State<MapPage> {
   Map listOfUrl;
 
   Future<void> _showPic() async {
-    print("inside Show Pic: $listOfUrl");
     final getUrlOptions = GetUrlOptions(
       accessLevel: StorageAccessLevel.guest,
     );
@@ -353,14 +349,13 @@ class _MapPageState extends State<MapPage> {
     }
 
     listOfUrl = urlMap;
-    print("listOfUrl: $listOfUrl");
+    print("list of image url: $listOfUrl");
   }
 
   Widget imageCard(shop) {
     return Expanded(
       child: Image.network(
         listOfUrl[shop["id"]],
-        // listOfUrl[shop["id"]],
         fit: BoxFit.cover,
         loadingBuilder: (context, child, loadingProgress) {
           if (loadingProgress == null) return child;
@@ -375,7 +370,6 @@ class _MapPageState extends State<MapPage> {
   }
 
   Future<void> _getAllShopData() async {
-    print('allShopData called');
     var response = await http.get(
         'https://pq3mbzzsbg.execute-api.ap-northeast-1.amazonaws.com/CaffeExpressRESTAPI/store');
     if (response.statusCode == 200) {
@@ -513,14 +507,7 @@ class _MapPageState extends State<MapPage> {
   }
 
   void _onTap(BuildContext context, String shopId) {
-    print("inside onTap");
-    // Navigator.pushNamed(context, DetailRoute, arguments: {"id": shopId});
     Navigator.pushNamed(context, StoreDetailRoute, arguments: {"id": shopId});
-  }
-
-  void _goHistoryPage(BuildContext context) {
-    Navigator.pushNamed(context, BookingHistoryRoute);
-    print("goHistoryPage was triggered");
   }
 
   void _logOut() {
@@ -551,9 +538,5 @@ class _MapPageState extends State<MapPage> {
       showCloseIcon: false,
       buttonsBorderRadius: BorderRadius.all(Radius.circular(100)),
     )..show();
-    // Amplify.Auth.signOut();
-    // Navigator.pushNamed(context, AuthRoute);
-
-    print("triggered");
   }
 }

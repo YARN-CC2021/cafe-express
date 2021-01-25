@@ -2,11 +2,9 @@ import 'package:cafeexpress/screens/auth.dart';
 import 'package:flutter/material.dart';
 import 'screens/map_page.dart';
 import 'screens/merchant_strict.dart';
-import 'screens/merchant_flex.dart';
 import 'screens/merchant_page.dart';
 import 'wrapper.dart';
 import 'screens/auth.dart';
-import 'screens/detail_page.dart';
 import 'screens/user_category_page.dart';
 import 'screens/validation.dart';
 import 'screens/merchant_profile_page.dart';
@@ -16,8 +14,6 @@ import 'screens/qr_page.dart';
 import 'screens/booking_list_page.dart';
 import 'screens/booking_history_page.dart';
 import 'screens/merchant_profile_setting_page.dart';
-import 'screens/stripe.dart';
-import 'services/stored_cards.dart';
 import 'screens/password_reset.dart';
 import 'package:amplify_core/amplify_core.dart';
 import 'app_theme.dart';
@@ -138,14 +134,8 @@ class MyApp extends StatelessWidget {
         case MapSearchRoute:
           screen = MapPage();
           break;
-        case DetailRoute:
-          screen = DetailPage(arguments['id']);
-          break;
         case MerchantRoute:
           screen = MerchantPage();
-          break;
-        case MerchantFlexRoute:
-          screen = MerchantFlex();
           break;
         case MerchantStrictRoute:
           screen = MerchantStrict();
@@ -179,12 +169,6 @@ class MyApp extends StatelessWidget {
           break;
         case BookingListRoute:
           screen = BookingListPage();
-          break;
-        case StripeRoute:
-          screen = StripePage(arguments['id'], arguments['price']);
-          break;
-        case StoredCardsRoute:
-          screen = ExistingCardsPage();
           break;
         case StoreDetailRoute:
           screen = StoreDetailPage(arguments['id']);
