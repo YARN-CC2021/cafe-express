@@ -5,7 +5,6 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:amplify_core/amplify_core.dart';
 import '../global.dart' as globals;
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../app_theme.dart';
 
 class UserCategoryPage extends StatefulWidget {
@@ -42,47 +41,155 @@ class _UserCategoryPageState extends State<UserCategoryPage> {
         body: Center(
             child: Column(children: [
           Padding(
-              padding: EdgeInsets.symmetric(vertical: 10),
-              child:
-                  Text("ユーザーカテゴリーを選択してください", style: TextStyle(fontSize: 15))),
-          Padding(
-              padding: EdgeInsets.all(10.0),
-              child: ButtonTheme(
-                  minWidth: 300,
-                  height: 300,
-                  child: RaisedButton.icon(
-                      color: Colors.amberAccent,
-                      onPressed: () {
-                        _insertUserCategory(false);
-                      },
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
+              padding: EdgeInsets.only(top: 20),
+              child: Text("どちらかを選択してください", style: TextStyle(fontSize: 15))),
+          Column(children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: CafeExpressTheme.nearlyWhite,
+                  borderRadius: const BorderRadius.all(Radius.circular(20.0)),
+                  boxShadow: <BoxShadow>[
+                    BoxShadow(
+                        color: CafeExpressTheme.grey.withOpacity(0.2),
+                        offset: const Offset(1.1, 1.1),
+                        blurRadius: 8.0),
+                  ],
+                ),
+                child: Padding(
+                    padding: const EdgeInsets.only(
+                        left: 18.0, right: 18.0, top: 12.0, bottom: 12.0),
+                    child: Column(children: [
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Padding(
+                            padding: EdgeInsets.only(),
+                            child: Align(
+                              alignment: Alignment.center,
+                              child: Text(
+                                '飲食店の方',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 20,
+                                  letterSpacing: 0.27,
+                                  color: CafeExpressTheme.darkText,
+                                ),
+                              ),
+                            ),
+                          ),
+                          Container(
+                              child: Padding(
+                                  padding: const EdgeInsets.only(
+                                      top: 12, right: 16, left: 16),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: const BorderRadius.all(
+                                          Radius.circular(20.0)),
+                                      boxShadow: <BoxShadow>[
+                                        BoxShadow(
+                                            color: CafeExpressTheme.grey
+                                                .withOpacity(0.2),
+                                            offset: const Offset(0.0, 0.0),
+                                            blurRadius: 6.0),
+                                      ],
+                                    ),
+                                    child: InkWell(
+                                      onTap: () {
+                                        _insertUserCategory(false);
+                                      },
+                                      child: ClipRRect(
+                                        borderRadius: const BorderRadius.all(
+                                            Radius.circular(20.0)),
+                                        child: AspectRatio(
+                                          aspectRatio: 1.28,
+                                          child: Image.asset(
+                                              "assets/images/store.jpeg"),
+                                        ),
+                                      ),
+                                    ),
+                                  ))),
+                        ],
                       ),
-                      icon: IconButton(
-                        icon: FaIcon(FontAwesomeIcons.store),
-                        onPressed: () {},
-                        iconSize: 70.0,
+                    ])),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: CafeExpressTheme.nearlyWhite,
+                  borderRadius: const BorderRadius.all(Radius.circular(20.0)),
+                  boxShadow: <BoxShadow>[
+                    BoxShadow(
+                        color: CafeExpressTheme.grey.withOpacity(0.2),
+                        offset: const Offset(1.1, 1.1),
+                        blurRadius: 8.0),
+                  ],
+                ),
+                child: Padding(
+                    padding: const EdgeInsets.only(
+                        left: 18.0, right: 18.0, top: 12.0, bottom: 12.0),
+                    child: Column(children: [
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Padding(
+                            padding: EdgeInsets.only(),
+                            child: Align(
+                              alignment: Alignment.center,
+                              child: Text(
+                                '一般の方',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 20,
+                                  letterSpacing: 0.27,
+                                  color: CafeExpressTheme.darkText,
+                                ),
+                              ),
+                            ),
+                          ),
+                          Container(
+                              child: Padding(
+                                  padding: const EdgeInsets.only(
+                                      top: 12, right: 16, left: 16),
+                                  child: Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: const BorderRadius.all(
+                                            Radius.circular(20.0)),
+                                        boxShadow: <BoxShadow>[
+                                          BoxShadow(
+                                              color: CafeExpressTheme.grey
+                                                  .withOpacity(0.2),
+                                              offset: const Offset(0.0, 0.0),
+                                              blurRadius: 6.0),
+                                        ],
+                                      ),
+                                      child: InkWell(
+                                        onTap: () {
+                                          _insertUserCategory(true);
+                                        },
+                                        child: ClipRRect(
+                                          borderRadius: const BorderRadius.all(
+                                              Radius.circular(20.0)),
+                                          child: AspectRatio(
+                                            aspectRatio: 1.28,
+                                            child: Image.asset(
+                                                "assets/images/customer.jpeg"),
+                                          ),
+                                        ),
+                                      )))),
+                        ],
                       ),
-                      label: Text("  飲食店の方", style: TextStyle(fontSize: 20))))),
-          Padding(
-              padding: EdgeInsets.all(10.0),
-              child: ButtonTheme(
-                  minWidth: 300,
-                  height: 300,
-                  child: RaisedButton.icon(
-                      color: Colors.indigoAccent,
-                      onPressed: () {
-                        _insertUserCategory(true);
-                      },
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      icon: IconButton(
-                        icon: FaIcon(FontAwesomeIcons.userAlt),
-                        onPressed: () {},
-                        iconSize: 70.0,
-                      ),
-                      label: Text("一般の方", style: TextStyle(fontSize: 20))))),
+                    ])),
+              ),
+            )
+          ]),
         ])));
   }
 
