@@ -7,12 +7,12 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:stripe_payment/stripe_payment.dart';
 import 'package:http/http.dart' as http;
-import 'package:url_launcher/url_launcher.dart';
 import '../global.dart' as globals;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import '../app.dart';
 import 'package:flutter/cupertino.dart';
+import 'dart:async';
 
 class StoreDetailPage extends StatefulWidget {
   final String id;
@@ -31,7 +31,6 @@ class _StoreDetailPageState extends State<StoreDetailPage>
   double opacity2 = 0.0;
   double opacity3 = 0.0;
 
-  final _scrollController = ScrollController();
   bool showSpinner = false;
   String text = 'Click the button to start the payment';
   String url =
@@ -697,9 +696,9 @@ class _StoreDetailPageState extends State<StoreDetailPage>
                                           channel.sink
                                               .add(json.encode(bookData)),
                                           _sendEmail(),
-                                          _goTimerPage(
-                                            context,
-                                          )
+                                          Timer(Duration(seconds: 1), () {
+                                            _goTimerPage(context, bookData);
+                                          })
                                         }
                                       : createPaymentMethod()
                                 }
@@ -751,7 +750,9 @@ class _StoreDetailPageState extends State<StoreDetailPage>
       bookData["updatedAt"] = "$bookedTime";
       channel.sink.add(json.encode(bookData));
       _sendEmail();
-      _goTimerPage(context);
+      Timer(Duration(seconds: 1), () {
+        _goTimerPage(context, bookData);
+      });
     } else {
       showDialog(
           context: context,
@@ -763,8 +764,9 @@ class _StoreDetailPageState extends State<StoreDetailPage>
     }
   }
 
-  void _goTimerPage(BuildContext context) {
-    Navigator.pushNamed(context, TimerRoute);
+  void _goTimerPage(BuildContext context, Map bookData) {
+    Navigator.pushNamed(context, TimerRoute,
+        arguments: {"passedBookingData": bookData});
     print("goTimerPage was triggered");
   }
 

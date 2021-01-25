@@ -260,22 +260,22 @@ class _BookingHistoryPageState extends State<BookingHistoryPage> {
   }
 
   _changeCardColor(Map booking) {
-    if (booking["status"] == "expired") {
-      return LinearGradient(colors: [Colors.redAccent[400], Colors.red[900]]);
-    } else if (booking["status"] == "paid" &&
+    if (booking["status"] == "paid" &&
         DateTime.now().isAfter(DateTime.parse(booking["expiredAt"]))) {
       return LinearGradient(
-          colors: [Colors.amberAccent[100], Colors.amberAccent]);
+          colors: [Colors.yellow.withOpacity(0.8), Colors.yellow]);
     } else if (booking["status"] == "paid") {
       return LinearGradient(colors: [Colors.white, Colors.white]);
     } else if (booking["status"] == "checked_in") {
       return LinearGradient(colors: [
+        Theme.of(context).primaryColor.withOpacity(0.5),
         Theme.of(context).primaryColor,
-        Colors.greenAccent[400],
       ]);
     } else if (booking["status"] == "cancelled") {
-      return LinearGradient(
-          colors: [Colors.blueGrey[100], Colors.blueGrey[300]]);
+      return LinearGradient(colors: [
+        Colors.blueGrey[100].withOpacity(0.8),
+        Colors.blueGrey[100]
+      ]);
     }
   }
 
