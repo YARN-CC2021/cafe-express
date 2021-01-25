@@ -101,7 +101,6 @@ class _TimerPageState extends State<TimerPage> {
 
   @override
   void dispose() {
-    // timer.cancel();
     widget.channel.sink.close();
     _locationChangedListen?.cancel();
     super.dispose();
@@ -114,7 +113,6 @@ class _TimerPageState extends State<TimerPage> {
       if (response.statusCode == 200) {
         final jsonResponse = await json.decode(utf8.decode(response.bodyBytes));
         bookingData = jsonResponse['body'];
-        print("bookingData in _getBookingData $bookingData");
         if (bookingData.length > 0) {
           await _sortBookingData(bookingData);
           bookingData = bookingData[0];
@@ -128,7 +126,6 @@ class _TimerPageState extends State<TimerPage> {
       }
     } else {
       bookingData = widget.bookData;
-      print("bookingData in passed case $bookingData");
       await _getShopData();
       start();
     }
@@ -141,7 +138,6 @@ class _TimerPageState extends State<TimerPage> {
     if (response.statusCode == 200) {
       final jsonResponse = await json.decode(utf8.decode(response.bodyBytes));
       shopingData = jsonResponse['body'];
-      print("shopingData in _getShopData $shopingData");
     } else {
       print('Request failed with status: ${response.statusCode}.');
     }
@@ -159,16 +155,6 @@ class _TimerPageState extends State<TimerPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        // appBar: AppBar(
-        //   leading: new Container(),
-        //   title: Text("タイマーページ",
-        //       textAlign: TextAlign.center,
-        //       style:
-        //           TextStyle(fontWeight: FontWeight.bold, color: Colors.black)),
-        //   centerTitle: true,
-        //   backgroundColor: CafeExpressTheme.buildLightTheme().backgroundColor,
-        //   elevation: 3.0,
-        // ),
         body: _yourLocation == null ||
                 bookingData == null ||
                 shopingData == null
@@ -185,13 +171,11 @@ class _TimerPageState extends State<TimerPage> {
                             icon: Icons.logout,
                             onTap: () {
                               _logOut();
-                              // callback
                             }),
                         CircularMenuItem(
                             icon: Icons.assignment,
                             onTap: () {
                               _changePage(context, BookingHistoryRoute);
-                              //callback
                             }),
                         CircularMenuItem(
                             icon: Icons.map,
@@ -206,36 +190,51 @@ class _TimerPageState extends State<TimerPage> {
                           json.decode(snapshot.data)["bookingId"] ==
                               bookingData["bookingId"] &&
                           bookingData["status"] == "paid") {
-                        print("snapshot.data ${snapshot.data}");
-                        WidgetsBinding.instance
-                            .addPostFrameCallback((_) => AwesomeDialog(
-                                  context: context,
-                                  customHeader: null,
-                                  animType: AnimType.BOTTOMSLIDE,
-                                  dialogType: DialogType.SUCCES,
-                                  body: Center(
-                                      child: Column(children: [
-                                    Text('名前: ${bookingData["bookName"]} さん'),
-                                    Text('予約したお店: ${shopingData["name"]}'),
-                                    Text('予約番号: ${bookingData["bookingId"]}'),
-                                    Text(
-                                        '${_displayStatus(json.decode(snapshot.data)["status"])}が完了しました！'),
-                                    Text(
-                                        '${_displayStatus(json.decode(snapshot.data)["status"])}時間：${json.decode(snapshot.data)["updatedAt"]}'),
-                                  ])),
-                                  btnOkOnPress: () {},
-                                  useRootNavigator: false,
-                                  btnOkColor: Colors.tealAccent[400],
-                                  // btnCancelOnPress: () {},
-                                  btnOkText: 'OK',
-                                  // btnCancelText: 'Go To\n Booking List',
-                                  // btnCancelColor: Colors.blueGreyAccent[400],
-                                  dismissOnTouchOutside: false,
-                                  headerAnimationLoop: false,
-                                  showCloseIcon: false,
-                                  buttonsBorderRadius:
-                                      BorderRadius.all(Radius.circular(100)),
-                                )..show());
+                        print("inside stream");
+                        WidgetsBinding.instance.addPostFrameCallback((_) =>
+                            AwesomeDialog(
+                              context: context,
+                              customHeader: null,
+                              animType: AnimType.BOTTOMSLIDE,
+                              dialogType: DialogType.SUCCES,
+                              body: Padding(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 5, vertical: 5),
+                                child: Center(
+                                    child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                      Padding(
+                                          padding: EdgeInsets.symmetric(
+                                              vertical: 10),
+                                          child: Align(
+                                              alignment: Alignment.center,
+                                              child: Text(
+                                                '${_displayStatus(json.decode(snapshot.data)["status"])}が完了しました！',
+                                                style: TextStyle(fontSize: 20),
+                                              ))),
+                                      Text(
+                                          '予約名: ${bookingData["bookName"]} さん'),
+                                      Text('予約したお店: ${shopingData["name"]}'),
+                                      Text('予約番号: ${bookingData["bookingId"]}'),
+                                      Text(
+                                          '${_displayStatus(json.decode(snapshot.data)["status"])}時間：${json.decode(snapshot.data)["updatedAt"].substring(0, 16)}'),
+                                    ])),
+                              ),
+                              btnOkOnPress: () {},
+                              useRootNavigator: false,
+                              btnOkColor: Colors.tealAccent[400],
+                              // btnCancelOnPress: () {},
+                              btnOkText: 'OK',
+                              // btnCancelText: 'Go To\n Booking List',
+                              // btnCancelColor: Colors.blueGreyAccent[400],
+                              dismissOnTouchOutside: false,
+                              headerAnimationLoop: false,
+                              showCloseIcon: false,
+                              buttonsBorderRadius:
+                                  BorderRadius.all(Radius.circular(100)),
+                            )..show());
                         bookingData["status"] =
                             json.decode(snapshot.data)["status"];
                         lockedTime = timetodisplay.toString();
@@ -625,25 +624,17 @@ class _TimerPageState extends State<TimerPage> {
                                 icon: Icons.logout,
                                 onTap: () {
                                   _logOut();
-                                  // callback
                                 }),
                             CircularMenuItem(
                                 icon: Icons.assignment,
                                 onTap: () {
                                   _changePage(context, BookingHistoryRoute);
-                                  //callback
                                 }),
                             CircularMenuItem(
                                 icon: Icons.map,
                                 onTap: () {
                                   _changePage(context, MapSearchRoute);
                                 }),
-                            // CircularMenuItem(icon: Icons.star, onTap: () {
-                            //   //callback
-                            // }),
-                            // CircularMenuItem(icon: Icons.pages, onTap: () {
-                            //   //callback
-                            // }),
                           ]));
                     }));
   }
@@ -667,7 +658,6 @@ class _TimerPageState extends State<TimerPage> {
                 shopingData['lat'].toDouble(), shopingData['lng'].toDouble()),
             infoWindow: InfoWindow(
               title: '${shopingData['name']}',
-              // snippet: ,
             ),
           )
         },
@@ -697,7 +687,6 @@ class _TimerPageState extends State<TimerPage> {
               .difference(DateTime.now())
               .inSeconds;
           if (totalTime < 0) {
-            //go fail page
             timer.cancel();
             timetodisplay = "期限が切れています";
           } else if (totalTime < 3600) {
@@ -772,10 +761,6 @@ class _TimerPageState extends State<TimerPage> {
       showCloseIcon: false,
       buttonsBorderRadius: BorderRadius.all(Radius.circular(100)),
     )..show();
-    // Amplify.Auth.signOut();
-    // Navigator.pushNamed(context, AuthRoute);
-
-    print("triggered");
   }
 
   void _changePage(BuildContext context, String route) {
