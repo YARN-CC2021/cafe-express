@@ -172,8 +172,7 @@ class MyApp extends StatelessWidget {
           screen = NavigationHomeScreen();
           break;
         case TimerRoute:
-          // screen = TimerPage(arguments['shopData'], arguments['bookData']);
-          screen = TimerPage();
+          screen = TimerPage(arguments['bookData']);
           break;
         case QrRoute:
           screen = QrPage();
