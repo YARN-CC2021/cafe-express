@@ -43,8 +43,7 @@ class _UserCategoryPageState extends State<UserCategoryPage> {
             child: Column(children: [
           Padding(
               padding: EdgeInsets.symmetric(vertical: 10),
-              child:
-                  Text("ユーザーカテゴリーを選択してください", style: TextStyle(fontSize: 15))),
+              child: Text("どちらかを選択してください", style: TextStyle(fontSize: 15))),
           Padding(
               padding: EdgeInsets.all(10.0),
               child: ButtonTheme(

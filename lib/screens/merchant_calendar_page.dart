@@ -1,5 +1,4 @@
 import "package:flutter/material.dart";
-import '../app.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -66,6 +65,7 @@ class _MerchantCalendarPageState extends State<MerchantCalendarPage> {
     );
     if (response.statusCode == 200) {
       final jsonResponse = json.decode(response.body);
+      print("updated details: $jsonResponse");
     } else {
       print('Request failed with status: ${response.statusCode}.');
     }
