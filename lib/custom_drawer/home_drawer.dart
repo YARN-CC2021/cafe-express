@@ -70,29 +70,24 @@ class _HomeDrawerState extends State<HomeDrawer> {
   }
 
   Future<void> _showPic() async {
-    print("inside showpic");
     final getUrlOptions = GetUrlOptions(
       accessLevel: StorageAccessLevel.guest,
     );
     var listOfUrl = [];
-    print("shopData: ${shopData["imageUrl"]}");
     if (shopData["imageUrl"].length > 0) {
       var result = await Amplify.Storage.getUrl(
           key: shopData["imageUrl"][0], options: getUrlOptions);
       var url = result.url;
       listOfUrl.add(url);
     }
-    print("List of Url: $listOfUrl");
     print("done getting getting image Url");
+    print("List of Image Url: $listOfUrl");
     setState(() {
       images = listOfUrl;
     });
-    print("imagesssss: $images");
-    print("done listing");
   }
 
   Future<void> _getShopData() async {
-    print("Inside Merchant Strict: ${globals.userId}");
     var response = await http.get(
         'https://pq3mbzzsbg.execute-api.ap-northeast-1.amazonaws.com/CaffeExpressRESTAPI/store/${globals.userId}');
     final jsonResponse = await json.decode(utf8.decode(response.bodyBytes));
@@ -119,7 +114,6 @@ class _HomeDrawerState extends State<HomeDrawer> {
     final jsonResponse = await json.decode(utf8.decode(response.bodyBytes));
     final clientStripeConnectUrl =
         await jsonDecode(jsonResponse["body"])["accountLinkURL"];
-    print(clientStripeConnectUrl);
     await launch("$clientStripeConnectUrl");
   }
 
@@ -240,21 +234,14 @@ class _HomeDrawerState extends State<HomeDrawer> {
             padding: const EdgeInsets.only(bottom: 12.0, left: 12),
             child: Row(children: [
               Column(children: [
-                SizedBox(
-                    width: 100, height: 25, child: Center(child: Text("口座設定"))),
                 ButtonTheme(
-                  minWidth: 100,
+                  minWidth: 120,
                   child: RaisedButton(
                     color: Theme.of(context).primaryColor,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(5.0),
                     ),
-                    child: Row(children: [
-                      FaIcon(FontAwesomeIcons.stripe,
-                          color: Colors.white, size: 40),
-                      // Text("へ行く",
-                      //     style: TextStyle(fontSize: 13, color: Colors.white)),
-                    ]),
+                    child: Text("口座管理", style: TextStyle(color: Colors.white)),
                     onPressed: _goToStripeLink,
                   ),
                 )
@@ -344,17 +331,6 @@ class _HomeDrawerState extends State<HomeDrawer> {
                   Container(
                     width: 6.0,
                     height: 46.0,
-                    // decoration: BoxDecoration(
-                    //   color: widget.screenIndex == listData.index
-                    //       ? Colors.blue
-                    //       : Colors.transparent,
-                    //   borderRadius: new BorderRadius.only(
-                    //     topLeft: Radius.circular(0),
-                    //     topRight: Radius.circular(16),
-                    //     bottomLeft: Radius.circular(0),
-                    //     bottomRight: Radius.circular(16),
-                    //   ),
-                    // ),
                   ),
                   const Padding(
                     padding: EdgeInsets.all(4.0),
