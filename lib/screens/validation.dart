@@ -92,11 +92,45 @@ class _ValidationState extends State<Validation> {
                   return true;
                 },
               ),
-              RaisedButton(
-                onPressed: () => _submitCode(context),
-                child: Text("CONFIRM", style: TextStyle(color: Colors.white)),
-              ),
-              Expanded(child: Container())
+              Padding(
+                padding: const EdgeInsets.only(
+                    left: 16, right: 16, bottom: 16, top: 8),
+                child: Container(
+                  height: 48,
+                  width: 200,
+                  decoration: BoxDecoration(
+                    color: CafeExpressTheme.buildLightTheme().primaryColor,
+                    borderRadius: const BorderRadius.all(Radius.circular(24.0)),
+                    boxShadow: <BoxShadow>[
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.6),
+                        blurRadius: 8,
+                        offset: const Offset(4, 4),
+                      ),
+                    ],
+                  ),
+                  child: Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      borderRadius:
+                          const BorderRadius.all(Radius.circular(24.0)),
+                      highlightColor: Colors.transparent,
+                      onTap: () {
+                        _submitCode(context);
+                      },
+                      child: Center(
+                        child: Text(
+                          '送信',
+                          style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 18,
+                              color: Colors.white),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              )
             ],
           ),
         ),

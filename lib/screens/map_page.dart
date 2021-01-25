@@ -528,7 +528,7 @@ class _MapPageState extends State<MapPage> {
         }
       },
       useRootNavigator: false,
-      btnOkColor: Colors.tealAccent[400],
+      btnOkColor: Theme.of(context).primaryColor,
       btnCancelOnPress: () {},
       btnOkText: 'ログアウト',
       btnCancelText: 'キャンセル',

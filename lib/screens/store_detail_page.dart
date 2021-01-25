@@ -704,7 +704,7 @@ class _StoreDetailPageState extends State<StoreDetailPage>
                                 }
                             },
                             useRootNavigator: false,
-                            btnOkColor: Colors.tealAccent[400],
+                            btnOkColor: Theme.of(context).primaryColor,
                             btnCancelOnPress: () {},
                             btnOkText: '予約',
                             btnCancelText: 'キャンセル',
@@ -781,6 +781,7 @@ class _StoreDetailPageState extends State<StoreDetailPage>
       },
       body: jsonEncode(sendBody),
     );
+    print("Send email status: $response");
   }
 
   Future<void> processPaymentAsDirectCharge(PaymentMethod paymentMethod) async {

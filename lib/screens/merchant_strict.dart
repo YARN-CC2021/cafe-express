@@ -115,18 +115,16 @@ class _MerchantStrictState extends State<MerchantStrict> {
                                 Text(
                                     'キャンセル料: ${json.decode(snapshot.data)["depositAmount"]}円'),
                               ])),
-                              btnOkOnPress: () {
-                                _changePage(context, BookingListRoute);
-                              },
+                              btnOkOnPress: () {},
                               useRootNavigator: false,
-                              btnOkColor: Colors.tealAccent[400],
+                              btnOkColor: Theme.of(context).primaryColor,
                               // btnCancelOnPress: () {},
-                              btnOkText: '予約リストを開く',
+                              btnOkText: '閉じる',
                               // btnCancelText: 'Go To\n Booking List',
                               // btnCancelColor: Colors.blueGreyAccent[400],
-                              dismissOnTouchOutside: false,
+                              dismissOnTouchOutside: true,
                               headerAnimationLoop: false,
-                              showCloseIcon: true,
+                              showCloseIcon: false,
                               buttonsBorderRadius:
                                   BorderRadius.all(Radius.circular(100)),
                             )..show());
@@ -138,12 +136,6 @@ class _MerchantStrictState extends State<MerchantStrict> {
                       padding: EdgeInsets.symmetric(vertical: 10),
                       child: Column(children: createListOfVacancyCard()));
                 }));
-  }
-
-  void _changePage(BuildContext context, String route) {
-    widget.channel.sink.close();
-    Navigator.pushNamed(context, route);
-    print("Going to $route was triggered");
   }
 
   createListOfVacancyCard() {
