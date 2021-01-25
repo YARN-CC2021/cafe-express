@@ -24,7 +24,7 @@ class _AuthState extends State<Auth> {
   @override
   initState() {
     super.initState();
-    print("Very beginning auth: ${globals.userId}");
+    print("login page useId: ${globals.userId}");
     if (!isConfigured) config();
   }
 
@@ -36,7 +36,7 @@ class _AuthState extends State<Auth> {
     amplify.configure(amplifyconfig);
     setState(() {
       isConfigured = true;
-      print('Configuration is $isConfigured');
+      print('Configuration Succesful $isConfigured');
     });
     print("user signed in? ${isSignIn.isSignedIn}");
   }
@@ -60,12 +60,6 @@ class _AuthState extends State<Auth> {
       SignInResult result = await Amplify.Auth.signIn(
           username: data.name, password: data.password);
       if (result.isSignedIn) {
-        print(isSignIn.isSignedIn);
-        setState(() {
-          //  isSignIn.isSignedIn = true;
-        });
-        //isSignIn.signedIn();
-        print(isSignIn.isSignedIn);
         isSignIn.signedIn();
         _returnWrapper(context);
       }
@@ -106,8 +100,6 @@ class _AuthState extends State<Auth> {
       ResetPasswordResult result = await Amplify.Auth.resetPassword(
         username: name,
       );
-      print(result);
-      print(result.isPasswordReset);
       if (!result.isPasswordReset) {
         _goResetPassword(context, name);
       } else {
@@ -145,7 +137,6 @@ class _AuthState extends State<Auth> {
   }
 
   void _returnWrapper(BuildContext context) {
-    // Navigator.pushNamed(context, MapSearchRoute);
     Navigator.pushNamed(context, WrapperRoute);
   }
 
