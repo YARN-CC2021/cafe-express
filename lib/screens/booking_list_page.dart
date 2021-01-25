@@ -61,7 +61,10 @@ class _BookingPageState extends State<BookingPage> {
       ),
       body: bookingData == null
           ? Center(child: CircularProgressIndicator())
-          : StreamBuilder(
+          : bookingData.length == 0
+              ? Center(
+                  child: Text("予約情報がありません", style: TextStyle(fontSize: 20)))
+              :  StreamBuilder(
               stream: channel.stream,
               builder: (context, snapshot) {
                 if (snapshot.hasData &&

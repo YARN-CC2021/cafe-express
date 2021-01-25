@@ -20,8 +20,6 @@ import 'screens/stripe.dart';
 import 'services/stored_cards.dart';
 import 'screens/password_reset.dart';
 import 'package:amplify_core/amplify_core.dart';
-import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
-import 'package:flutter/services.dart';
 import 'app_theme.dart';
 import 'custom_drawer/navigation_home_screen.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -169,6 +167,9 @@ class MyApp extends StatelessWidget {
           break;
         case MerchantCalendarRoute:
           screen = MerchantCalendarPage();
+          break;
+        case NavigateMerchantRoute:
+          screen = NavigationHomeScreen();
           break;
         case TimerRoute:
           // screen = TimerPage(arguments['shopData'], arguments['bookData']);
