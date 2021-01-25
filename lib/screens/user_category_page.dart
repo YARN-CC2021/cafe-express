@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:amplify_core/amplify_core.dart';
 import '../global.dart' as globals;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import '../app_theme.dart';
 
 class UserCategoryPage extends StatefulWidget {
   @override
@@ -27,9 +28,16 @@ class _UserCategoryPageState extends State<UserCategoryPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("Cafe Express"),
-          backgroundColor: Theme.of(context).primaryColor,
-          elevation: 0.0,
+          leading: new Container(),
+          title: Text("ユーザーカテゴリー",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+              )),
+          centerTitle: true,
+          backgroundColor: CafeExpressTheme.buildLightTheme().backgroundColor,
+          elevation: 3.0,
         ),
         body: Center(
             child: Column(children: [
