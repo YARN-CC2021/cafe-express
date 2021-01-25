@@ -14,7 +14,7 @@ class FiltersScreen extends StatefulWidget {
 class _FiltersScreenState extends State<FiltersScreen> {
   List<CategoryData> categoryData = CategoryData.category;
 
-  double distValue = 5.0;
+  double distValue = 25.0;
   double peopleValue = 1;
 
   @override
@@ -72,8 +72,8 @@ class _FiltersScreenState extends State<FiltersScreen> {
                     highlightColor: Colors.transparent,
                     onTap: () {
                       Navigator.pop(context, {
-                        "groupSize": peopleValue.toInt(),
-                        "distance": (distValue * 100).toInt(),
+                        "groupSize": globals.peopleValue.toInt(),
+                        "distance": (globals.distanceValue * 100).toInt(),
                         "category": categoryData
                       });
                     },
@@ -151,7 +151,7 @@ class _FiltersScreenState extends State<FiltersScreen> {
                 Row(
                   children: [
                     Text(
-                      "人数絞り込み",
+                      "絞り込みON",
                       style: TextStyle(
                           color: Colors.grey,
                           fontSize:
@@ -174,7 +174,7 @@ class _FiltersScreenState extends State<FiltersScreen> {
               ],
             )),
         PeopleSliderView(
-          peopleValue: peopleValue,
+          peopleValue: globals.peopleValue,
           onChangePeopleValue: (double value) {
             peopleValue = value;
           },
@@ -204,7 +204,7 @@ class _FiltersScreenState extends State<FiltersScreen> {
           ),
         ),
         SliderView(
-          distValue: distValue,
+          distValue: globals.distanceValue,
           onChangedistValue: (double value) {
             distValue = value;
           },
@@ -341,8 +341,8 @@ class _FiltersScreenState extends State<FiltersScreen> {
                   ),
                   onTap: () {
                     Navigator.pop(context, {
-                      "groupSize": peopleValue.toInt(),
-                      "distance": (distValue * 100).toInt(),
+                      "groupSize": globals.peopleValue.toInt(),
+                      "distance": (globals.distanceValue * 100).toInt(),
                       "category": categoryData
                     });
                   },

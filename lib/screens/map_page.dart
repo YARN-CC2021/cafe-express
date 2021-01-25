@@ -63,9 +63,9 @@ class _MapPageState extends State<MapPage> {
 
   @override
   void dispose() {
-    super.dispose();
     _pageController.dispose();
     _locationChangedListen?.cancel();
+    super.dispose();
   }
 
   @override
@@ -87,141 +87,160 @@ class _MapPageState extends State<MapPage> {
                               children: [
                                 _makeGoogleMap(),
                                 Align(
-                                  alignment: Alignment.bottomCenter,
-                                  child: Container(
-                                    height: 150,
-                                    child: PageView(
-                                      controller: _pageController,
-                                      children: listShops.map<Widget>((shop) {
-                                        return Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 10.0),
-                                          child: GestureDetector(
-                                            onTap: () {
-                                              _onTap(context, shop['id']);
-                                            },
-                                            child: Card(
-                                              clipBehavior: Clip.antiAlias,
-                                              margin: EdgeInsets.zero,
-                                              shape:
-                                                  const RoundedRectangleBorder(
-                                                borderRadius: BorderRadius.all(
-                                                    Radius.circular(16.0)),
-                                              ),
-                                              child: Stack(
-                                                fit: StackFit.loose,
-                                                children: <Widget>[
-                                                  Center(
-                                                      child: shop["imageUrl"]
-                                                                  .length ==
-                                                              0
-                                                          ? Text("写真がありません")
-                                                          : listOfUrl == null
-                                                              ? CircularProgressIndicator()
-                                                              : Container(
-                                                                  constraints:
-                                                                      BoxConstraints
-                                                                          .expand(),
-                                                                  decoration:
-                                                                      BoxDecoration(
-                                                                    image:
-                                                                        DecorationImage(
-                                                                      onError:
-                                                                          (error,
-                                                                              stackTrace) {
-                                                                        return Text(
-                                                                            "写真がありません");
-                                                                      },
-                                                                      fit: BoxFit
-                                                                          .cover,
-                                                                      image: NetworkImage(
-                                                                          listOfUrl[
-                                                                              shop["id"]]),
-                                                                    ),
-                                                                  ),
-                                                                )),
-                                                  Positioned(
-                                                    left: 0,
-                                                    right: 0,
-                                                    bottom: 0,
-                                                    child: Container(
-                                                      child: Text(shop['name'],
-                                                          style: TextStyle(
-                                                              color: Colors
-                                                                  .white)),
-                                                      decoration:
-                                                          const BoxDecoration(
-                                                              color: Color
-                                                                  .fromARGB(
-                                                                      0x99,
-                                                                      0,
-                                                                      0,
-                                                                      0)),
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              8),
+                                    alignment: Alignment.bottomCenter,
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        Container(
+                                          height: 150,
+                                          child: PageView(
+                                            controller: _pageController,
+                                            children:
+                                                listShops.map<Widget>((shop) {
+                                              return Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 10.0),
+                                                child: GestureDetector(
+                                                  onTap: () {
+                                                    _onTap(context, shop['id']);
+                                                  },
+                                                  child: Card(
+                                                    clipBehavior:
+                                                        Clip.antiAlias,
+                                                    margin: EdgeInsets.zero,
+                                                    shape:
+                                                        const RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.all(
+                                                              Radius.circular(
+                                                                  16.0)),
                                                     ),
-                                                  )
-                                                ],
+                                                    child: Stack(
+                                                      fit: StackFit.loose,
+                                                      children: <Widget>[
+                                                        Center(
+                                                            child: shop["imageUrl"]
+                                                                        .length ==
+                                                                    0
+                                                                ? Text(
+                                                                    "写真がありません")
+                                                                : listOfUrl ==
+                                                                        null
+                                                                    ? CircularProgressIndicator()
+                                                                    : Container(
+                                                                        constraints:
+                                                                            BoxConstraints.expand(),
+                                                                        decoration:
+                                                                            BoxDecoration(
+                                                                          image:
+                                                                              DecorationImage(
+                                                                            onError:
+                                                                                (error, stackTrace) {
+                                                                              return Text("写真がありません");
+                                                                            },
+                                                                            fit:
+                                                                                BoxFit.cover,
+                                                                            image:
+                                                                                NetworkImage(listOfUrl[shop["id"]]),
+                                                                          ),
+                                                                        ),
+                                                                      )),
+                                                        Positioned(
+                                                          left: 0,
+                                                          right: 0,
+                                                          bottom: 0,
+                                                          child: Container(
+                                                            child: Text(
+                                                                shop['name'],
+                                                                style: TextStyle(
+                                                                    color: Colors
+                                                                        .white)),
+                                                            decoration:
+                                                                const BoxDecoration(
+                                                                    color: Color
+                                                                        .fromARGB(
+                                                                            0x99,
+                                                                            0,
+                                                                            0,
+                                                                            0)),
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .all(8),
+                                                          ),
+                                                        )
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                              );
+                                            }).toList(),
+                                            onPageChanged: (int page) {
+                                              if (_isPageViewAnimating) {
+                                                return;
+                                              }
+                                              _updateSelectedShopForPage(page);
+                                            },
+                                          ),
+                                          decoration: BoxDecoration(
+                                              color: Colors.transparent),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                              left: 16,
+                                              right: 16,
+                                              bottom: 12,
+                                              top: 10),
+                                          child: Container(
+                                            height: 45,
+                                            width: 150,
+                                            decoration: BoxDecoration(
+                                              color: CafeExpressTheme
+                                                      .buildLightTheme()
+                                                  .primaryColor,
+                                              borderRadius:
+                                                  const BorderRadius.all(
+                                                      Radius.circular(24.0)),
+                                              boxShadow: <BoxShadow>[
+                                                BoxShadow(
+                                                  color: Colors.grey
+                                                      .withOpacity(0.6),
+                                                  blurRadius: 8,
+                                                  offset: const Offset(4, 4),
+                                                ),
+                                              ],
+                                            ),
+                                            child: Material(
+                                              color: Colors.transparent,
+                                              child: InkWell(
+                                                borderRadius:
+                                                    const BorderRadius.all(
+                                                        Radius.circular(24.0)),
+                                                highlightColor:
+                                                    Colors.transparent,
+                                                onTap: () {
+                                                  FocusScope.of(context)
+                                                      .requestFocus(
+                                                          FocusNode());
+                                                  _goToFilter(context);
+                                                },
+                                                child: Center(
+                                                  child: Text(
+                                                    '条件を絞る',
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        fontSize: 18,
+                                                        color: Colors.white),
+                                                  ),
+                                                ),
                                               ),
                                             ),
                                           ),
-                                        );
-                                      }).toList(),
-                                      onPageChanged: (int page) {
-                                        if (_isPageViewAnimating) {
-                                          return;
-                                        }
-                                        _updateSelectedShopForPage(page);
-                                      },
-                                    ),
-                                    decoration: BoxDecoration(
-                                        color: Colors.transparent),
-                                  ),
-                                ),
+                                        ),
+                                      ],
+                                    )),
                               ],
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(
-                                left: 16, right: 16, bottom: 10, top: 10),
-                            child: Container(
-                              height: 48,
-                              decoration: BoxDecoration(
-                                color: CafeExpressTheme.buildLightTheme()
-                                    .primaryColor,
-                                borderRadius: const BorderRadius.all(
-                                    Radius.circular(24.0)),
-                                boxShadow: <BoxShadow>[
-                                  BoxShadow(
-                                    color: Colors.grey.withOpacity(0.6),
-                                    blurRadius: 8,
-                                    offset: const Offset(4, 4),
-                                  ),
-                                ],
-                              ),
-                              child: Material(
-                                color: Colors.transparent,
-                                child: InkWell(
-                                  borderRadius: const BorderRadius.all(
-                                      Radius.circular(24.0)),
-                                  highlightColor: Colors.transparent,
-                                  onTap: () {
-                                    FocusScope.of(context)
-                                        .requestFocus(FocusNode());
-                                    _goToFilter(context);
-                                  },
-                                  child: Center(
-                                    child: Text(
-                                      '条件を絞る',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 18,
-                                          color: Colors.white),
-                                    ),
-                                  ),
-                                ),
-                              ),
                             ),
                           ),
                         ]),
@@ -272,7 +291,7 @@ class _MapPageState extends State<MapPage> {
           target: LatLng(_yourLocation.latitude, _yourLocation.longitude),
           zoom: 18.0,
         ),
-        padding: EdgeInsets.only(bottom: 180.0),
+        // padding: EdgeInsets.only(bottom: 180.0),
         markers: listShops.map((shop) {
           return Marker(
             markerId: MarkerId(shop['id']),
@@ -299,7 +318,8 @@ class _MapPageState extends State<MapPage> {
           _controller.complete(controller);
         },
         myLocationEnabled: true,
-        myLocationButtonEnabled: true,
+        myLocationButtonEnabled: false,
+        zoomControlsEnabled: false,
         mapToolbarEnabled: false,
       );
     }
@@ -366,7 +386,7 @@ class _MapPageState extends State<MapPage> {
         await _showPic();
 
         _filterShop(
-            500,
+            2500,
             [
               CategoryData(
                 titleTxt: 'All',
@@ -488,7 +508,8 @@ class _MapPageState extends State<MapPage> {
 
   void _onTap(BuildContext context, String shopId) {
     print("inside onTap");
-    Navigator.pushNamed(context, DetailRoute, arguments: {"id": shopId});
+    // Navigator.pushNamed(context, DetailRoute, arguments: {"id": shopId});
+    Navigator.pushNamed(context, StoreDetailRoute, arguments: {"id": shopId});
   }
 
   void _goHistoryPage(BuildContext context) {

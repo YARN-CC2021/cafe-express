@@ -5,8 +5,6 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:amplify_core/amplify_core.dart';
-import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
-import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:amplify_storage_s3/amplify_storage_s3.dart';
 import '../app_theme.dart';
@@ -35,7 +33,6 @@ class _MerchantProfileSettingPageState
   }
 
   Future<void> _getShopData() async {
-    print("Inside Merchant Strict: ${globals.userId}");
     var response = await http.get(
         'https://pq3mbzzsbg.execute-api.ap-northeast-1.amazonaws.com/CaffeExpressRESTAPI/store/${globals.userId}');
     final jsonResponse = await json.decode(utf8.decode(response.bodyBytes));
@@ -62,17 +59,14 @@ class _MerchantProfileSettingPageState
     final jsonResponse = await json.decode(utf8.decode(response.bodyBytes));
     final clientStripeConnectUrl =
         await jsonDecode(jsonResponse["body"])["accountLinkURL"];
-    print(clientStripeConnectUrl);
     await launch("$clientStripeConnectUrl");
   }
 
   Future<void> _showPic() async {
-    print("inside showpic");
     final getUrlOptions = GetUrlOptions(
       accessLevel: StorageAccessLevel.guest,
     );
     var listOfUrl = [];
-    print("shopData Image URL: ${shopData["imageUrl"]}");
     if (shopData["imageUrl"] != null && shopData["imageUrl"].length > 0) {
       for (var key in shopData["imageUrl"]) {
         var result =
@@ -86,8 +80,6 @@ class _MerchantProfileSettingPageState
     setState(() {
       images = listOfUrl;
     });
-    print("imagesssss: $images");
-    print("done listing");
   }
 
   @override
@@ -325,7 +317,6 @@ class _MerchantProfileSettingPageState
                           ),
                         ),
                         IconButton(
-                          // Use the FaIcon Widget + FontAwesomeIcons class for the IconData
                           icon: FaIcon(FontAwesomeIcons.edit),
                           onPressed: () {
                             _changePage(context, MerchantProfileRoute);
