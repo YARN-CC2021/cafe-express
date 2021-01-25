@@ -5,6 +5,7 @@ import '../app.dart';
 import '../global.dart' as globals;
 import 'dart:async';
 import 'package:pin_code_fields/pin_code_fields.dart';
+import '../app_theme.dart';
 
 class Validation extends StatefulWidget {
   final String email;
@@ -27,9 +28,15 @@ class _ValidationState extends State<Validation> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        title: Text("Confirm your email"),
-        backgroundColor: Theme.of(context).primaryColor,
+        title: Text("確認コード",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+            )),
         centerTitle: true,
+        backgroundColor: CafeExpressTheme.buildLightTheme().backgroundColor,
+        elevation: 3.0,
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 40),
@@ -37,13 +44,16 @@ class _ValidationState extends State<Validation> {
           child: Column(
             children: [
               Text(
-                "An email confirmation code has been sent to ${widget.email}.",
+                "確認コードが${widget.email}に送信されました",
+                // "An email confirmation code has been sent to ${widget.email}.",
                 style: Theme.of(context).textTheme.headline6,
+                textAlign: TextAlign.center,
               ),
-              SizedBox(height: 80),
+              SizedBox(height: 50),
               Text(
-                "Please type the code to confirm your email:",
+                "お使いの電子メールアドレスであることを確認するために、確認コードを下に入力してください:",
                 // style: Theme.of(context).textTheme.headline6,
+                textAlign: TextAlign.center,
               ),
               SizedBox(height: 30),
               PinCodeTextField(
@@ -62,7 +72,7 @@ class _ValidationState extends State<Validation> {
                   activeColor: Theme.of(context).primaryColor,
                 ),
                 animationDuration: Duration(milliseconds: 300),
-                backgroundColor: Colors.blue.shade50,
+                backgroundColor: Colors.transparent,
                 enableActiveFill: true,
                 errorAnimationController: errorController,
                 controller: _confirmationCodeController,
@@ -82,11 +92,11 @@ class _ValidationState extends State<Validation> {
                   return true;
                 },
               ),
-              SizedBox(height: 80),
               RaisedButton(
                 onPressed: () => _submitCode(context),
-                child: Text("CONFIRM"),
+                child: Text("CONFIRM", style: TextStyle(color: Colors.white)),
               ),
+              Expanded(child: Container())
             ],
           ),
         ),
