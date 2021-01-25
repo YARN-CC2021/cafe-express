@@ -463,7 +463,7 @@ class _MerchantCalendarPageState extends State<MerchantCalendarPage> {
                               ]),
                         ),
                         Container(
-                          margin: const EdgeInsets.only(bottom: 10.0),
+                          margin: const EdgeInsets.only(bottom: 30.0),
                           child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
@@ -505,48 +505,70 @@ class _MerchantCalendarPageState extends State<MerchantCalendarPage> {
                     Center(
                         child: Row(
                       children: [
-                        SizedBox(width: 100),
                         Expanded(
-                            child: MaterialButton(
-                          color: Theme.of(context).primaryColor,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5.0),
-                          ),
-                          onPressed: () {
-                            try {
-                              assignNewHours();
-                              _updateStoreProfile();
-                              AwesomeDialog(
-                                context: context,
-                                customHeader: null,
-                                dialogType: DialogType.NO_HEADER,
-                                animType: AnimType.BOTTOMSLIDE,
-                                body: Center(
-                                  child: Text('カレンダー情報がアップデートされました'),
+                          child: Container(
+                            height: 48,
+                            decoration: BoxDecoration(
+                              color: CafeExpressTheme.buildLightTheme()
+                                  .primaryColor,
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(24.0)),
+                              boxShadow: <BoxShadow>[
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(0.6),
+                                  blurRadius: 8,
+                                  offset: const Offset(4, 4),
                                 ),
-                                // btnOkOnPress: () {},
-                                useRootNavigator: false,
-                                // btnOkColor: Colors.tealAccent[400],
-                                // btnCancelOnPress: () {},
-                                // btnOkText: 'ログアウト',
-                                // btnCancelText: 'キャンセル',
-                                // btnCancelColor: Colors.blueGrey[400],
-                                dismissOnTouchOutside: true,
-                                headerAnimationLoop: false,
-                                showCloseIcon: false,
-                                buttonsBorderRadius:
-                                    BorderRadius.all(Radius.circular(100)),
-                              )..show();
-                            } catch (e) {
-                              print(e.toString());
-                            }
-                          },
-                          child: Text(
-                            '保存',
-                            style: TextStyle(color: Colors.white, fontSize: 16),
+                              ],
+                            ),
+                            child: Material(
+                              color: Colors.transparent,
+                              child: InkWell(
+                                borderRadius: const BorderRadius.all(
+                                    Radius.circular(24.0)),
+                                highlightColor: Colors.transparent,
+                                onTap: () {
+                                  try {
+                                    assignNewHours();
+                                    _updateStoreProfile();
+                                    AwesomeDialog(
+                                      context: context,
+                                      customHeader: null,
+                                      dialogType: DialogType.NO_HEADER,
+                                      animType: AnimType.BOTTOMSLIDE,
+                                      body: Center(
+                                        child: Text('カレンダー情報がアップデートされました'),
+                                      ),
+                                      // btnOkOnPress: () {},
+                                      useRootNavigator: false,
+                                      // btnOkColor: Colors.tealAccent[400],
+                                      // btnCancelOnPress: () {},
+                                      // btnOkText: 'ログアウト',
+                                      // btnCancelText: 'キャンセル',
+                                      // btnCancelColor: Colors.blueGrey[400],
+                                      dismissOnTouchOutside: true,
+                                      headerAnimationLoop: false,
+                                      showCloseIcon: false,
+                                      buttonsBorderRadius: BorderRadius.all(
+                                          Radius.circular(100)),
+                                    )..show();
+                                  } catch (e) {
+                                    print(e.toString());
+                                  }
+                                },
+                                child: Center(
+                                  child: Text(
+                                    '保存',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 18,
+                                        color: Colors.white),
+                                  ),
+                                ),
+                              ),
+                            ),
                           ),
-                        )),
-                        SizedBox(width: 100),
+                        ),
                       ],
                     )),
                   ]),

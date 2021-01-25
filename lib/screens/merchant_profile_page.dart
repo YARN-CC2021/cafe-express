@@ -10,6 +10,7 @@ import 'dart:io';
 import 'package:amplify_storage_s3/amplify_storage_s3.dart';
 import 'package:amplify_core/amplify_core.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import '../app_theme.dart';
 
 class MerchantProfilePage extends StatefulWidget {
   @override
@@ -144,12 +145,14 @@ class _MerchantProfilePageState extends State<MerchantProfilePage> {
     return Scaffold(
         appBar: AppBar(
           title: Text("プロフィール編集",
+              textAlign: TextAlign.center,
               style: TextStyle(
                 fontWeight: FontWeight.bold,
+                color: Colors.black,
               )),
           centerTitle: true,
-          backgroundColor: Theme.of(context).primaryColor,
-          elevation: 0.0,
+          backgroundColor: CafeExpressTheme.buildLightTheme().backgroundColor,
+          elevation: 3.0,
         ),
         body: shopData == null && images == null && _category == null
             ? Center(child: CircularProgressIndicator())
