@@ -386,7 +386,7 @@ class _MapPageState extends State<MapPage> {
         await _showPic();
 
         _filterShop(
-            500,
+            2500,
             [
               CategoryData(
                 titleTxt: 'All',

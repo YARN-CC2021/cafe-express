@@ -254,13 +254,24 @@ class _TimerPageState extends State<TimerPage> {
                                               Container(
                                                 padding: const EdgeInsets.only(
                                                     top: 8),
-                                                child: Text(
-                                                  '${_displayStatus(bookingData["status"])}が完了しました！',
-                                                  style: TextStyle(
-                                                    fontSize: 18,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
+                                                child: bookingData["status"] ==
+                                                        "cancelled"
+                                                    ? Text(
+                                                        '予約が${_displayStatus(bookingData["status"])}されました',
+                                                        style: TextStyle(
+                                                          fontSize: 18,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                        ),
+                                                      )
+                                                    : Text(
+                                                        '${_displayStatus(bookingData["status"])}が完了しました！',
+                                                        style: TextStyle(
+                                                          fontSize: 18,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                        ),
+                                                      ),
                                               ),
                                               bookingData["status"] == "paid"
                                                   ? Container(
@@ -373,20 +384,32 @@ class _TimerPageState extends State<TimerPage> {
                                                               .center,
                                                       crossAxisAlignment:
                                                           CrossAxisAlignment
-                                                              .center,
+                                                              .start,
                                                       children: <Widget>[
-                                                        Text(
-                                                          '${shopingData["name"]}',
-                                                          textAlign:
-                                                              TextAlign.center,
-                                                          style: TextStyle(
-                                                            fontWeight:
-                                                                FontWeight.w600,
-                                                            fontSize: 14,
-                                                            letterSpacing: 0.27,
-                                                            color:
-                                                                CafeExpressTheme
-                                                                    .darkText,
+                                                        Padding(
+                                                          padding:
+                                                              EdgeInsets.only(
+                                                                  bottom: 10),
+                                                          child: Align(
+                                                            alignment: Alignment
+                                                                .center,
+                                                            child: Text(
+                                                              '${shopingData["name"]}',
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .center,
+                                                              style: TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w600,
+                                                                fontSize: 14,
+                                                                letterSpacing:
+                                                                    0.27,
+                                                                color:
+                                                                    CafeExpressTheme
+                                                                        .darkText,
+                                                              ),
+                                                            ),
                                                           ),
                                                         ),
                                                         Text(
@@ -418,7 +441,7 @@ class _TimerPageState extends State<TimerPage> {
                                                           ),
                                                         ),
                                                         Text(
-                                                          '${_displayStatus(bookingData["status"])}時刻：${bookingData["updatedAt"]}',
+                                                          '${_displayStatus(bookingData["status"])}時刻：${bookingData["updatedAt"].substring(0, 16)}',
                                                           textAlign:
                                                               TextAlign.left,
                                                           style: TextStyle(
@@ -453,9 +476,16 @@ class _TimerPageState extends State<TimerPage> {
                                                 height: 45,
                                                 width: 200,
                                                 decoration: BoxDecoration(
-                                                  color: CafeExpressTheme
-                                                          .buildLightTheme()
-                                                      .primaryColor,
+                                                  color: bookingData[
+                                                                  "status"] ==
+                                                              "checked_in" ||
+                                                          bookingData[
+                                                                  "status"] ==
+                                                              "cancelled"
+                                                      ? Colors.grey
+                                                      : CafeExpressTheme
+                                                              .buildLightTheme()
+                                                          .primaryColor,
                                                   borderRadius:
                                                       const BorderRadius.all(
                                                           Radius.circular(
@@ -523,8 +553,42 @@ class _TimerPageState extends State<TimerPage> {
                                                     Radius.circular(32.0),
                                                   ),
                                                   onTap: () {
-                                                    launch(
-                                                        "tel:${shopingData['tel']}");
+                                                    AwesomeDialog(
+                                                      context: context,
+                                                      customHeader: null,
+                                                      dialogType:
+                                                          DialogType.NO_HEADER,
+                                                      animType:
+                                                          AnimType.BOTTOMSLIDE,
+                                                      body: Center(
+                                                        child: Text(
+                                                            '${bookingData["storeInfo"]["name"]}に\n電話をしますか？',
+                                                            textAlign: TextAlign
+                                                                .center),
+                                                      ),
+                                                      btnOkOnPress: () {
+                                                        launch(
+                                                            "tel:${shopingData['tel']}");
+                                                      },
+                                                      useRootNavigator: false,
+                                                      btnOkColor:
+                                                          Theme.of(context)
+                                                              .primaryColor,
+                                                      btnCancelOnPress: () {},
+                                                      btnOkText: '電話する',
+                                                      btnCancelText: 'キャンセル',
+                                                      btnCancelColor:
+                                                          Colors.blueGrey[400],
+                                                      dismissOnTouchOutside:
+                                                          true,
+                                                      headerAnimationLoop:
+                                                          false,
+                                                      showCloseIcon: false,
+                                                      buttonsBorderRadius:
+                                                          BorderRadius.all(
+                                                              Radius.circular(
+                                                                  100)),
+                                                    )..show();
                                                   },
                                                   child: Padding(
                                                     padding:
