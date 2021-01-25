@@ -43,11 +43,8 @@ class _MerchantProfilePageState extends State<MerchantProfilePage> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController storeUrlController = TextEditingController();
   final TextEditingController categoryController = TextEditingController();
-  // final TextEditingController depositController = TextEditingController();
   final TextEditingController imageController = TextEditingController();
   final TextEditingController zipCodeController = TextEditingController();
-
-  // var profile = {};
 
   Future<void> _getShopData() async {
     setState(() => _userId = globals.userId);
@@ -66,9 +63,7 @@ class _MerchantProfilePageState extends State<MerchantProfilePage> {
   }
 
   Future<void> _uploadPhoto() async {
-    print("Im in Filepick");
     try {
-      // use a file selection mechanism of your choice
       File file = await FilePicker.getFile(type: FileType.image);
       String fileName = new DateTime.now().millisecondsSinceEpoch.toString();
       fileName = "image/store/${globals.userId}/" + fileName;
@@ -76,33 +71,17 @@ class _MerchantProfilePageState extends State<MerchantProfilePage> {
           S3UploadFileOptions(accessLevel: StorageAccessLevel.guest);
       UploadFileResult result = await Amplify.Storage.uploadFile(
           key: fileName, local: file, options: options);
-      print("first print ${shopData["imageUrl"]}");
-      print("first print ${result.key}");
       setState(() {
         shopData["imageUrl"].add(result.key);
       });
-      print("first print ${shopData["imageUrl"]}");
       await _updatePhoto();
-      print("Upload Completed!");
+      print("Photo Upload Completed!");
     } catch (e) {
       print(e.toString());
     }
   }
 
-  // Future<void> _fetchSession() async {
-  //   print("Im in fetchSesssion!!!");
-  //   try {
-  //     CognitoAuthSession res = await Amplify.Auth.fetchAuthSession(
-  //         options: CognitoSessionOptions(getAWSCredentials: true));
-  //     identityId = res.identityId;
-  //     print("IdentityId $identityId");
-  //   } on AuthError catch (e) {
-  //     print(e);
-  //   }
-  // }
-
   Future<void> _showPic() async {
-    print("inside showpic");
     final getUrlOptions = GetUrlOptions(
       accessLevel: StorageAccessLevel.guest,
     );
@@ -116,32 +95,15 @@ class _MerchantProfilePageState extends State<MerchantProfilePage> {
         listOfUrl.add(url);
       }
     }
-    print("List of Url: $listOfUrl");
     print("done getting getting image Url");
     setState(() {
       images = listOfUrl;
     });
-    print("imagesssss: $images");
-    print("done listing");
+    print("done listing image url");
   }
-
-  // Future<void> _listPic() async {
-  //   print("Im in listPic");
-  //   try {
-  //     S3ListOptions options = S3ListOptions(
-  //       accessLevel: StorageAccessLevel.guest,
-  //     );
-  //     ListResult res = await Amplify.Storage.list(options: options);
-  //     result = res.items[0].key;
-  //     print("res $res");
-  //   } catch (e) {
-  //     print(e.toString());
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {
-    // Build a Form widget using the _formKey created above.
     return Scaffold(
         appBar: AppBar(
           title: Text("プロフィール編集",
@@ -164,7 +126,6 @@ class _MerchantProfilePageState extends State<MerchantProfilePage> {
                         padding: EdgeInsets.symmetric(
                             horizontal: 16.0, vertical: 10),
                         children: <Widget>[
-                          // Add TextFormFields and ElevatedButton here.
                           Row(
                             children: [
                               images != null && images.length != 0
@@ -213,7 +174,6 @@ class _MerchantProfilePageState extends State<MerchantProfilePage> {
                                             height: 83,
                                             color: Colors.grey[300],
                                             child: IconButton(
-                                              // Use the FaIcon Widget + FontAwesomeIcons class for the IconData
                                               iconSize: 35,
                                               color: Colors.grey,
                                               icon: FaIcon(
@@ -270,7 +230,6 @@ class _MerchantProfilePageState extends State<MerchantProfilePage> {
                                             height: 83,
                                             color: Colors.grey[300],
                                             child: IconButton(
-                                              // Use the FaIcon Widget + FontAwesomeIcons class for the IconData
                                               iconSize: 35,
                                               color: Colors.grey,
                                               icon: FaIcon(
@@ -327,7 +286,6 @@ class _MerchantProfilePageState extends State<MerchantProfilePage> {
                                             height: 83,
                                             color: Colors.grey[300],
                                             child: IconButton(
-                                              // Use the FaIcon Widget + FontAwesomeIcons class for the IconData
                                               iconSize: 35,
                                               color: Colors.grey,
                                               icon: FaIcon(
@@ -384,7 +342,6 @@ class _MerchantProfilePageState extends State<MerchantProfilePage> {
                                             height: 83,
                                             color: Colors.grey[300],
                                             child: IconButton(
-                                              // Use the FaIcon Widget + FontAwesomeIcons class for the IconData
                                               iconSize: 35,
                                               color: Colors.grey,
                                               icon: FaIcon(
@@ -397,9 +354,7 @@ class _MerchantProfilePageState extends State<MerchantProfilePage> {
                                     ),
                             ],
                           ),
-
                           TextFormField(
-                            // The validator receives the text that the user has entered.
                             decoration: InputDecoration(
                               icon: Container(
                                 width: 26,
@@ -420,7 +375,6 @@ class _MerchantProfilePageState extends State<MerchantProfilePage> {
                             },
                           ),
                           TextFormField(
-                            // The validator receives the text that the user has entered.
                             decoration: InputDecoration(
                               icon: Container(
                                 width: 26,
@@ -463,7 +417,6 @@ class _MerchantProfilePageState extends State<MerchantProfilePage> {
                               OutlineButton(
                                 child: Text('検索'),
                                 onPressed: () async {
-                                  print(zipCodeController.text);
                                   var result = await http.get(
                                       'https://zipcloud.ibsnet.co.jp/api/search?zipcode=${zipCodeController.text}');
                                   Map<String, dynamic> map =
@@ -475,7 +428,6 @@ class _MerchantProfilePageState extends State<MerchantProfilePage> {
                             ],
                           ),
                           TextFormField(
-                            // The validator receives the text that the user has entered.
                             decoration: InputDecoration(
                               icon: Container(
                                 width: 26,
@@ -496,7 +448,6 @@ class _MerchantProfilePageState extends State<MerchantProfilePage> {
                             },
                           ),
                           TextFormField(
-                            // The validator receives the text that the user has entered.
                             decoration: InputDecoration(
                               icon: Container(
                                 width: 26,
@@ -508,7 +459,6 @@ class _MerchantProfilePageState extends State<MerchantProfilePage> {
                               hintText: '電話番号を入力してください',
                               labelText: '電話番号',
                             ),
-                            //fillColor: Colors.green),
                             controller: telController,
                             validator: (value) {
                               if (value.isEmpty) {
@@ -518,7 +468,6 @@ class _MerchantProfilePageState extends State<MerchantProfilePage> {
                             },
                           ),
                           TextFormField(
-                            // The validator receives the text that the user has entered.
                             decoration: InputDecoration(
                               icon: Container(
                                 width: 26,
@@ -539,7 +488,6 @@ class _MerchantProfilePageState extends State<MerchantProfilePage> {
                             },
                           ),
                           TextFormField(
-                            // The validator receives the text that the user has entered.
                             decoration: InputDecoration(
                               icon: Container(
                                 width: 26,
@@ -661,42 +609,50 @@ class _MerchantProfilePageState extends State<MerchantProfilePage> {
                               ),
                             ),
                           ]),
-                          // ElevatedButton(
-                          //   onPressed: () {
-                          //     if (_formKey.currentState.validate()) {
-                          //       assignVariable();
-                          //       _updateStoreProfile();
-                          //     }
-                          //   },
-                          //   child: Text('保存'),
-                          // ),
                           Center(
                               child: Row(
                             children: [
-                              SizedBox(width: 100),
                               Expanded(
-                                child: ButtonTheme(
-                                  minWidth: 50,
-                                  child: RaisedButton(
-                                    color: Colors.lightBlue,
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(5.0),
-                                        side: BorderSide(
-                                            color: Colors.lightBlue)),
-                                    onPressed: () {
-                                      if (_formKey.currentState.validate()) {
-                                        assignVariable();
-                                        _updateStoreProfile();
-                                      }
-                                    },
-                                    child: Text('保存',
-                                        style: TextStyle(
-                                            color: Colors.white, fontSize: 16)),
+                                child: Container(
+                                  height: 48,
+                                  decoration: BoxDecoration(
+                                    color: CafeExpressTheme.buildLightTheme()
+                                        .primaryColor,
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(24.0)),
+                                    boxShadow: <BoxShadow>[
+                                      BoxShadow(
+                                        color: Colors.grey.withOpacity(0.6),
+                                        blurRadius: 8,
+                                        offset: const Offset(4, 4),
+                                      ),
+                                    ],
+                                  ),
+                                  child: Material(
+                                    color: Colors.transparent,
+                                    child: InkWell(
+                                      borderRadius: const BorderRadius.all(
+                                          Radius.circular(24.0)),
+                                      highlightColor: Colors.transparent,
+                                      onTap: () {
+                                        if (_formKey.currentState.validate()) {
+                                          assignVariable();
+                                          _updateStoreProfile();
+                                        }
+                                      },
+                                      child: Center(
+                                        child: Text(
+                                          '保存',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w500,
+                                              fontSize: 18,
+                                              color: Colors.white),
+                                        ),
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ),
-                              SizedBox(width: 100),
                             ],
                           )),
                         ]))));
@@ -778,11 +734,6 @@ class _MerchantProfilePageState extends State<MerchantProfilePage> {
     emailController.text = shopData['contactEmail'];
     storeUrlController.text = shopData['storeURL'];
     _category = shopData['category'];
-    // if (shopData['imageUrl'].length > 0) {
-    //   imageController.text = shopData['imageUrl'][0];
-    // } else {
-    //   imageController.text = "";
-    // }
     _vacancyType = shopData['vacancyType'];
     shopData.remove("id");
   }
