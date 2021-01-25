@@ -60,13 +60,7 @@ class _AuthState extends State<Auth> {
       SignInResult result = await Amplify.Auth.signIn(
           username: data.name, password: data.password);
       if (result.isSignedIn) {
-        print(isSignIn.isSignedIn);
-        setState(() {
-          //  isSignIn.isSignedIn = true;
-        });
-        //isSignIn.signedIn();
-        print(isSignIn.isSignedIn);
-        isSignIn.signedIn();
+        // isSignIn.signedIn();
         _returnWrapper(context);
       }
     } catch (e) {
