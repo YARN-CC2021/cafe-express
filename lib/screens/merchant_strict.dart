@@ -168,7 +168,6 @@ class _MerchantStrictState extends State<MerchantStrict> {
             width: 150,
             height: 60,
             child: TextFormField(
-              // The validator receives the text that the user has entered.
               textAlign: TextAlign.center,
               decoration: InputDecoration(
                 labelText: "Deposit金額(円)",
@@ -463,7 +462,6 @@ class _MerchantStrictState extends State<MerchantStrict> {
                   child: IconButton(
                     icon: FaIcon(FontAwesomeIcons.edit, size: 12),
                     onPressed: () {
-                      print("test");
                       showDialogForCancelFee(index);
                     },
                   )),

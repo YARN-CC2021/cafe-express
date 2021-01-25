@@ -44,7 +44,6 @@ class _PasswordResetState extends State<PasswordReset> {
               SizedBox(height: 80),
               Text(
                 "Please type the code to confirm your email:",
-                // style: Theme.of(context).textTheme.headline6,
               ),
               SizedBox(height: 30),
               PinCodeTextField(
@@ -88,9 +87,6 @@ class _PasswordResetState extends State<PasswordReset> {
                 keyboardType: TextInputType.number,
                 controller: _newPassCodeController,
                 decoration: InputDecoration(labelText: "New Password"),
-                // validator: (value) => value.length != 6
-                //     ? "The confirmation code is invalid"
-                //     : null,
               ),
               RaisedButton(
                 onPressed: () => _submitCode(context),
@@ -104,7 +100,6 @@ class _PasswordResetState extends State<PasswordReset> {
   }
 
   Future<void> _submitCode(BuildContext context) async {
-    //  if (_formKey.currentState.validate()) {
     final confirmationCode = _confirmationCodeController.text;
     final newPassCode = _newPassCodeController.text;
 
@@ -114,7 +109,6 @@ class _PasswordResetState extends State<PasswordReset> {
           newPassword: newPassCode,
           confirmationCode: confirmationCode);
       if (response != null) {
-        //_goToUserCategory(context);
         autoLogIn(context, newPassCode);
       }
     } on AuthError catch (e) {

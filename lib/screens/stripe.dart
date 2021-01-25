@@ -4,7 +4,6 @@ import '../services/payments.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 
 class StripePage extends StatefulWidget {
-  // StripePage({Key key}) : super(key: key);
   final String id;
   final int price;
   StripePage(this.id, this.price);

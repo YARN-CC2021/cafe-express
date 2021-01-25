@@ -57,7 +57,6 @@ class _MerchantCalendarPageState extends State<MerchantCalendarPage> {
   }
 
   Future<void> _updateStoreProfile() async {
-    // print("JSON stringiified shopdata ${jsonEncode(shopData)}");
     var response = await http.patch(
       "https://pq3mbzzsbg.execute-api.ap-northeast-1.amazonaws.com/CaffeExpressRESTAPI/store/$_userId",
       headers: <String, String>{
@@ -90,14 +89,12 @@ class _MerchantCalendarPageState extends State<MerchantCalendarPage> {
       initialTime: _time,
     );
     var hour;
-    // hour converted to our format
     if (newTime.hour.toString().length == 1) {
       hour = "0" + newTime.hour.toString().substring(0);
     } else {
       hour = newTime.hour.toString();
     }
 
-    // minute converted to our format
     var minute;
     if (newTime.minute.toString().length == 1) {
       minute = "0" + newTime.minute.toString().substring(0);
@@ -158,50 +155,48 @@ class _MerchantCalendarPageState extends State<MerchantCalendarPage> {
             body: Center(
               child: new ListView(
                   padding:
-                      EdgeInsets.symmetric(horizontal: 30.0, vertical: 10.0),
+                      EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
                   children: [
                     Column(
                       mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Container(
-                            margin: const EdgeInsets.only(bottom: 3.0),
-                            child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  Text(
-                                    ' ',
-                                    style: TextStyle(fontSize: 10),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  FlatButton(
-                                    onPressed: () {},
-                                    minWidth: _width / 15,
-                                    height: _height / 15,
-                                    child: Center(
+                          margin: const EdgeInsets.only(bottom: 3.0),
+                          child: Padding(
+                              padding: EdgeInsets.symmetric(vertical: 15),
+                              child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Container(
+                                      width: 18,
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.only(),
+                                      child: Center(
+                                        child: Text(
+                                          'オープン',
+                                          style: TextStyle(fontSize: 20),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.only(),
                                       child: Text(
-                                        'Open',
-                                        style: TextStyle(fontSize: 25),
+                                        'クローズ',
+                                        style: TextStyle(fontSize: 20),
                                         textAlign: TextAlign.center,
                                       ),
                                     ),
-                                  ),
-                                  FlatButton(
-                                    onPressed: () {},
-                                    minWidth: _width / 15,
-                                    height: _height / 15,
-                                    child: Text(
-                                      'Close',
-                                      style: TextStyle(fontSize: 25),
+                                    Text(
+                                      '休日',
+                                      style: TextStyle(fontSize: 20),
                                       textAlign: TextAlign.center,
                                     ),
-                                  ),
-                                  Text(
-                                    '休',
-                                    style: TextStyle(fontSize: 25),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ])),
+                                  ])),
+                        ),
                         Container(
                             margin: const EdgeInsets.only(top: 0, bottom: 10.0),
                             child: Row(
@@ -210,7 +205,7 @@ class _MerchantCalendarPageState extends State<MerchantCalendarPage> {
                                 children: [
                                   Text(
                                     '月',
-                                    style: TextStyle(fontSize: 30),
+                                    style: TextStyle(fontSize: 20),
                                   ),
                                   FlatButton(
                                     onPressed: () =>
@@ -220,7 +215,7 @@ class _MerchantCalendarPageState extends State<MerchantCalendarPage> {
                                     color: Colors.grey[200],
                                     child: Text(
                                       _displaySetTime("Mon", "open"),
-                                      style: TextStyle(fontSize: 30),
+                                      style: TextStyle(fontSize: 20),
                                     ),
                                   ),
                                   FlatButton(
@@ -231,7 +226,7 @@ class _MerchantCalendarPageState extends State<MerchantCalendarPage> {
                                     color: Colors.grey[200],
                                     child: Text(
                                       _displaySetTime("Mon", "close"),
-                                      style: TextStyle(fontSize: 30),
+                                      style: TextStyle(fontSize: 20),
                                     ),
                                   ),
                                   Checkbox(
@@ -247,7 +242,7 @@ class _MerchantCalendarPageState extends State<MerchantCalendarPage> {
                               children: [
                                 Text(
                                   '火',
-                                  style: TextStyle(fontSize: 30),
+                                  style: TextStyle(fontSize: 20),
                                 ),
                                 FlatButton(
                                   onPressed: () => {_selectTime("Tue", "open")},
@@ -256,7 +251,7 @@ class _MerchantCalendarPageState extends State<MerchantCalendarPage> {
                                   color: Colors.grey[200],
                                   child: Text(
                                     _displaySetTime("Tue", "open"),
-                                    style: TextStyle(fontSize: 30),
+                                    style: TextStyle(fontSize: 20),
                                   ),
                                 ),
                                 FlatButton(
@@ -267,7 +262,7 @@ class _MerchantCalendarPageState extends State<MerchantCalendarPage> {
                                   color: Colors.grey[200],
                                   child: Text(
                                     _displaySetTime("Tue", "close"),
-                                    style: TextStyle(fontSize: 30),
+                                    style: TextStyle(fontSize: 20),
                                   ),
                                 ),
                                 Checkbox(
@@ -284,7 +279,7 @@ class _MerchantCalendarPageState extends State<MerchantCalendarPage> {
                               children: [
                                 Text(
                                   '水',
-                                  style: TextStyle(fontSize: 30),
+                                  style: TextStyle(fontSize: 20),
                                 ),
                                 FlatButton(
                                   onPressed: () => {_selectTime("Wed", "open")},
@@ -293,7 +288,7 @@ class _MerchantCalendarPageState extends State<MerchantCalendarPage> {
                                   color: Colors.grey[200],
                                   child: Text(
                                     _displaySetTime("Wed", "open"),
-                                    style: TextStyle(fontSize: 30),
+                                    style: TextStyle(fontSize: 20),
                                   ),
                                 ),
                                 FlatButton(
@@ -304,7 +299,7 @@ class _MerchantCalendarPageState extends State<MerchantCalendarPage> {
                                   color: Colors.grey[200],
                                   child: Text(
                                     _displaySetTime("Wed", "close"),
-                                    style: TextStyle(fontSize: 30),
+                                    style: TextStyle(fontSize: 20),
                                   ),
                                 ),
                                 Checkbox(
@@ -321,7 +316,7 @@ class _MerchantCalendarPageState extends State<MerchantCalendarPage> {
                               children: [
                                 Text(
                                   '木',
-                                  style: TextStyle(fontSize: 30),
+                                  style: TextStyle(fontSize: 20),
                                 ),
                                 FlatButton(
                                   onPressed: () => {_selectTime("Thu", "open")},
@@ -330,7 +325,7 @@ class _MerchantCalendarPageState extends State<MerchantCalendarPage> {
                                   color: Colors.grey[200],
                                   child: Text(
                                     _displaySetTime("Thu", "open"),
-                                    style: TextStyle(fontSize: 30),
+                                    style: TextStyle(fontSize: 20),
                                   ),
                                 ),
                                 FlatButton(
@@ -341,7 +336,7 @@ class _MerchantCalendarPageState extends State<MerchantCalendarPage> {
                                   color: Colors.grey[200],
                                   child: Text(
                                     _displaySetTime("Thu", "close"),
-                                    style: TextStyle(fontSize: 30),
+                                    style: TextStyle(fontSize: 20),
                                   ),
                                 ),
                                 Checkbox(
@@ -358,7 +353,7 @@ class _MerchantCalendarPageState extends State<MerchantCalendarPage> {
                               children: [
                                 Text(
                                   '金',
-                                  style: TextStyle(fontSize: 30),
+                                  style: TextStyle(fontSize: 20),
                                 ),
                                 FlatButton(
                                   onPressed: () => {_selectTime("Fri", "open")},
@@ -367,7 +362,7 @@ class _MerchantCalendarPageState extends State<MerchantCalendarPage> {
                                   color: Colors.grey[200],
                                   child: Text(
                                     _displaySetTime("Fri", "open"),
-                                    style: TextStyle(fontSize: 30),
+                                    style: TextStyle(fontSize: 20),
                                   ),
                                 ),
                                 FlatButton(
@@ -378,7 +373,7 @@ class _MerchantCalendarPageState extends State<MerchantCalendarPage> {
                                   color: Colors.grey[200],
                                   child: Text(
                                     _displaySetTime("Fri", "close"),
-                                    style: TextStyle(fontSize: 30),
+                                    style: TextStyle(fontSize: 20),
                                   ),
                                 ),
                                 Checkbox(
@@ -395,7 +390,7 @@ class _MerchantCalendarPageState extends State<MerchantCalendarPage> {
                               children: [
                                 Text(
                                   '土',
-                                  style: TextStyle(fontSize: 30),
+                                  style: TextStyle(fontSize: 20),
                                 ),
                                 FlatButton(
                                   onPressed: () => {_selectTime("Sat", "open")},
@@ -404,7 +399,7 @@ class _MerchantCalendarPageState extends State<MerchantCalendarPage> {
                                   color: Colors.grey[200],
                                   child: Text(
                                     _displaySetTime("Sat", "open"),
-                                    style: TextStyle(fontSize: 30),
+                                    style: TextStyle(fontSize: 20),
                                   ),
                                 ),
                                 FlatButton(
@@ -415,7 +410,7 @@ class _MerchantCalendarPageState extends State<MerchantCalendarPage> {
                                   color: Colors.grey[200],
                                   child: Text(
                                     _displaySetTime("Sat", "close"),
-                                    style: TextStyle(fontSize: 30),
+                                    style: TextStyle(fontSize: 20),
                                   ),
                                 ),
                                 Checkbox(
@@ -432,7 +427,7 @@ class _MerchantCalendarPageState extends State<MerchantCalendarPage> {
                               children: [
                                 Text(
                                   '日',
-                                  style: TextStyle(fontSize: 30),
+                                  style: TextStyle(fontSize: 20),
                                 ),
                                 FlatButton(
                                   onPressed: () => {_selectTime("Sun", "open")},
@@ -441,7 +436,7 @@ class _MerchantCalendarPageState extends State<MerchantCalendarPage> {
                                   color: Colors.grey[200],
                                   child: Text(
                                     _displaySetTime("Sun", "open"),
-                                    style: TextStyle(fontSize: 30),
+                                    style: TextStyle(fontSize: 20),
                                   ),
                                 ),
                                 FlatButton(
@@ -452,7 +447,7 @@ class _MerchantCalendarPageState extends State<MerchantCalendarPage> {
                                   color: Colors.grey[200],
                                   child: Text(
                                     _displaySetTime("Sun", "close"),
-                                    style: TextStyle(fontSize: 30),
+                                    style: TextStyle(fontSize: 20),
                                   ),
                                 ),
                                 Checkbox(
@@ -463,13 +458,13 @@ class _MerchantCalendarPageState extends State<MerchantCalendarPage> {
                               ]),
                         ),
                         Container(
-                          margin: const EdgeInsets.only(bottom: 10.0),
+                          margin: const EdgeInsets.only(bottom: 20.0),
                           child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
                                 Text(
                                   '祝',
-                                  style: TextStyle(fontSize: 30),
+                                  style: TextStyle(fontSize: 20),
                                 ),
                                 FlatButton(
                                   onPressed: () =>
@@ -479,7 +474,7 @@ class _MerchantCalendarPageState extends State<MerchantCalendarPage> {
                                   color: Colors.grey[200],
                                   child: Text(
                                     _displaySetTime("Holiday", "open"),
-                                    style: TextStyle(fontSize: 30),
+                                    style: TextStyle(fontSize: 20),
                                   ),
                                 ),
                                 FlatButton(
@@ -490,7 +485,7 @@ class _MerchantCalendarPageState extends State<MerchantCalendarPage> {
                                   color: Colors.grey[200],
                                   child: Text(
                                     _displaySetTime("Holiday", "close"),
-                                    style: TextStyle(fontSize: 30),
+                                    style: TextStyle(fontSize: 20),
                                   ),
                                 ),
                                 Checkbox(
@@ -502,60 +497,47 @@ class _MerchantCalendarPageState extends State<MerchantCalendarPage> {
                         ),
                       ],
                     ),
-                    Center(
-                        child: Row(
-                      children: [
-                        SizedBox(width: 100),
-                        Expanded(
-                            child: MaterialButton(
-                          color: Theme.of(context).primaryColor,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5.0),
-                          ),
-                          onPressed: () {
-                            try {
-                              assignNewHours();
-                              _updateStoreProfile();
-                              AwesomeDialog(
-                                context: context,
-                                customHeader: null,
-                                dialogType: DialogType.NO_HEADER,
-                                animType: AnimType.BOTTOMSLIDE,
-                                body: Center(
-                                  child: Text('カレンダー情報がアップデートされました'),
-                                ),
-                                // btnOkOnPress: () {},
-                                useRootNavigator: false,
-                                // btnOkColor: Colors.tealAccent[400],
-                                // btnCancelOnPress: () {},
-                                // btnOkText: 'ログアウト',
-                                // btnCancelText: 'キャンセル',
-                                // btnCancelColor: Colors.blueGrey[400],
-                                dismissOnTouchOutside: true,
-                                headerAnimationLoop: false,
-                                showCloseIcon: false,
-                                buttonsBorderRadius:
-                                    BorderRadius.all(Radius.circular(100)),
-                              )..show();
-                            } catch (e) {
-                              print(e.toString());
-                            }
-                          },
-                          child: Text(
-                            '保存',
-                            style: TextStyle(color: Colors.white, fontSize: 16),
-                          ),
-                        )),
-                        SizedBox(width: 100),
-                      ],
-                    )),
                   ]),
             ),
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.centerDocked,
+            floatingActionButton: Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: Container(
+                    width: _width / 1.1,
+                    child: FloatingActionButton.extended(
+                      onPressed: () {
+                        try {
+                          assignNewHours();
+                          _updateStoreProfile();
+                          AwesomeDialog(
+                            context: context,
+                            customHeader: null,
+                            dialogType: DialogType.NO_HEADER,
+                            animType: AnimType.BOTTOMSLIDE,
+                            body: Center(
+                              child: Text('カレンダー情報がアップデートされました'),
+                            ),
+                            // btnOkOnPress: () {},
+                            useRootNavigator: false,
+                            // btnOkColor: Colors.tealAccent[400],
+                            // btnCancelOnPress: () {},
+                            // btnOkText: '',
+                            // btnCancelText: '',
+                            // btnCancelColor: Colors.blueGrey[400],
+                            dismissOnTouchOutside: true,
+                            headerAnimationLoop: false,
+                            showCloseIcon: false,
+                            buttonsBorderRadius:
+                                BorderRadius.all(Radius.circular(100)),
+                          )..show();
+                        } catch (e) {
+                          print(e.toString());
+                        }
+                      },
+                      label: Text('保存', style: TextStyle(color: Colors.white)),
+                      backgroundColor: Theme.of(context).primaryColor,
+                    ))),
           );
-  }
-
-  void _changePage(BuildContext context, String route) {
-    Navigator.pushNamed(context, route);
-    print("Going to $route was triggered");
   }
 }

@@ -14,9 +14,6 @@ class BookingListPage extends StatefulWidget {
 }
 
 class _BookingListPageState extends State<BookingListPage> {
-  // String status;
-  // final TextEditingController _searchControl = new TextEditingController();
-
   @override
   Widget build(BuildContext context) {
     return BookingPage();
@@ -64,12 +61,14 @@ class _BookingPageState extends State<BookingPage> {
       ),
       body: bookingData == null
           ? Center(child: CircularProgressIndicator())
-          : StreamBuilder(
+          : bookingData.length == 0
+              ? Center(
+                  child: Text("予約情報がありません", style: TextStyle(fontSize: 20)))
+              :  StreamBuilder(
               stream: channel.stream,
               builder: (context, snapshot) {
                 if (snapshot.hasData &&
                     json.decode(snapshot.data)["bookingId"] != bookingId) {
-                  print(snapshot.data);
                   if (json.decode(snapshot.data)["status"] == "checked_in") {
                     _statusUpdateFromCustomer(json.decode(snapshot.data));
                   } else {
@@ -82,11 +81,6 @@ class _BookingPageState extends State<BookingPage> {
                     child: buildListView());
               }),
     );
-  }
-
-  void _changePage(BuildContext context, String route) {
-    Navigator.pushNamed(context, route);
-    print("Going to $route was triggered");
   }
 
   Future<void> _getBookingData() async {
@@ -201,16 +195,16 @@ class _BookingPageState extends State<BookingPage> {
           Container(
               alignment: Alignment.centerLeft,
               padding: EdgeInsets.symmetric(horizontal: 12, vertical: 16),
-              // color: Theme.of(context).primaryColor,
               child: Column(children: [
                 Padding(
                   padding: EdgeInsets.only(right: 26),
                   child: Text(
                     "予約時間",
                     textAlign: TextAlign.start,
-                    style: Theme.of(context).textTheme.subtitle2.copyWith(
-                        // color: Colors.white,
-                        fontSize: 10),
+                    style: Theme.of(context)
+                        .textTheme
+                        .subtitle2
+                        .copyWith(fontSize: 10),
                   ),
                 ),
                 Padding(
@@ -219,7 +213,6 @@ class _BookingPageState extends State<BookingPage> {
                     DateFormat("hh:mm a").format(date),
                     textAlign: TextAlign.left,
                     style: Theme.of(context).textTheme.subtitle2.copyWith(
-                          // color: Colors.white,
                           fontWeight: FontWeight.bold,
                         ),
                   ),
@@ -229,10 +222,7 @@ class _BookingPageState extends State<BookingPage> {
                   child: Text(
                     "到着締切",
                     textAlign: TextAlign.left,
-                    style: TextStyle(
-                        // color: Colors.white,
-                        fontSize: 10,
-                        color: Colors.red),
+                    style: TextStyle(fontSize: 10, color: Colors.red),
                   ),
                 ),
                 Padding(
@@ -240,7 +230,6 @@ class _BookingPageState extends State<BookingPage> {
                   child: Text(
                     DateFormat("hh:mm a").format(date2),
                     style: Theme.of(context).textTheme.subtitle2.copyWith(
-                          // color: Colors.white,
                           fontWeight: FontWeight.bold,
                         ),
                   ),
@@ -315,7 +304,6 @@ class _BookingPageState extends State<BookingPage> {
                           width: 100,
                           child: Text(
                             "種類：${booking["tableType"]["label"]}\n人数：${booking["partySize"]}人",
-                            // "種類：１２人席\n人数：${booking["partySize"]}人",
                             style: TextStyle(fontSize: 10),
                           ),
                         ),
@@ -341,7 +329,6 @@ class _BookingPageState extends State<BookingPage> {
                 ),
                 MaterialButton(
                   minWidth: 110,
-                  // disabledColor: Colors.blueGrey[100],
                   child: Text('キャンセル',
                       style: TextStyle(fontSize: 12, color: Colors.white)),
                   color: Theme.of(context).selectedRowColor,

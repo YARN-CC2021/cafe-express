@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import '../global.dart' as globals;
 import '../app_theme.dart';
 
 class SliderView extends StatefulWidget {
@@ -14,11 +14,11 @@ class SliderView extends StatefulWidget {
 }
 
 class _SliderViewState extends State<SliderView> {
-  double distValue = 5.0;
+  double distValue;
 
   @override
   void initState() {
-    distValue = widget.distValue;
+    distValue = globals.distanceValue;
     super.initState();
   }
 
@@ -53,7 +53,8 @@ class _SliderViewState extends State<SliderView> {
             child: Slider(
               onChanged: (double value) {
                 setState(() {
-                  distValue = value;
+                  globals.distanceValue = value;
+                  distValue = globals.distanceValue;
                 });
                 try {
                   widget.onChangedistValue(distValue);
