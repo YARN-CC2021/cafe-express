@@ -231,7 +231,7 @@ class _StoreDetailPageState extends State<StoreDetailPage>
   Widget build(BuildContext context) {
     final double tempHeight = MediaQuery.of(context).size.height -
         (MediaQuery.of(context).size.width / 1.2) +
-        300.0; // Increased from 24 --> 224
+        300.0; // Increased from 24 --> 300
     return Container(
         color: CafeExpressTheme.nearlyWhite,
         child: Scaffold(
@@ -414,7 +414,7 @@ class _StoreDetailPageState extends State<StoreDetailPage>
                                   Padding(
                                     padding: EdgeInsets.only(top: 10, left: 18),
                                     child: Text(
-                                      '予約可能時間',
+                                      '営業時間',
                                       textAlign: TextAlign.left,
                                       style: TextStyle(
                                         fontWeight: FontWeight.w600,
@@ -432,7 +432,7 @@ class _StoreDetailPageState extends State<StoreDetailPage>
                                           top: 16),
                                       child: Row(
                                         mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
+                                            MainAxisAlignment.spaceAround,
                                         children: [
                                           Column(
                                               crossAxisAlignment:
