@@ -230,7 +230,7 @@ class _StoreDetailPageState extends State<StoreDetailPage>
   Widget build(BuildContext context) {
     final double tempHeight = MediaQuery.of(context).size.height -
         (MediaQuery.of(context).size.width / 1.2) +
-        24; // Increased from 24 --> 300
+        100;
     return Container(
         color: CafeExpressTheme.nearlyWhite,
         child: Scaffold(
@@ -788,7 +788,6 @@ class _StoreDetailPageState extends State<StoreDetailPage>
     setState(() {
       showSpinner = true;
     });
-    //step 2: request to create PaymentIntent, attempt to confirm the payment & return PaymentIntent
     print(
         "amount = ${availableSeats[selectedSeatIndex]["cancelFee"]}, payMethod= ${paymentMethod.id} storeStripeId=${shopData["stripeId"]}");
     final http.Response response = await http.post(
@@ -801,9 +800,7 @@ class _StoreDetailPageState extends State<StoreDetailPage>
       final paymentIntentX = jsonDecode(decordedBody["body"]);
       final status = paymentIntentX['paymentIntent']['status'];
       final strAccount = paymentIntentX['stripeAccount'];
-      //step 3: check if payment was succesfully confirmed
       if (status == 'succeeded') {
-        //payment was confirmed by the server without need for futher authentification
         StripePayment.completeNativePayRequest();
         setState(() {
           text =
@@ -811,7 +808,6 @@ class _StoreDetailPageState extends State<StoreDetailPage>
           showSpinner = false;
         });
       } else {
-        //step 4: there is a need to authenticate
         StripePayment.setStripeAccount(strAccount);
         await StripePayment.confirmPaymentIntent(PaymentIntent(
                 paymentMethodId: paymentIntentX['paymentIntent']
@@ -819,8 +815,6 @@ class _StoreDetailPageState extends State<StoreDetailPage>
                 clientSecret: paymentIntentX['paymentIntent']['client_secret']))
             .then(
           (PaymentIntentResult paymentIntentResult) async {
-            //This code will be executed if the authentication is successful
-            //step 5: request the server to confirm the payment with
             final statusFinal = paymentIntentResult.status;
             if (statusFinal == 'succeeded') {
               StripePayment.completeNativePayRequest();
@@ -853,9 +847,7 @@ class _StoreDetailPageState extends State<StoreDetailPage>
                       buttonText: 'CLOSE'));
             }
           },
-          //If Authentication fails, a PlatformException will be raised which can be handled here
         ).catchError((e) {
-          //case B1
           StripePayment.cancelNativePayRequest();
           setState(() {
             showSpinner = false;

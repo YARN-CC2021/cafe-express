@@ -49,7 +49,7 @@ class _UserCategoryPageState extends State<UserCategoryPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 12),
               child: Container(
                 decoration: BoxDecoration(
                   color: CafeExpressTheme.nearlyWhite,
@@ -79,7 +79,7 @@ class _UserCategoryPageState extends State<UserCategoryPage> {
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                   fontWeight: FontWeight.w600,
-                                  fontSize: 20,
+                                  fontSize: 17,
                                   letterSpacing: 0.27,
                                   color: CafeExpressTheme.darkText,
                                 ),
@@ -123,7 +123,7 @@ class _UserCategoryPageState extends State<UserCategoryPage> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 12),
               child: Container(
                 decoration: BoxDecoration(
                   color: CafeExpressTheme.nearlyWhite,
@@ -152,7 +152,7 @@ class _UserCategoryPageState extends State<UserCategoryPage> {
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                   fontWeight: FontWeight.w600,
-                                  fontSize: 20,
+                                  fontSize: 17,
                                   letterSpacing: 0.27,
                                   color: CafeExpressTheme.darkText,
                                 ),
