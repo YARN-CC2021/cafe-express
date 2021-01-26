@@ -5,11 +5,7 @@ import 'dart:convert';
 import '../global.dart' as globals;
 import 'package:http/http.dart' as http;
 import 'package:web_socket_channel/io.dart';
-import '../app.dart';
 import '../app_theme.dart';
-import 'package:circular_menu/circular_menu.dart';
-import 'package:amplify_core/amplify_core.dart';
-import 'package:awesome_dialog/awesome_dialog.dart';
 
 class BookingHistoryPage extends StatefulWidget {
   @override
@@ -59,9 +55,6 @@ class _BookingHistoryPageState extends State<BookingHistoryPage> {
                   builder: (context, snapshot) {
                     if (snapshot.hasData &&
                         json.decode(snapshot.data)["bookingId"] != bookingId) {
-                      print(
-                          "SNAPSHOT DATA in Stream, History Page ${snapshot.data}");
-                      // _insertBooking(json.decode(snapshot.data));
                       _statusUpdate(json.decode(snapshot.data)["bookingId"],
                           json.decode(snapshot.data)["status"]);
                       bookingId = json.decode(snapshot.data)["bookingId"];
@@ -71,46 +64,6 @@ class _BookingHistoryPageState extends State<BookingHistoryPage> {
                         child: buildListView());
                   }),
     );
-  }
-
-  void _logOut() {
-    AwesomeDialog(
-      context: context,
-      customHeader: null,
-      dialogType: DialogType.NO_HEADER,
-      animType: AnimType.BOTTOMSLIDE,
-      body: Center(
-        child: Text('本当にログアウトしますか？'),
-      ),
-      btnOkOnPress: () {
-        try {
-          Amplify.Auth.signOut();
-          _changePage(context, AuthRoute);
-        } on Error catch (e) {
-          print(e);
-        }
-      },
-      useRootNavigator: false,
-      btnOkColor: Colors.tealAccent[400],
-      btnCancelOnPress: () {},
-      btnOkText: 'ログアウト',
-      btnCancelText: 'キャンセル',
-      btnCancelColor: Colors.blueGrey[400],
-      dismissOnTouchOutside: false,
-      headerAnimationLoop: false,
-      showCloseIcon: false,
-      buttonsBorderRadius: BorderRadius.all(Radius.circular(100)),
-    )..show();
-    // Amplify.Auth.signOut();
-    // Navigator.pushNamed(context, AuthRoute);
-
-    print("triggered");
-  }
-
-  void _changePage(BuildContext context, String route) {
-    channel.sink.close();
-    Navigator.pushNamed(context, route);
-    print("Going to $route was triggered");
   }
 
   Future<void> _getBookingData() async {
@@ -140,7 +93,6 @@ class _BookingHistoryPageState extends State<BookingHistoryPage> {
     for (final booking in bookingData) {
       if (booking["bookingId"] == bookingId) {
         booking["status"] = status;
-        print("BOOKING STATUS in for loop ${booking["status"]}");
         break;
       }
     }
@@ -205,16 +157,16 @@ class _BookingHistoryPageState extends State<BookingHistoryPage> {
           Container(
               alignment: Alignment.centerLeft,
               padding: EdgeInsets.symmetric(horizontal: 12, vertical: 16),
-              // color: Theme.of(context).accentColor,
               child: Column(children: [
                 Padding(
                   padding: EdgeInsets.only(right: 26),
                   child: Text(
                     "予約時間",
                     textAlign: TextAlign.start,
-                    style: Theme.of(context).textTheme.subtitle2.copyWith(
-                        // color: Colors.white,
-                        fontSize: 10),
+                    style: Theme.of(context)
+                        .textTheme
+                        .subtitle2
+                        .copyWith(fontSize: 10),
                   ),
                 ),
                 Padding(
@@ -223,7 +175,6 @@ class _BookingHistoryPageState extends State<BookingHistoryPage> {
                     DateFormat("hh:mm a").format(date),
                     textAlign: TextAlign.left,
                     style: Theme.of(context).textTheme.subtitle2.copyWith(
-                          // color: Colors.white,
                           fontWeight: FontWeight.bold,
                         ),
                   ),
@@ -233,10 +184,7 @@ class _BookingHistoryPageState extends State<BookingHistoryPage> {
                   child: Text(
                     "到着締切",
                     textAlign: TextAlign.left,
-                    style: TextStyle(
-                        // color: Colors.white,
-                        fontSize: 10,
-                        color: Colors.red),
+                    style: TextStyle(fontSize: 10, color: Colors.red),
                   ),
                 ),
                 Padding(
@@ -244,7 +192,6 @@ class _BookingHistoryPageState extends State<BookingHistoryPage> {
                   child: Text(
                     DateFormat("hh:mm a").format(date2),
                     style: Theme.of(context).textTheme.subtitle2.copyWith(
-                          // color: Colors.white,
                           fontWeight: FontWeight.bold,
                         ),
                   ),
@@ -260,22 +207,22 @@ class _BookingHistoryPageState extends State<BookingHistoryPage> {
   }
 
   _changeCardColor(Map booking) {
-    if (booking["status"] == "expired") {
-      return LinearGradient(colors: [Colors.redAccent[400], Colors.red[900]]);
-    } else if (booking["status"] == "paid" &&
+    if (booking["status"] == "paid" &&
         DateTime.now().isAfter(DateTime.parse(booking["expiredAt"]))) {
       return LinearGradient(
-          colors: [Colors.amberAccent[100], Colors.amberAccent]);
+          colors: [Colors.yellow.withOpacity(0.8), Colors.yellow]);
     } else if (booking["status"] == "paid") {
       return LinearGradient(colors: [Colors.white, Colors.white]);
     } else if (booking["status"] == "checked_in") {
       return LinearGradient(colors: [
+        Theme.of(context).primaryColor.withOpacity(0.5),
         Theme.of(context).primaryColor,
-        Colors.greenAccent[400],
       ]);
     } else if (booking["status"] == "cancelled") {
-      return LinearGradient(
-          colors: [Colors.blueGrey[100], Colors.blueGrey[300]]);
+      return LinearGradient(colors: [
+        Colors.blueGrey[100].withOpacity(0.8),
+        Colors.blueGrey[100]
+      ]);
     }
   }
 
@@ -323,12 +270,6 @@ class _BookingHistoryPageState extends State<BookingHistoryPage> {
                             ),
                           )),
                     ]))),
-            // Container(
-            //   padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-            //   child: Column(
-            //     children: [SizedBox(width: 110)],
-            //   ),
-            // )
           ],
         ),
       ),

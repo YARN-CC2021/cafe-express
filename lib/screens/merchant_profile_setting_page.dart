@@ -5,7 +5,6 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:amplify_core/amplify_core.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:amplify_storage_s3/amplify_storage_s3.dart';
 import '../app_theme.dart';
 
@@ -46,20 +45,6 @@ class _MerchantProfileSettingPageState
     } else {
       print('Request failed with status: ${response.statusCode}.');
     }
-  }
-
-  Future<void> _goToStripeLink() async {
-    var response = await http.post(
-      "https://pq3mbzzsbg.execute-api.ap-northeast-1.amazonaws.com/CaffeExpressRESTAPI/stripeaccount?storeStripeId=${shopData["stripeId"]}&storeId=${shopData["storeId"]}",
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-    );
-
-    final jsonResponse = await json.decode(utf8.decode(response.bodyBytes));
-    final clientStripeConnectUrl =
-        await jsonDecode(jsonResponse["body"])["accountLinkURL"];
-    await launch("$clientStripeConnectUrl");
   }
 
   Future<void> _showPic() async {
