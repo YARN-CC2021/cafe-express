@@ -350,7 +350,7 @@ class _TimerPageState extends State<TimerPage> {
                                                               fontWeight:
                                                                   FontWeight
                                                                       .w500,
-                                                              fontSize: 18,
+                                                              fontSize: 28,
                                                               letterSpacing:
                                                                   0.0,
                                                               color: Colors
