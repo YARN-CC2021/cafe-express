@@ -123,7 +123,9 @@ class _AuthState extends State<Auth> {
       onLogin: logIn,
       onSignup: signUp,
       onRecoverPassword: recoverPassword,
-      theme: LoginTheme(primaryColor: Theme.of(context).primaryColor),
+      theme: LoginTheme(
+        primaryColor: Theme.of(context).primaryColor,
+      ),
       messages: LoginMessages(
         usernameHint: 'メールアドレス',
         passwordHint: 'パスワード',
