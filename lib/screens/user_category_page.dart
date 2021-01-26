@@ -39,13 +39,17 @@ class _UserCategoryPageState extends State<UserCategoryPage> {
           elevation: 3.0,
         ),
         body: Center(
-            child: Column(children: [
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
           Padding(
               padding: EdgeInsets.only(top: 20),
               child: Text("どちらかを選択してください", style: TextStyle(fontSize: 15))),
-          Column(children: [
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 12),
               child: Container(
                 decoration: BoxDecoration(
                   color: CafeExpressTheme.nearlyWhite,
@@ -59,8 +63,9 @@ class _UserCategoryPageState extends State<UserCategoryPage> {
                 ),
                 child: Padding(
                     padding: const EdgeInsets.only(
-                        left: 18.0, right: 18.0, top: 12.0, bottom: 12.0),
-                    child: Column(children: [
+                        left: 18.0, right: 18.0),
+                    child: Column(
+                      children: [
                       Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -74,7 +79,7 @@ class _UserCategoryPageState extends State<UserCategoryPage> {
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                   fontWeight: FontWeight.w600,
-                                  fontSize: 20,
+                                  fontSize: 17,
                                   letterSpacing: 0.27,
                                   color: CafeExpressTheme.darkText,
                                 ),
@@ -118,7 +123,7 @@ class _UserCategoryPageState extends State<UserCategoryPage> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 12),
               child: Container(
                 decoration: BoxDecoration(
                   color: CafeExpressTheme.nearlyWhite,
@@ -132,7 +137,7 @@ class _UserCategoryPageState extends State<UserCategoryPage> {
                 ),
                 child: Padding(
                     padding: const EdgeInsets.only(
-                        left: 18.0, right: 18.0, top: 12.0, bottom: 12.0),
+                        left: 18.0, right: 18.0),
                     child: Column(children: [
                       Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -147,7 +152,7 @@ class _UserCategoryPageState extends State<UserCategoryPage> {
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                   fontWeight: FontWeight.w600,
-                                  fontSize: 20,
+                                  fontSize: 17,
                                   letterSpacing: 0.27,
                                   color: CafeExpressTheme.darkText,
                                 ),

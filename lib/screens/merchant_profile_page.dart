@@ -128,6 +128,7 @@ class _MerchantProfilePageState extends State<MerchantProfilePage> {
                             horizontal: 16.0, vertical: 10),
                         children: <Widget>[
                           Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               images != null && images.length != 0
                                   ? Padding(
