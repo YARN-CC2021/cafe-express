@@ -62,14 +62,10 @@ class _AuthState extends State<Auth> {
       SignInResult result = await Amplify.Auth.signIn(
           username: data.name, password: data.password);
       if (result.isSignedIn) {
-<<<<<<< HEAD
-        // isSignIn.signedIn();
-=======
         isSignIn.signedIn();
         var user = await Amplify.Auth.getCurrentUser();
         globals.userId = user.userId;
         await _fetchType();
->>>>>>> e7b40f2a518eebb946980d16357cab80d6736412
         _returnWrapper(context);
       }
     } catch (e) {
