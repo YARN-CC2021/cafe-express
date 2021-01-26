@@ -91,6 +91,7 @@ class _MerchantProfileSettingPageState
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 3, vertical: 3),
                     child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         images != null && images.length > 0
                             ? Padding(
