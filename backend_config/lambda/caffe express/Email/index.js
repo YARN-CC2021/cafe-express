@@ -341,7 +341,7 @@ const createHTML = (body) => {
                         <tr>
                           <td style="padding: 0 2.5em; text-align: center; padding-bottom: 3em;">
                             <div class="text">
-                              <h2>VACANSEAT予約完了のお知らせ</h2>
+                              <h2>予約完了のお知らせ</h2>
                             </div>
                           </td>
                         </tr>
@@ -375,7 +375,7 @@ const createHTML = (body) => {
                               <tr>
                                 <td style="text-align: left; padding-right: 10px;">
                                   <h3 class="heading">About</h3>
-                                  <p>We want to enable users to consult with doctors and ask questions from the comfort of their homes.
+                                  <p>We connect the customers who need vacant seat and the stores that need to reduce the vacancy in real time!                                  
                                   </p>
                                 </td>
                               </tr>
@@ -389,19 +389,7 @@ const createHTML = (body) => {
                                   <ul>
                                     <li><span class="text">VORT Motoazabu B2, 3-1-35 Motoazabu, Minato-ku, Tokyo 106-0046</span></li>
                                     <li><span class="text">+81-3-6821-1699</span></a></li>
-                                  </ul>
-                                </td>
-                              </tr>
-                            </table>
-                          </td>
-                          <td valign="top" width="33.333%" style="padding-top: 20px;">
-                            <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
-                              <tr>
-                                <td style="text-align: left; padding-left: 10px;">
-                                  <h3 class="heading">Links</h3>
-                                  <ul>
-                                    <li><a href="https://your-solution-front.vercel.app/" target="_blank" rel="noopener noreferrer">HEY, DOC! Web App</a></li>
-                                    <li><a href="https://github.com/YoSoRyuShawn/your-solution" target="_blank" rel="noopener noreferrer">Our GitHub</a></li>
+                                    <li><a href="https://github.com/YARN-CC2021/cafe-express" target="_blank" rel="noopener noreferrer">Our GitHub</a></li>
                                   </ul>
                                 </td>
                               </tr>
@@ -442,8 +430,8 @@ const createMail = (contactEmail, customerEmail, html) => {
     to: `${customerEmail}`,
     cc: `${contactEmail}`,
     replyTo: "bayezid1989@live.jp",
-    subject: "Cafe Express 予約完了のお知らせ",
-    text: "Cafe Express での予約が完了しました！",
+    subject: "VACANSEAT 予約完了のお知らせ",
+    text: "VACANSEAT での予約が完了しました！",
     html: html,
   };
 };
