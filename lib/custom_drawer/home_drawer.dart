@@ -304,7 +304,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
                             }
                           },
                           useRootNavigator: false,
-                          btnOkColor: Colors.tealAccent[400],
+                          btnOkColor: Theme.of(context).primaryColor,
                           btnCancelOnPress: () {},
                           btnOkText: 'ログアウト',
                           btnCancelText: 'キャンセル',
