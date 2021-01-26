@@ -1,0 +1,15 @@
+{
+	"auth": {
+		"cafeexpressd296e42a": {
+			"service": "Cognito",
+			"providerPlugin": "awscloudformation",
+			"dependsOn": []
+		}
+	},
+	"storage": {
+		"CafeExpressPhotos": {
+			"service": "S3",
+			"providerPlugin": "awscloudformation"
+		}
+	}
+}
