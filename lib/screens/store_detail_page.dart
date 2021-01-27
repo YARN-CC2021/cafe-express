@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import '../app_theme.dart';
 import 'package:amplify_storage_s3/amplify_storage_s3.dart';
-import 'package:amplify_core/amplify_core.dart';
+// import 'package:amplify_core/amplify_core.dart';
+import "package:amplify_flutter/amplify.dart";
 import 'package:web_socket_channel/io.dart';
 import 'dart:convert';
 import 'dart:io';

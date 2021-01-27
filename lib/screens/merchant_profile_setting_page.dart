@@ -4,7 +4,8 @@ import '../global.dart' as globals;
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:amplify_core/amplify_core.dart';
+// import 'package:amplify_core/amplify_core.dart';
+import "package:amplify_flutter/amplify.dart";
 import 'package:amplify_storage_s3/amplify_storage_s3.dart';
 import '../app_theme.dart';
 

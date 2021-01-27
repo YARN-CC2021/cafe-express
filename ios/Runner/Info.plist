@@ -44,7 +44,7 @@
 	<!-- ADDED -->
 	<key>LSRequiresIPhoneOS</key>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>This app needs access to location when open and in the background.</string>
+	<!-- <string>This app needs access to location when open and in the background.</string> -->
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>Your location is required for this app</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
