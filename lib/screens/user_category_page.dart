@@ -3,7 +3,8 @@ import '../app.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:amplify_core/amplify_core.dart';
+// import 'package:amplify_core/amplify_core.dart';
+import "package:amplify_flutter/amplify.dart";
 import '../global.dart' as globals;
 import '../app_theme.dart';
 
@@ -39,15 +40,12 @@ class _UserCategoryPageState extends State<UserCategoryPage> {
           elevation: 3.0,
         ),
         body: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
+            child:
+                Column(mainAxisAlignment: MainAxisAlignment.start, children: [
           Padding(
               padding: EdgeInsets.only(top: 20),
               child: Text("どちらかを選択してください", style: TextStyle(fontSize: 15))),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
+          Column(mainAxisAlignment: MainAxisAlignment.center, children: [
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 12),
               child: Container(
@@ -62,10 +60,8 @@ class _UserCategoryPageState extends State<UserCategoryPage> {
                   ],
                 ),
                 child: Padding(
-                    padding: const EdgeInsets.only(
-                        left: 18.0, right: 18.0),
-                    child: Column(
-                      children: [
+                    padding: const EdgeInsets.only(left: 18.0, right: 18.0),
+                    child: Column(children: [
                       Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -136,8 +132,7 @@ class _UserCategoryPageState extends State<UserCategoryPage> {
                   ],
                 ),
                 child: Padding(
-                    padding: const EdgeInsets.only(
-                        left: 18.0, right: 18.0),
+                    padding: const EdgeInsets.only(left: 18.0, right: 18.0),
                     child: Column(children: [
                       Column(
                         mainAxisAlignment: MainAxisAlignment.center,
