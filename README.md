@@ -2,7 +2,7 @@
 <p align="right"><img src="https://img.shields.io/badge/license-MIT-green" height=15px>
 </p>
 
-<p align="center"><img src="assets/images/logo_green.png" width="200px"></p>
+<p align="center"><img src="assets/readMe/VACANSEAT_icon_250.png" width="200px"></p>
 
 <br>
 <h1 align="center">Vacanseat</h1>
@@ -29,7 +29,7 @@ Merchants are supplied with a new sales channel, useful whether the restaurant i
 ---
 
 <br>
-<p align="center"><img src="assets/images/vacanseat_tech_stack.png" width= "400"></p><br>
+<p align="center"><img src="assets/readMe/vacanseat_tech_stack.png" width= "400"></p><br>
 
 
 The application uses a variety of technologies described below with relevant links.
