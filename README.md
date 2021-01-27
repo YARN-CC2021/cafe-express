@@ -1,6 +1,8 @@
 # Vacanseat
 
-![logo](./assets/images/logo_green.png)
+
+
+<img src="./assets/images/logo_green.png" width="300" height="300">
 
 
 
@@ -16,7 +18,10 @@ Merchants are supplied with a new sales channel, useful whether the restaurant i
 
 ## Tech/Framework
 
-![TechStack](./assets/images/Technologies.png)
+
+
+<img src="./assets/images/Technologies.png" width="547" height="280">
+
 
 
 
