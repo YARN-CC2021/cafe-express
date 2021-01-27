@@ -30,7 +30,7 @@ Vacanseat はお客さんに現在の空席情報を伝えることができ、�
 
 
 ### アプリの作成者(Github リンク)
-[Yoshinori Wakabayashi](https://github.com/Bayezid1989)  
-[Naoto Maeda](https://github.com/naoto-1119)  
-[Alexander Stevenson](https://github.com/AVStevenson)  
-[Ryusei Takezono](https://github.com/ryu-take)  
+Yoshinori Wakabayashi[@Bayezid1989](https://github.com/Bayezid1989)  
+Naoto Maeda[@naoto-1119](https://github.com/naoto-1119)  
+Alexander Stevenson[@AVStevenson](https://github.com/AVStevenson)  
+Ryusei Takezono[@ryu-take](https://github.com/ryu-take)  
