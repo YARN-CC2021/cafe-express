@@ -23,6 +23,7 @@ Merchants are supplied with a new sales channel, useful whether the restaurant i
 The application uses a variety of technologies described below with relevant links.
 
 The front end application was developed using Dart Language and the Flutter framework. For more information on Dart and Flutter:
+
 [dart](https://dart.dev/)
 
 [flutter](https://flutter.dev/)
