@@ -26,12 +26,12 @@ Vacanseat はイマスグ空いているお店を探したいアナタのため�
 
 Vacanseat はお客さんに現在の空席情報を伝えることができ、安全に予約を受け付けることもできるアプリです！
 
-### 気になったそこのアナタ！Google Play StoreでイマスグVacanseatをダウンロード！ [![icon](./assets/images/VACANSEAT_icon.png)](https://play.google.com/store/apps/details?id=com.yarn.vacanseat)
+### 気になったそこのアナタ！Google Play StoreでイマスグVacanseatをダウンロード！ [![icon](./assets/images/VACANSEAT_icon_250.png)](https://play.google.com/store/apps/details?id=com.yarn.vacanseat)
 
 
 
 ### アプリの作成者(Github リンク)
-Yoshinori Wakabayashi[@Bayezid1989](https://github.com/Bayezid1989)  
-Naoto Maeda[@naoto-1119](https://github.com/naoto-1119)  
-Alexander Stevenson[@AVStevenson](https://github.com/AVStevenson)  
-Ryusei Takezono[@ryu-take](https://github.com/ryu-take)  
+#### Yoshinori Wakabayashi [@Bayezid1989](https://github.com/Bayezid1989)  
+#### Naoto Maeda [@naoto-1119](https://github.com/naoto-1119)  
+#### Alexander Stevenson [@AVStevenson](https://github.com/AVStevenson)  
+#### Ryusei Takezono [@ryu-take](https://github.com/ryu-take)  
