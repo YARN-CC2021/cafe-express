@@ -1,4 +1,4 @@
-package com.yarn.cafeexpress
+package com.yarn.vacanseat
 
 import io.flutter.embedding.android.FlutterActivity
 
