@@ -1,15 +1,12 @@
 # Vacanseat
 
 <p align="center">
-  <img src="./assets/images/VACANSEAT_yoko.png">
-</p>
-
-<p align="center">
   <img src="./assets/images/VACANSEAT_transparet.png">
 </p>
 
 * イマスグ空いているお店が見たい人は[コチラ](#お客さんの使い方)
 * 空席情報をいち早くお客さんに伝えたいオーナーの方は[コチラ](#オーナーの使い方)
+* こんなサイコーなアプリを作った私たちやアプリのテックに興味がある方は[コチラ](#テックについて)
 
 ## お客さんの使い方
 
@@ -28,6 +25,8 @@ Vacanseat はお客さんに現在の空席情報を伝えることができ、�
 
 ### 気になったそこのアナタ！Google Play StoreでイマスグVacanseatをダウンロード！ [![icon](./assets/images/VACANSEAT_icon_250.png)](https://play.google.com/store/apps/details?id=com.yarn.vacanseat)
 
+
+## テックについて
 
 
 ### アプリの作成者(Github リンク)
