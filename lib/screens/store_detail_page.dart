@@ -254,7 +254,7 @@ class _StoreDetailPageState extends State<StoreDetailPage>
                                       (context, child, loadingProgress) {
                                     if (loadingProgress == null) return child;
                                     return Center(
-                                        child: LinearProgressIndicator());
+                                        child: CircularProgressIndicator());
                                   },
                                   errorBuilder: (BuildContext context,
                                       Object exception, StackTrace stackTrace) {
