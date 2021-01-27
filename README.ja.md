@@ -24,7 +24,7 @@ Vacanseat はイマスグ空いているお店を探したいアナタのため�
 
 ### どんなアプリ？
 
-Vacanseat はお客さんに現在の空席情報を伝えることができ、安全に予約も受け付けることができるアプリです！
+Vacanseat はお客さんに現在の空席情報を伝えることができ、安全に予約を受け付けることもできるアプリです！
 
 ### 気になったそこのアナタ！Google Play StoreでイマスグVacanseatをダウンロード！ <https://play.google.com/store/apps/details?id=com.yarn.vacanseat>
 
