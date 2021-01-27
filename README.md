@@ -2,6 +2,9 @@
 
 ![logo](./assets/images/logo_green.png)
 
+
+
+
 ## Introduction 
 
 VacanSeat is designed to connect venues (restaurants/bars/cafes) that have immediate capacity with patrons for impromptu bookings.
@@ -12,6 +15,8 @@ Merchants are supplied with a new sales channel, useful whether the restaurant i
 
 
 ## Tech/Framework
+
+![TechStack](./assets/images/Technologies.png)
 
 
 
