@@ -34,3 +34,4 @@ Vacanseat はお客さんに現在の空席情報を伝えることができ、�
 #### Naoto Maeda [@naoto-1119](https://github.com/naoto-1119)  
 #### Alexander Stevenson [@AVStevenson](https://github.com/AVStevenson)  
 #### Ryusei Takezono [@ryu-take](https://github.com/ryu-take)  
+A
