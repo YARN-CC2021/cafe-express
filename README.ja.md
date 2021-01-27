@@ -1,7 +1,11 @@
 # Vacanseat
 
 <p align="center">
-  <img src="./assets/images/logo_green.png">
+  <img src="./assets/images/VACANSEAT_yoko.png">
+</p>
+
+<p align="center">
+  <img src="./assets/images/VACANSEAT_transparet.png">
 </p>
 
 * イマスグ空いているお店が見たい人は[コチラ](#お客さんの使い方)
