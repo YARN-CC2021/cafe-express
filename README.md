@@ -39,7 +39,7 @@ Merchants are supplied with a new sales channel, useful whether the restaurant i
 ---
 
 <br>
-<p align="center"><img src="assets/readMe/vacanseat_tech_stack.png" width= "400"></p><br>
+<p align="center"><img src="assets/readMe/vacanseat_tech_stack.png" width= "540"></p><br>
 
 
 The application uses a variety of technologies described below with relevant links.
