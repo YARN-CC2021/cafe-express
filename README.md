@@ -50,7 +50,7 @@ Amazon Amplify was used to provide a serverless backend via DynamoDB and AWS Lam
 
 The application utilises the google map and routes APIs and the Stripe API for payments from customers to merchants via Stripe Connect.
 
-[Google APIs(]https://developers.google.com/maps)
+[Google APIs](https://developers.google.com/maps)
 
 [Stripe API](https://stripe.com/docs/api)
 
