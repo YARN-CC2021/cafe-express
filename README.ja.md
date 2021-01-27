@@ -1,43 +1,29 @@
-# VACANSEAT日本語README
+##### Vacanseat
 
 <p align="center">
-  <img src="./assets/readMe/VACANSEAT_transparet.png">
+  <img src="./assets/images/VACANSEAT_transparet.png">
 </p>
 
-* イマスグ空いているお店が見たい方は[コチラ](#ユーザーのアナタ)
-* 空席情報をいち早くお客さんに伝えたいオーナーの方は[コチラ](#オーナーのアナタ)
+* イマスグ空いているお店が見たいユーザーの方は[コチラ](#お客さんの使い方)
+* 空席情報をいち早くお客さんに伝えたいオーナーの方は[コチラ](#オーナーの使い方)
 * こんなサイコーなアプリを作った私たちやアプリのテックに興味がある方は[コチラ](#テックについて)
 
-## ユーザーのアナタ
+## お客さんの使い方
 
-### どんなアプリなの？
+### どんなアプリ？
 
-VACANSEAT は**今**!空いているお店を探したいアナタのためのアプリです  
-このアプリの特徴を一行で伝えるとしたら*近くの空いているお店(カフェ、レストラン、バー)をその場で簡単に検索、予約ができるアプリ*になっています!
+Vacanseat はイマスグ空いているお店を探したいアナタのためのアプリで、近くで空いているお店(カフェ、レストラン、バー)をその場で検索、予約ができるアプリです！
 
-### ユーザーのアプリの使い方
- 
-#### サインアップ
-まずはサインアップをしていただきます。 >"サインアップが完了している方は[ログイン](#ログイン)もしくは[マップページ](#マップページ)"
 
-ログイン画面で**サインアップボタン**を押していただき、その後メールアドレスとパスワードを入力して、完了したら新規登録!
 
-次に確認コード入力画面に移ります。ここでは先ほど登録していただいたメールアドレス宛に届いた6ケタの確認コードを入力していただきます。
 
-正常に入力が完了したら、次はユーザーカテゴリー選択画面に移ります。アナタはユーザーなので一般の方を選択してください。
+## オーナーの使い方
 
-サインアップ完了
-
-## オーナーのアナタ
-
-### どんなアプリなの？
+### どんなアプリ？
 
 Vacanseat はお客さんに現在の空席情報を伝えることができ、安全に予約を受け付けることもできるアプリです！
 
-### オーナーのアプリの使い方
-
-
-### このアプリが気になったそこのアナタ！Google Play Storeでイマスグ**VACANSEAT**をダウンロード！ [![icon](./assets/readMe/VACANSEAT_icon_250.png)](https://play.google.com/store/apps/details?id=com.yarn.vacanseat)
+### 気になったそこのアナタ！Google Play StoreでイマスグVacanseatをダウンロード！ [![icon](./assets/images/VACANSEAT_icon_250.png)](https://play.google.com/store/apps/details?id=com.yarn.vacanseat)
 
 
 ## テックについて
@@ -48,3 +34,4 @@ Vacanseat はお客さんに現在の空席情報を伝えることができ、�
 #### Naoto Maeda [@naoto-1119](https://github.com/naoto-1119)  
 #### Alexander Stevenson [@AVStevenson](https://github.com/AVStevenson)  
 #### Ryusei Takezono [@ryu-take](https://github.com/ryu-take)  
+A
