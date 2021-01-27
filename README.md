@@ -1,8 +1,10 @@
-<p align="center">*This repository was created during our time as students at Code Chrysalis.</p><br>
+<p align="center">
+Thank you very much for coming to see our repository. We spent a month to create our app to solve real world problem in Tokyo. I hope you enjoy exploring here and our app.
+</p>
+
 <p align="right"><img src="https://img.shields.io/badge/license-MIT-green" height=15px>
 </p>
 
-Thank you very much for coming to see our repository. We spent a month to create our app to solve real world problem in Tokyo. I hope you enjoy exploring here and our app.
 <br>
 <br>
 
@@ -62,7 +64,7 @@ The application utilises the [Google Map API](https://developers.google.com/maps
 ---
 
 
-**1) User Sign Up**
+### **1) User Sign Up**
 
 
 When a user first loads the app they are greeted with a login/signup page that is Identical for merchants and customers.
@@ -86,9 +88,9 @@ During the signup process the user will be asked to indicate whether they are in
 
 
 
-**2) Customer Flow**
+### **2) Customer Flow**
 
-### *A) Finding Vacant Seats* 🔎
+#### *A) Finding Vacant Seats* 🔎
 
 Upon entry to the application as a customer, the user is presented with a map view displaying participating restaurants within range.   There are a selection of filter options that can be accessed via the button at the bottom of the page. Filters include party size, distance and venue type.
 
@@ -102,7 +104,7 @@ Available venues on the map can be directly inspected by tapping upon them or by
 </p>
 <br>
 
-### *B) Booking Vacant Seats* ✅ 
+#### *B) Booking Vacant Seats* ✅ 
 Tapping on the information bubble above a pin or directly upon the photo in the gallery will take the user through to the venue detail page where the user is able to inspect further information relating to the venue and make a booking if desired.
 
 
@@ -115,7 +117,7 @@ In order to complete a booking the user must select (tap) one of the listed vaca
 </p>
 <br>
 
-### *C) Go to Venue* 🏃‍♂️⏳
+#### *C) Go to Venue* 🏃‍♂️⏳
 After the booking process is complete the user is taken to a timer page. Additionally, an email receipt related to the booking is sent to the users registered email address for reference.
 
 The timer page contains:  
@@ -133,9 +135,9 @@ Phone contacts of the venue
 
 <br>
 
-**3) Merchant flow**
+### **3) Merchant flow**
 
-### *A) Control Vacancy Status* 🕹️
+#### *A) Control Vacancy Status* 🕹️
 When a user enters the application from a merchant account they are greeted with the main control panel. From here they can make available various table configurations for customers to book. If they should desire they can assign a deposit fee related to that table.
 
 
@@ -144,7 +146,7 @@ When a user enters the application from a merchant account they are greeted with
 
 
 
-### *B) Receive Booking Notification* ⚙️ 
+#### *B) Receive Booking Notification* ⚙️ 
 
 When a customer makes a booking at the store the merchant is sent a notification and the relevant seating configuration is toggled off. The merchant is prompted to review the reservation and must make a decision based upon their own circumstances as to whether to manually reoffer the seating configuration to the app again.
 
@@ -152,14 +154,14 @@ When a customer makes a booking at the store the merchant is sent a notification
 <br>
 
 
-### *C) Open Menu* ⚙️ 
+#### *C) Open Menu* ⚙️ 
 
 The settings page has a sliding drawer style menu giving access to other important pages such as store details, booking history, stripe payment registration and the QR code check in page.
 
 <p align="center"><img src="assets/readMe/menu.jpg" width= "200"></p>
 <br>
 
-### *D) Checkin Customers* ⚙️ 
+#### *D) Checkin Customers* ⚙️ 
 
 Once the customer has arrived at the location the Merchant can manually check the user in by clicking the button on the booking transaction page. Alternatively, they can require the customer to scan either the QR code within the application or a QR code placed conveniently with the store.
 
