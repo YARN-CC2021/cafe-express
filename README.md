@@ -19,10 +19,10 @@ Thank you very much for coming to see our repository. We spent a month to create
 
 ## 0. Index
 ---
-* [Introduction](#1.-introduction)
-* [Technology](#2.-technology-/-framework)
-* [User Guide](#3.-user-guide)
-* [Authors](#4.-authors)
+* [Introduction](#1.introduction)
+* [Technology](#2.technology)
+* [User Guide](#3.user-guide)
+* [Authors](#4.authors)
 
 
 ## 1. Introduction
