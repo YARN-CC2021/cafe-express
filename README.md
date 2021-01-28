@@ -75,9 +75,9 @@ During the signup process the user will be asked to indicate whether they are in
 
 <br>
 <p align="center">
-<img src="assets/readMe/logInScreen.jpg" width= "150"> &nbsp;&nbsp;&nbsp;
-<img src="assets/readMe/verification page.jpg" width= "150"> &nbsp;&nbsp;&nbsp;
-<img src="assets/readMe/user_category_screen.jpg" width= "150">
+<img src="assets/readMe/logInScreen.jpg" width= "200"> &nbsp;&nbsp;&nbsp;
+<img src="assets/readMe/verification page.jpg" width= "200"> &nbsp;&nbsp;&nbsp;
+<img src="assets/readMe/user_category_screen.jpg" width= "200">
  &nbsp;&nbsp;&nbsp;
 </p>
 <br>
@@ -98,8 +98,8 @@ Available venues on the map can be directly inspected by tapping upon them or by
 
 <br>
 <p align="center">
-<img src="assets/readMe/map_initial_view.jpg" width= "150"> &nbsp;&nbsp;&nbsp;
-<img src="assets/readMe/filter_view.jpg" width= "150"> 
+<img src="assets/readMe/map_initial_view.jpg" width= "200"> &nbsp;&nbsp;&nbsp;
+<img src="assets/readMe/filter_view.jpg" width= "200"> 
 </p>
 <br>
 
@@ -111,8 +111,8 @@ In order to complete a booking the user must select (tap) one of the listed vaca
 
 <br>
 <p align="center">
-<img src="assets/readMe/store_detail.jpg" width= "150"> &nbsp;&nbsp;&nbsp;
-<img src="assets/readMe/booking_name.jpg" width= "150">
+<img src="assets/readMe/store_detail.jpg" width= "200"> &nbsp;&nbsp;&nbsp;
+<img src="assets/readMe/booking_name.jpg" width= "200">
 </p>
 <br>
 
@@ -128,7 +128,7 @@ Phone contacts of the venue
 
 
 <p align="center">
-<img src="assets/readMe/timer_page.jpg" width= "150">
+<img src="assets/readMe/timer_page.jpg" width= "200">
 </p>
 <p align="center">⚠️ If customer do not check-in at the venue by the 30 minutes time frame, venues can cancel reservation and deposit will not return to the customer</p>
 
