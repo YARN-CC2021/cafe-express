@@ -2,7 +2,8 @@ import "package:flutter/material.dart";
 import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:amplify_core/amplify_core.dart';
+// import 'package:amplify_core/amplify_core.dart';
+import "package:amplify_flutter/amplify.dart";
 import 'package:awesome_dialog/awesome_dialog.dart';
 import '../app_theme.dart';
 
