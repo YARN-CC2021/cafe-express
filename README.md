@@ -19,13 +19,13 @@ Thank you very much for coming to see our repository. We spent a month to create
 
 ## 0. Index
 ---
-* [Introduction](#1.-Introduction)
-* [Technology](#2.-Technology-/-Framework)
-* [User Guide](#3.-User-Guide)
-* [Authors](#4.-Authors)
+* [Introduction](#1.introduction)
+* [Technology](#2.technology)
+* [User Guide](#3.user-guide)
+* [Authors](#4.authors)
 
 
-## 1. Introduction
+## 1.Introduction
 --- 
 
 VACANSEAT is designed to connect venues (restaurants/bars/cafes) that have immediate capacity with patrons for impromptu bookings.
@@ -35,11 +35,11 @@ Walking door to door with a group of people or calling venues found using simple
 Merchants are supplied with a new sales channel, useful whether the restaurant is unexpectedly empty or when they simply wish to maximise occupancy.  The signup is simple and the system itself is designed to easily integrate with their existing booking management system.
 
 
-## 2. Technology / Framework
+## 2.Technology
 ---
 
 <br>
-<p align="center"><img src="assets/readMe/vacanseat_tech_stack.png" width= "400"></p><br>
+<p align="center"><img src="assets/readMe/vacanseat_tech_stack.png" width= "650"></p><br>
 
 
 The application uses a variety of technologies described below with relevant links.
@@ -60,7 +60,7 @@ The application utilises the [Google Map API](https://developers.google.com/maps
 ⚠️ Currently Stripe Connect account is in test mode, so the real transaction will not happen through Vacanseat.
 
 
-## 3. User Guide
+## 3.User Guide
 ---
 
 
@@ -76,9 +76,9 @@ During the signup process the user will be asked to indicate whether they are in
 
 <br>
 <p align="center">
-<img src="assets/readMe/logInScreen.jpg" width= "150"> &nbsp;&nbsp;&nbsp;
-<img src="assets/readMe/verification page.jpg" width= "150"> &nbsp;&nbsp;&nbsp;
-<img src="assets/readMe/user_category_screen.jpg" width= "150">
+<img src="assets/readMe/logInScreen.jpg" width= "200"> &nbsp;&nbsp;&nbsp;
+<img src="assets/readMe/verification page.jpg" width= "200"> &nbsp;&nbsp;&nbsp;
+<img src="assets/readMe/user_category_screen.jpg" width= "200">
  &nbsp;&nbsp;&nbsp;
 </p>
 <br>
@@ -99,8 +99,8 @@ Available venues on the map can be directly inspected by tapping upon them or by
 
 <br>
 <p align="center">
-<img src="assets/readMe/map_initial_view.jpg" width= "150"> &nbsp;&nbsp;&nbsp;
-<img src="assets/readMe/filter_view.jpg" width= "150"> 
+<img src="assets/readMe/map_initial_view.jpg" width= "200"> &nbsp;&nbsp;&nbsp;
+<img src="assets/readMe/filter_view.jpg" width= "200"> 
 </p>
 <br>
 
@@ -112,8 +112,8 @@ In order to complete a booking the user must select (tap) one of the listed vaca
 
 <br>
 <p align="center">
-<img src="assets/readMe/store_detail.jpg" width= "150"> &nbsp;&nbsp;&nbsp;
-<img src="assets/readMe/booking_name.jpg" width= "150">
+<img src="assets/readMe/store_detail.jpg" width= "200"> &nbsp;&nbsp;&nbsp;
+<img src="assets/readMe/booking_name.jpg" width= "200">
 </p>
 <br>
 
@@ -129,7 +129,7 @@ Phone contacts of the venue
 
 
 <p align="center">
-<img src="assets/readMe/timer_page.jpg" width= "150">
+<img src="assets/readMe/timer_page.jpg" width= "200">
 </p>
 <p align="center">⚠️ If customer do not check-in at the venue by the 30 minutes time frame, venues can cancel reservation and deposit will not return to the customer</p>
 
@@ -171,7 +171,7 @@ Once the customer has arrived at the location the Merchant can manually check th
 <br>
 
 
-## 4. Authors
+## 4.Authors
 ---
 
 
