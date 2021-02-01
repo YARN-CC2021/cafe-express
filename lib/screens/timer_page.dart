@@ -14,7 +14,8 @@ import 'package:http/http.dart' as http;
 import '../app_theme.dart';
 import 'package:circular_menu/circular_menu.dart';
 import '../app.dart';
-import 'package:amplify_core/amplify_core.dart';
+// import 'package:amplify_core/amplify_core.dart';
+import "package:amplify_flutter/amplify.dart";
 
 class TimerPage extends StatefulWidget {
   final bookData;
