@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:amplify_core/amplify_core.dart';
+//import 'package:amplify_core/amplify_core.dart';
+import "package:amplify_flutter/amplify.dart";
 import '../amplifyconfiguration.dart';
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import "package:flutter_login/flutter_login.dart";
@@ -17,7 +18,7 @@ class Auth extends StatefulWidget {
 }
 
 class _AuthState extends State<Auth> {
-  Amplify amplify = Amplify();
+  // Amplify amplify = Amplify();
   bool isConfigured = false;
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
@@ -33,9 +34,11 @@ class _AuthState extends State<Auth> {
   void config() async {
     AmplifyAuthCognito amplifyAuthCognito = AmplifyAuthCognito();
     AmplifyStorageS3 storage = AmplifyStorageS3();
-    amplify.addPlugin(
-        authPlugins: [amplifyAuthCognito], storagePlugins: [storage]);
-    amplify.configure(amplifyconfig);
+    // Amplify.addPlugin(
+    //     authPlugins: [amplifyAuthCognito], storagePlugins: [storage]);
+    Amplify.addPlugin(amplifyAuthCognito);
+    Amplify.addPlugin(storage);
+    Amplify.configure(amplifyconfig);
     setState(() {
       isConfigured = true;
       print('Configuration Succesful $isConfigured');

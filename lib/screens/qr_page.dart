@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-import 'package:amplify_core/amplify_core.dart';
+// import 'package:amplify_core/amplify_core.dart';
+import "package:amplify_flutter/amplify.dart";
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:cafeexpress/global.dart' as globals;
 import '../app_theme.dart';
