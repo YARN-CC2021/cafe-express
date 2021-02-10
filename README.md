@@ -1,3 +1,4 @@
+
 <p align="center">
 Thank you very much for coming to see our repository. We spent a month to create our app to solve real world problem in Tokyo. I hope you enjoy exploring here and our app.
 </p>
@@ -13,8 +14,10 @@ Thank you very much for coming to see our repository. We spent a month to create
 <br>
 <h1 align="center">VACANSEAT</h1>
 
+
 <p align="center"><strong>Mobile application to find and book real time vacant seat among cafes, restaurants, and bars.</strong></p>
 <br>
+
 
 
 ## 0. Index
@@ -205,3 +208,4 @@ We are indebted to the genuine support and insighful advice by...
 ## 6. License
 ---
 - MIT
+

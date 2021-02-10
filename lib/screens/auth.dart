@@ -34,6 +34,7 @@ class _AuthState extends State<Auth> {
   void config() async {
     AmplifyAuthCognito amplifyAuthCognito = AmplifyAuthCognito();
     AmplifyStorageS3 storage = AmplifyStorageS3();
+
     // Amplify.addPlugin(
     //     authPlugins: [amplifyAuthCognito], storagePlugins: [storage]);
     Amplify.addPlugin(amplifyAuthCognito);
